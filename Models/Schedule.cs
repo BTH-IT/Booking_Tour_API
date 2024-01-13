@@ -13,5 +13,8 @@ namespace BookingApi.Models
         public DateTime DateStart { get; set; }
         public DateTime DateEnd {get; set;}
         public int AvailableSeats { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

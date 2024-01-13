@@ -15,14 +15,12 @@ namespace BookingApi.Data
                 .HasOne(rd => rd.Role)
                 .WithMany(r => r.RoleDetails);
 
-            modelBuilder.Entity<Review>()
-                .HasOne(r => r.Tour)
-                .WithMany(t => t.Reviews);
+            modelBuilder.Entity<Schedule>()
+                .HasOne(s => s.Tour)
+                .WithMany(t => t.Schedules);
 
             modelBuilder.Entity<RoleDetail>()
                 .HasKey(rd => new { rd.RoleId, rd.ActionName });
-
-            // Additional configurations or mappings can be added here
 
             base.OnModelCreating(modelBuilder);
         }
@@ -30,7 +28,6 @@ namespace BookingApi.Data
         #region DbSet
         public DbSet<Tour>? Tours { get; set; }
         public DbSet<Destination>? Destinations { get; set; }
-        public DbSet<Review>? Reviews { get; set; }
         public DbSet<User>? Users { get; set; }
         public DbSet<Role>? Roles { get; set; }
         public DbSet<RoleDetail>? RoleDetails { get; set; }

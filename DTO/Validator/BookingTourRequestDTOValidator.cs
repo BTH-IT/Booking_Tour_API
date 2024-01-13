@@ -7,7 +7,6 @@ namespace BookingApi.DTO.Validator
     {
         public BookingTourRequestDTOValidator()
         {
-            RuleFor(bt => bt.Id).NotEmpty().WithMessage("Id is required");
             RuleFor(bt => bt.UserId).NotEmpty().WithMessage("UserId is required");
             RuleFor(bt => bt.ScheduleId).NotEmpty().WithMessage("ScheduleId is required");
             RuleFor(bt => bt.Seats).NotEmpty().WithMessage("Seats is required");

@@ -21,7 +21,7 @@ namespace BookingApi.DTO
 
     public class BookingTourRequestDTO
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public int UserId { get; set; }
         public int ScheduleId { get; set; }
         public int Seats { get; set; }

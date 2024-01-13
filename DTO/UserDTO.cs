@@ -21,7 +21,7 @@ namespace BookingApi.DTO
 
     public class UserRequestDTO
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string Fullname { get; set; }
 

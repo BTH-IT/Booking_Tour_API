@@ -7,6 +7,21 @@ using Newtonsoft.Json;
 
 namespace BookingApi.Models
 {
+    public class Review
+    {
+        public int Id { get; set; }
+
+        public string Content { get; set; }
+
+        public float Rating { get; set; }
+
+        public DateTime? CreatedAt { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
+
+        public int TourId { get; set; }
+        public int UserId { get; set; }
+    }
     public class Day
     {
         public string Title { get; set; }
@@ -49,18 +64,16 @@ namespace BookingApi.Models
 
         [NotMapped]
         public string[] PriceExcludeList { get; set; }
-
         [NotMapped]
         public string[] PriceIncludeList { get; set; }
-
-        // Ignore Activities property in database mapping
         [NotMapped]
         public string[] ActivityList { get; set; }
-
         [NotMapped]
         public string[] ImageList { get; set; }
         [NotMapped]
         public Day[] DayList { get; set; }
+        [NotMapped]
+        public Review[] ReviewList { get; set; }
 
         public Destination Destination { get; set; }
 
@@ -99,6 +112,17 @@ namespace BookingApi.Models
             set => DayList = JsonConvert.DeserializeObject<Day[]>(value) ?? Array.Empty<Day>();
         }
 
-        public ICollection<Review> Reviews { get; set; }
+        [Column(TypeName = "JSON")]
+        public string Reviews
+        {
+            get => JsonConvert.SerializeObject(ReviewList);
+            set => ReviewList = JsonConvert.DeserializeObject<Review[]>(value) ?? Array.Empty<Review>();
+        }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<Schedule> Schedules { get; set; }
     }
 }

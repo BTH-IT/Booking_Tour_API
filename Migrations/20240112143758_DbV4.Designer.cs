@@ -3,6 +3,7 @@ using System;
 using BookingApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240112143758_DbV4")]
+    partial class DbV4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,9 +28,6 @@ namespace BookingApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -38,9 +38,6 @@ namespace BookingApi.Migrations
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -57,9 +54,6 @@ namespace BookingApi.Migrations
 
                     b.Property<float>("Coupon")
                         .HasColumnType("float");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsCleaningFee")
                         .HasColumnType("tinyint(1)");
@@ -92,9 +86,6 @@ namespace BookingApi.Migrations
                     b.Property<int>("Umbrella")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -113,9 +104,6 @@ namespace BookingApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -123,9 +111,6 @@ namespace BookingApi.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -136,23 +121,51 @@ namespace BookingApi.Migrations
                     b.ToTable("Destination");
                 });
 
+            modelBuilder.Entity("BookingApi.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<float>("Rating")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TourId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TourId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Review");
+                });
+
             modelBuilder.Entity("BookingApi.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("RoleName")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -184,9 +197,6 @@ namespace BookingApi.Migrations
                     b.Property<int>("AvailableSeats")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<DateTime>("DateEnd")
                         .HasColumnType("datetime(6)");
 
@@ -195,9 +205,6 @@ namespace BookingApi.Migrations
 
                     b.Property<int>("TourId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -215,9 +222,6 @@ namespace BookingApi.Migrations
                     b.Property<string>("Activities")
                         .IsRequired()
                         .HasColumnType("JSON");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DateFrom")
                         .HasColumnType("datetime(6)");
@@ -271,15 +275,8 @@ namespace BookingApi.Migrations
                     b.Property<float>("Rate")
                         .HasColumnType("float");
 
-                    b.Property<string>("Reviews")
-                        .IsRequired()
-                        .HasColumnType("JSON");
-
                     b.Property<float>("SalePercent")
                         .HasColumnType("float");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Video")
                         .IsRequired()
@@ -309,9 +306,6 @@ namespace BookingApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Fullname")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -323,9 +317,6 @@ namespace BookingApi.Migrations
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -364,6 +355,25 @@ namespace BookingApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BookingApi.Models.Review", b =>
+                {
+                    b.HasOne("BookingApi.Models.Tour", "Tour")
+                        .WithMany("Reviews")
+                        .HasForeignKey("TourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookingApi.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tour");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BookingApi.Models.RoleDetail", b =>
                 {
                     b.HasOne("BookingApi.Models.Role", "Role")
@@ -378,7 +388,7 @@ namespace BookingApi.Migrations
             modelBuilder.Entity("BookingApi.Models.Schedule", b =>
                 {
                     b.HasOne("BookingApi.Models.Tour", "Tour")
-                        .WithMany("Schedules")
+                        .WithMany()
                         .HasForeignKey("TourId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -415,7 +425,7 @@ namespace BookingApi.Migrations
 
             modelBuilder.Entity("BookingApi.Models.Tour", b =>
                 {
-                    b.Navigation("Schedules");
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

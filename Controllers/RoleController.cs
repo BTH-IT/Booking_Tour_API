@@ -58,7 +58,7 @@ namespace BookingApi.Controllers
         public async Task<IActionResult> Insert([FromForm] RoleRequestDTO role)
         {
             var data = await _roleService.Insert(role);
-            return StatusCode(data.ResponseCode, data);
+            return StatusCode(data.StatusCode, data);
         }
 
         [HttpPatch()]
@@ -79,7 +79,7 @@ namespace BookingApi.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var data = await _roleService.Delete(id);
-            return StatusCode(data.ResponseCode, data);
+            return StatusCode(data.StatusCode, data);
         }
     }
 }

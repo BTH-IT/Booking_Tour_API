@@ -1,13 +1,10 @@
 ﻿using BookingApi.Models;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace BookingApi.DTO
 {
     public class TourRequestDTO
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
         public int MaxGuests { get; set; }
         public bool IsWifi { get; set; }
@@ -25,7 +22,7 @@ namespace BookingApi.DTO
         public string[] ImageList { get; set; }
         public List<Day> DayList { get; set; }
         public int DestinationId { get; set; }
-        public List<Review> Reviews { get; set; }
+        public List<Review> ReviewList { get; set; }
     }
 
     public class TourResponseDTO
@@ -48,6 +45,6 @@ namespace BookingApi.DTO
         public string[] ImageList { get; set; }
         public List<Day> DayList { get; set; }
         public Destination Destination { get; set; }
-        public List<Review> Reviews { get; set; }
+        public List<Review> ReviewList { get; set; }
     }
 }

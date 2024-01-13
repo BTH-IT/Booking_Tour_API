@@ -1,6 +1,14 @@
-﻿namespace BookingApi.Interfaces
+﻿using BookingApi.DTO;
+using BookingApi.Helpers;
+
+namespace BookingApi.Interfaces
 {
     public interface ITourService
     {
+        Task<List<TourResponseDTO>> GetAll();
+        Task<TourResponseDTO> GetById(int id);
+        Task<APIResponse<int>> Insert(TourRequestDTO item);
+        Task<TourResponseDTO> Update(TourRequestDTO item);
+        Task<APIResponse<int>> Delete(int id);
     }
 }

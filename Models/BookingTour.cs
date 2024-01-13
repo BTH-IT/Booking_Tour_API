@@ -39,5 +39,9 @@ namespace BookingApi.Models
             get => JsonConvert.SerializeObject(TravellerList);
             set => TravellerList = JsonConvert.DeserializeObject<Traveller[]>(value) ?? new Traveller[0];
         }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

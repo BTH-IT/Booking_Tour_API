@@ -95,7 +95,7 @@ namespace BookingApi.Repositories
                 {
                     Email = item.Email,
                     Password = item.Password,
-                    Role = await _roleRepository.GetById(item.Id),
+                    Role = await _roleRepository.GetById(0),
                 };
 
                 await _context.Accounts.AddAsync(account);

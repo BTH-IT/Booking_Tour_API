@@ -5,10 +5,10 @@ namespace BookingApi.Interfaces
 {
     public interface ITourRepository
     {
-        Task<List<Role>> GetAll();
-        Task<Role> GetById(int id);
-        Task<(bool isSuccess, int insertedItemId)> Insert(RoleRequestDTO item);
-        Task<Role> Update(RoleRequestDTO item);
+        Task<List<Tour>> GetAll();
+        Task<Tour> GetById(int id);
+        Task<(bool isSuccess, int insertedItemId)> Insert(TourRequestDTO item);
+        Task<Tour> Update(TourRequestDTO item);
         Task<bool> Delete(int id);
     }
 }

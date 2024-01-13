@@ -8,8 +8,8 @@ namespace BookingApi.Services.Interfaces
     {
         Task<List<UserResponseDTO>> GetAll();
         Task<UserResponseDTO> GetById(int id);
-        Task<APIResponse> Insert(UserRequestDTO item);
+        Task<APIResponse<int>> Insert(UserRequestDTO item);
         Task<UserResponseDTO> Update(UserRequestDTO item);
-        Task<APIResponse> Delete(int id);
+        Task<APIResponse<int>> Delete(int id);
     }
 }

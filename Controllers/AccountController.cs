@@ -46,7 +46,7 @@ namespace BookingApi.Controllers
         public async Task<IActionResult> Insert([FromForm] AccountRequestDTO account)
         {
             var data = await _accountService.Insert(account);
-            return StatusCode(data.ResponseCode, data);
+            return StatusCode(data.StatusCode, data);
         }
 
         [HttpPatch()]
@@ -66,7 +66,7 @@ namespace BookingApi.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var data = await _accountService.Delete(id);
-            return StatusCode(data.ResponseCode, data);
+            return StatusCode(data.StatusCode, data);
         }
     }
 }

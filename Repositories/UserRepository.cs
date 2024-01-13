@@ -55,6 +55,7 @@ namespace BookingApi.Repositories
 
         public async Task<(bool isSuccess, int insertedItemId)> Insert(UserRequestDTO item)
         {
+            if (item.Id == null) return (false, -1);
             try
             {
                 User user = new User
@@ -64,7 +65,7 @@ namespace BookingApi.Repositories
                     Country = item.Country,
                     Phone = item.Phone,
                     Gender = item.Gender,
-                    Account = await _accountRepository.GetById(item.Id)
+                    Account = await _accountRepository.GetById(item.Id.Value)
                 };
 
                 await _context.Users.AddAsync(user);

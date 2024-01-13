@@ -7,7 +7,6 @@ namespace BookingApi.DTO.Validator
     {
         public TourRequestDTOValidator()
         {
-            RuleFor(bt => bt.Id).NotEmpty().WithMessage("Id is required");
             RuleFor(bt => bt.Name).NotEmpty().WithMessage("Name is required");
             RuleFor(bt => bt.IsWifi).NotEmpty().WithMessage("IsWifi is required");
             RuleFor(bt => bt.Detail).NotEmpty().WithMessage("Detail is required");
@@ -23,7 +22,7 @@ namespace BookingApi.DTO.Validator
             RuleFor(bt => bt.ImageList).NotEmpty().WithMessage("ImageList is required");
             RuleFor(bt => bt.DayList).NotEmpty().WithMessage("DayList is required");
             RuleFor(bt => bt.DestinationId).NotEmpty().WithMessage("DestinationId is required");
-            RuleFor(bt => bt.Reviews);
+            RuleFor(bt => bt.ReviewList).NotEmpty().WithMessage("ReviewList is required");
         }
     }
 }

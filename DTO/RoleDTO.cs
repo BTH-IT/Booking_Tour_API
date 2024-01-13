@@ -15,7 +15,7 @@ namespace BookingApi.DTO
 
     public class RoleRequestDTO
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string RoleName { get; set; }
 

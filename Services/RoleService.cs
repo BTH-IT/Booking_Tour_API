@@ -21,28 +21,28 @@ namespace BookingApi.Services
             _mapper = mapper;
         }
 
-        public async Task<APIResponse> Delete(int id)
+        public async Task<APIResponse<int>> Delete(int id)
         {
-            APIResponse response = new APIResponse();
+            APIResponse<int> response = new APIResponse<int>();
 
             try
             {
                 bool isSuccess = await _roleRepository.Delete(id);
                 if (isSuccess)
                 {
-                    response.ResponseCode = 201;
-                    response.Result = id.ToString();
+                    response.StatusCode = 201;
+                    response.Result = id;
                 }
                 else
                 {
-                    response.ResponseCode = 404;
-                    response.ErrorMessage = "Not Found";
+                    response.StatusCode = 404;
+                    response.Message = "Not Found";
                 }
             }
             catch (Exception ex)
             {
-                response.ResponseCode = 500;
-                response.ErrorMessage = "Server Error";
+                response.StatusCode = 500;
+                response.Message = "Server Error";
             }
 
             return response;
@@ -69,28 +69,28 @@ namespace BookingApi.Services
             return roleDetailDTOs;
         }
 
-        public async Task<APIResponse> Insert(RoleRequestDTO item)
+        public async Task<APIResponse<int>> Insert(RoleRequestDTO item)
         {
-            APIResponse response = new APIResponse();
+            APIResponse<int> response = new APIResponse<int>();
 
             try
             {
                 (bool isSuccess, int insertedItemId) = await _roleRepository.Insert(item);
                 if (isSuccess)
                 {
-                    response.ResponseCode = 201;
-                    response.Result = insertedItemId.ToString();
+                    response.StatusCode = 201;
+                    response.Result = insertedItemId;
                 }
                 else
                 {
-                    response.ResponseCode = 400;
-                    response.ErrorMessage = "Something went wrong";
+                    response.StatusCode = 400;
+                    response.Message = "Something went wrong";
                 }
             }
             catch (Exception ex)
             {
-                response.ResponseCode = 500;
-                response.ErrorMessage = "Server Error";
+                response.StatusCode = 500;
+                response.Message = "Server Error";
             }
 
             return response;

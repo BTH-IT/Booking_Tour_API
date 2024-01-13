@@ -1,9 +1,9 @@
 ﻿namespace BookingApi.Helpers
 {
-    public class APIResponse
+    public class APIResponse<T>
     {
-        public int ResponseCode { get; set; }
-        public string Result { get; set; }
-        public string ErrorMessage { get; set; }
+        public int StatusCode { get; set; }
+        public T Result { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -15,5 +15,9 @@ namespace BookingApi.Models
         public bool Status { get; set; }
 
         public ICollection<RoleDetail> RoleDetails { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

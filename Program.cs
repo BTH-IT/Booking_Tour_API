@@ -23,6 +23,7 @@ builder.Services.AddControllers()
         config.RegisterValidatorsFromAssemblyContaining<BookingTourRequestDTOValidator>();
         config.RegisterValidatorsFromAssemblyContaining<TourRequestDTOValidator>();
         config.RegisterValidatorsFromAssemblyContaining<ScheduleRequestDTOValidator>();
+        config.RegisterValidatorsFromAssemblyContaining<DestinationRequestDTOValidator>();
     });
 
 
@@ -36,7 +37,7 @@ builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true
 // Add Cors
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-// Add Connection
+// Add Connection Db
 var connectionString = builder.Configuration.GetConnectionString("default");
 
 builder.Services.AddDbContext<DataContext>(options =>
@@ -48,11 +49,17 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IBookingTourRepository, BookingTourRepository>();
+builder.Services.AddScoped<IDestinationRepository, DestinationRepository>();
+builder.Services.AddScoped<ITourRepository, TourRepository>();
 
 // Add service, interface
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IBookingTourService, BookingTourService>();
+builder.Services.AddScoped<IDestinationService, DestinationService>();
+builder.Services.AddScoped<ITourService, TourService>();
 
 // Add auto mapper
 var automapper = new MapperConfiguration(item => item.AddProfile(new MappingProfiles()));

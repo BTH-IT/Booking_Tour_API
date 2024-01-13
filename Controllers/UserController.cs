@@ -55,7 +55,7 @@ namespace BookingApi.Controllers
         public async Task<IActionResult> Create([FromForm] UserRequestDTO user)
         {
             var data = await _userService.Insert(user);
-            return StatusCode(data.ResponseCode, data);
+            return StatusCode(data.StatusCode, data);
         }
 
         [HttpPatch()]
@@ -75,7 +75,7 @@ namespace BookingApi.Controllers
         {
             var data = await _userService.Delete(id);
 
-            return StatusCode(data.ResponseCode, data);
+            return StatusCode(data.StatusCode, data);
         }
     }
 }

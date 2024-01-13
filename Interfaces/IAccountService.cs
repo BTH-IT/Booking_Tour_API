@@ -1,5 +1,4 @@
-﻿
-using BookingApi.DTO;
+﻿using BookingApi.DTO;
 using BookingApi.Helpers;
 
 namespace BookingApi.Services.Interfaces
@@ -9,8 +8,8 @@ namespace BookingApi.Services.Interfaces
         Task<List<AccountResponseDTO>> GetAll();
         Task<AccountResponseDTO> GetById(int id);
         Task<AccountResponseDTO> GetByEmail(string email);
-        Task<APIResponse> Insert(AccountRequestDTO item);
+        Task<APIResponse<int>> Insert(AccountRequestDTO item);
         Task<AccountResponseDTO> Update(AccountRequestDTO item);
-        Task<APIResponse> Delete(int id);
+        Task<APIResponse<int>> Delete(int id);
     }
 }
