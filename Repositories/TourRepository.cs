@@ -53,13 +53,18 @@ namespace BookingApi.Repositories
         // Get all Tours
         public async Task<List<Tour>> GetAll()
         {
-            return await _context.Tours.ToListAsync();
+            return await _context.Tours.Include(t => t.Destination).ToListAsync();
         }
 
         // Get a Tour by its ID
         public async Task<Tour> GetById(int id)
         {
-            return await _context.Tours.FindAsync(id);
+            return await _context.Tours.Include(t => t.Destination).SingleOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<List<Schedule>> GetSchedulesByTourId(int id)
+        {
+            return await _context.Schedules.Include(t => t.Tour).Where(t => t.Tour.Id == id).ToListAsync();
         }
 
         // Insert a new Tour

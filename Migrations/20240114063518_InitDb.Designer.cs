@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240113152703_ChangeDatabase")]
-    partial class ChangeDatabase
+    [Migration("20240114063518_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,10 @@ namespace BookingApi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RefreshToken")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -139,6 +143,24 @@ namespace BookingApi.Migrations
                     b.ToTable("Destination");
                 });
 
+            modelBuilder.Entity("BookingApi.Models.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permission");
+                });
+
             modelBuilder.Entity("BookingApi.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -165,15 +187,23 @@ namespace BookingApi.Migrations
             modelBuilder.Entity("BookingApi.Models.RoleDetail", b =>
                 {
                     b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(1);
 
-                    b.Property<string>("ActionName")
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int")
+                        .HasColumnOrder(2);
+
+                    b.Property<int>("ActionName")
+                        .HasColumnType("int")
+                        .HasColumnOrder(3);
 
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
 
-                    b.HasKey("RoleId", "ActionName");
+                    b.HasKey("RoleId", "PermissionId", "ActionName");
+
+                    b.HasIndex("PermissionId");
 
                     b.ToTable("RoleDetail");
                 });
@@ -369,11 +399,19 @@ namespace BookingApi.Migrations
 
             modelBuilder.Entity("BookingApi.Models.RoleDetail", b =>
                 {
+                    b.HasOne("BookingApi.Models.Permission", "Permission")
+                        .WithMany("RoleDetails")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BookingApi.Models.Role", "Role")
                         .WithMany("RoleDetails")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Permission");
 
                     b.Navigation("Role");
                 });
@@ -409,6 +447,11 @@ namespace BookingApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("BookingApi.Models.Permission", b =>
+                {
+                    b.Navigation("RoleDetails");
                 });
 
             modelBuilder.Entity("BookingApi.Models.Role", b =>

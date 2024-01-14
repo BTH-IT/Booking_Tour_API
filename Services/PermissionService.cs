@@ -3,17 +3,21 @@ using BookingApi.DTO;
 using BookingApi.Helpers;
 using BookingApi.Interfaces;
 using BookingApi.Models;
+using BookingApi.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookingApi.Services
 {
-    public class TourService : ITourService
+    public class PermissionService : IPermissionService
     {
-        private readonly ITourRepository _tourRepository;
+        private readonly IPermissionRepository _permissionRepository;
         private readonly IMapper _mapper;
 
-        public TourService(ITourRepository tourRepository, IMapper mapper)
+        public PermissionService(IPermissionRepository permissionRepository, IMapper mapper)
         {
-            _tourRepository = tourRepository;
+            _permissionRepository = permissionRepository;
             _mapper = mapper;
         }
 
@@ -23,7 +27,7 @@ namespace BookingApi.Services
 
             try
             {
-                bool isSuccess = await _tourRepository.Delete(id);
+                bool isSuccess = await _permissionRepository.Delete(id);
                 if (isSuccess)
                 {
                     response.StatusCode = 201;
@@ -44,12 +48,12 @@ namespace BookingApi.Services
             return response;
         }
 
-        public async Task<List<TourResponseDTO>> GetAll()
+        public async Task<List<PermissionResponseDTO>> GetAll()
         {
             try
             {
-                var tours = await _tourRepository.GetAll();
-                var responseDTOs = _mapper.Map<List<Tour>, List<TourResponseDTO>>(tours);
+                var permissions = await _permissionRepository.GetAll();
+                var responseDTOs = _mapper.Map<List<Permission>, List<PermissionResponseDTO>>(permissions);
 
                 return responseDTOs;
             }
@@ -60,12 +64,12 @@ namespace BookingApi.Services
             }
         }
 
-        public async Task<TourResponseDTO> GetById(int id)
+        public async Task<PermissionResponseDTO> GetById(int id)
         {
             try
             {
-                var tour = await _tourRepository.GetById(id);
-                var responseDTO = _mapper.Map<Tour, TourResponseDTO>(tour);
+                var permission = await _permissionRepository.GetById(id);
+                var responseDTO = _mapper.Map<Permission, PermissionResponseDTO>(permission);
 
                 return responseDTO;
             }
@@ -76,29 +80,13 @@ namespace BookingApi.Services
             }
         }
 
-        public async Task<List<ScheduleResponseDTO>> GetSchedulesByTourId(int id)
-        {
-            try
-            {
-                var schedules = await _tourRepository.GetSchedulesByTourId(id);
-                var responseDTOs = _mapper.Map<List<Schedule>, List<ScheduleResponseDTO>>(schedules);
-
-                return responseDTOs;
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception appropriately
-                return null;
-            }
-        }
-
-        public async Task<APIResponse<int>> Insert(TourRequestDTO item)
+        public async Task<APIResponse<int>> Insert(PermissionRequestDTO item)
         {
             APIResponse<int> response = new APIResponse<int>();
 
             try
             {
-                (bool isSuccess, int insertedItemId) = await _tourRepository.Insert(item);
+                (bool isSuccess, int insertedItemId) = await _permissionRepository.Insert(item);
                 if (isSuccess)
                 {
                     response.StatusCode = 201;
@@ -119,12 +107,12 @@ namespace BookingApi.Services
             return response;
         }
 
-        public async Task<TourResponseDTO> Update(TourRequestDTO item)
+        public async Task<PermissionResponseDTO> Update(PermissionRequestDTO item)
         {
             try
             {
-                var updatedTour = await _tourRepository.Update(item);
-                var responseDTO = _mapper.Map<Tour, TourResponseDTO>(updatedTour);
+                var updatedPermission = await _permissionRepository.Update(item);
+                var responseDTO = _mapper.Map<Permission, PermissionResponseDTO>(updatedPermission);
 
                 return responseDTO;
             }

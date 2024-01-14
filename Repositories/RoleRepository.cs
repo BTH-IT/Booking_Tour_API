@@ -9,7 +9,6 @@ namespace BookingApi.Repositories
 {
     public class RoleRepository : IRoleRepository
     {
-        private readonly string[] _actionList = new[] { "CREATE", "READ", "UPDATE", "DELETE" };
         private readonly DataContext _context;
 
         public RoleRepository(DataContext context)
@@ -77,12 +76,12 @@ namespace BookingApi.Repositories
                 await _context.Roles.AddAsync(role);
                 await _context.SaveChangesAsync();
 
-                foreach (string action in _actionList)
+                foreach (ActionType actionType in Enum.GetValues(typeof(ActionType)))
                 {
                     RoleDetail roleDetail = new RoleDetail
                     {
                         RoleId = role.Id,
-                        ActionName = action,
+                        ActionName = actionType,
                         Status = false
                     };
 
@@ -129,7 +128,7 @@ namespace BookingApi.Repositories
             {
                 var roleDetail = await _context.RoleDetails.Where(roleDetail => 
                     roleDetail.RoleId == item.RoleId && 
-                    roleDetail.ActionName.ToUpperInvariant() == item.ActionName.ToUpperInvariant())
+                    roleDetail.ActionName == item.ActionName)
                         .SingleOrDefaultAsync();
 
                 if (roleDetail == null)

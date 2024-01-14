@@ -7,6 +7,7 @@ namespace BookingApi.Interfaces
     {
         Task<List<Tour>> GetAll();
         Task<Tour> GetById(int id);
+        Task<List<Schedule>> GetSchedulesByTourId(int id);
         Task<(bool isSuccess, int insertedItemId)> Insert(TourRequestDTO item);
         Task<Tour> Update(TourRequestDTO item);
         Task<bool> Delete(int id);
