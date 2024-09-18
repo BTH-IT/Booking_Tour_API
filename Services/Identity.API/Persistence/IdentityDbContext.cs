@@ -10,10 +10,10 @@ namespace Identity.API.Persistence
 
         }
         #region DbSet
-        public DbSet<User>? Users { get; set; }
-        public DbSet<Role>? Roles { get; set; }
-        public DbSet<RoleDetail>? RoleDetails { get; set; }
-        public DbSet<Permission>? Permissions { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<RoleDetail> RoleDetails { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
         public DbSet<Identity.API.Entites.Account> Accounts {get;set;}
 
         #endregion

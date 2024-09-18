@@ -11,6 +11,8 @@ namespace OcelotApiGw.Extensions
             builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true,
                         reloadOnChange: true)
+                    .AddJsonFile($"ocelot.{env.EnvironmentName}.json", optional: false,
+                        reloadOnChange: true)
                     .AddEnvironmentVariables();
             builder.Host.UseSerilog(SeriLogger.Configure);
         }

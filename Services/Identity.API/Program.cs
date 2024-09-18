@@ -1,6 +1,11 @@
+using FluentValidation.AspNetCore;
 using Identity.API;
+using Identity.API.DTO.Validator;
 using Identity.API.Extensions;
+using Identity.API.Persistence;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Shared.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +21,18 @@ try
     builder.Services.AddSwaggerGen();
     // Add Auto Mapper
     builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+    // Add Fluent Validator 
+    builder.Services.AddFluentValidation(cfg=>cfg.RegisterValidatorsFromAssemblyContaining<AccountRequestDTOValidator>());
+    builder.Services.Configure<ApiBehaviorOptions>(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    });
     // Add DbContext
     builder.Services.ConfigureIdentityDbContext();
     // Add Infrastructure Services
     builder.Services.AddInfrastructureServices();
+    // Configure Route Options 
+    builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
     // Configure the HTTP request pipeline.
     var app = builder.Build();
    
@@ -34,7 +47,13 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
-
+    // Seeding database async
+    using (var scope = app.Services.CreateScope())
+    {
+        var seeder = scope.ServiceProvider.GetRequiredService<IdentityDbContextSeeder>();
+        await seeder.InitialiseAsync();
+        await seeder.IdentityDbSeedAsync();
+    }
     app.Run();
 
 }

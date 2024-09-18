@@ -4,7 +4,7 @@ using Shared.Enums;
 using Contracts.Domains;
 namespace Identity.API.Entites
 {
-    [Table("RoleDetail")]
+    [Table("RoleDetails")]
     public class RoleDetail : EntityBase<int>
     {
         [Key]

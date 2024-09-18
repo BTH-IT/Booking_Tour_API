@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Identity.API.Entites
 {
-    [Table("User")]
+    [Table("Users")]
     public class User : EntityBase<int> , IDateTracking
     {
         public string Fullname { get; set; }

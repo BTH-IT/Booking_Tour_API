@@ -2,6 +2,8 @@
 using Identity.API.Persistence;
 using Identity.API.Repositories;
 using Identity.API.Repositories.Interfaces;
+using Identity.API.Services;
+using Identity.API.Services.Interfaces;
 using Infrastructure.Extensions;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +34,9 @@ namespace Identity.API.Extensions
                     .AddScoped<IPermissionRepository, PermissionRepository>()
                     .AddScoped<IAccountRepository, AccountRepository>()
                     .AddScoped<IUserRepository, UserRepository>()
-                    .AddScoped<IRoleRepository, RoleRepositoy>();
+                    .AddScoped<IRoleRepository, RoleRepositoy>()
+                    .AddScoped<IAccountSerivce, AccountService>()
+                    .AddScoped<IdentityDbContextSeeder>();
                 
         }
     }

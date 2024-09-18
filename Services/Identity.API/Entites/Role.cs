@@ -5,15 +5,15 @@ using Contracts.Domains.Interfaces;
 
 namespace Identity.API.Entites
 {
-    [Table("Role")]
+    [Table("Roles")]
     public class Role : EntityBase<int> , IDateTracking
     {
         public string? RoleName { get; set; }
 
         public bool Status { get; set; }
 
-        public ICollection<RoleDetail> RoleDetails { get; set; }
-        public ICollection<Account> Accounts { get; set; } = new List<Account>();
+        public ICollection<RoleDetail>? RoleDetails { get; set; }
+        public ICollection<Account>? Accounts { get; set; } = new List<Account>();
 
         public DateTime CreatedAt { get; set; } 
 

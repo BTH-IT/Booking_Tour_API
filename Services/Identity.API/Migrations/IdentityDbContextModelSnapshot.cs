@@ -42,7 +42,6 @@ namespace Identity.API.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("RoleId")
@@ -55,7 +54,7 @@ namespace Identity.API.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Account", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("Identity.API.Entites.Permission", b =>
@@ -75,7 +74,7 @@ namespace Identity.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permission", (string)null);
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("Identity.API.Entites.Role", b =>
@@ -100,7 +99,7 @@ namespace Identity.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Identity.API.Entites.RoleDetail", b =>
@@ -127,7 +126,7 @@ namespace Identity.API.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RoleDetail", (string)null);
+                    b.ToTable("RoleDetails");
                 });
 
             modelBuilder.Entity("Identity.API.Entites.User", b =>
@@ -171,7 +170,7 @@ namespace Identity.API.Migrations
                     b.HasIndex("AccountId")
                         .IsUnique();
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Identity.API.Entites.Account", b =>
@@ -217,8 +216,7 @@ namespace Identity.API.Migrations
 
             modelBuilder.Entity("Identity.API.Entites.Account", b =>
                 {
-                    b.Navigation("User")
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Identity.API.Entites.Permission", b =>

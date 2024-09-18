@@ -16,10 +16,15 @@ namespace OcelotApiGw.Extensions
         public static IServiceCollection ConfigureCors(this IServiceCollection services,IConfiguration configuration)
         {
             var origins = configuration["AllowOrigins"];
-            services.AddCors(option=>
-                option.AddPolicy("CorsPolicy",)
+            services.AddCors(option =>
+                option.AddPolicy("CorsPolicy", cfg =>
+                    cfg.WithOrigins(origins ?? "*")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                )
             );
-
+            return services;
         }
     }
 }
