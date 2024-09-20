@@ -25,9 +25,9 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Repositories\" />
     <Folder Include="Validators\" />
     <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
