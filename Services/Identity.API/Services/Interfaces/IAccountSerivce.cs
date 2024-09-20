@@ -3,8 +3,8 @@ using Shared.Helper;
 
 namespace Identity.API.Services.Interfaces
 {
-    public interface IAccountSerivce
-    {
+    public interface IAccountService
+	{
         Task<ApiResponse<List<AccountResponseDTO>>> GetAllAsync();
         Task<ApiResponse<AccountResponseDTO>> GetByIdAsync(int id);
         Task<ApiResponse<int>> CreateAsync(AccountRequestDTO item);
