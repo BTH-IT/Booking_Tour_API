@@ -11,7 +11,9 @@ namespace Identity.API
             CreateMap<User, UserResponseDTO>().ReverseMap();
             CreateMap<UserRequestDTO, User>();
             
-            CreateMap<Role, RoleResponseDTO>().ReverseMap();   
+            CreateMap<Role, RoleResponseDTO>().ReverseMap(); 
+            CreateMap<RoleDetail,RoleDetailDTO>().ReverseMap();
+
             CreateMap<RoleRequestDTO, Role>();
             
             CreateMap<Account,AccountResponseDTO>().ReverseMap();   

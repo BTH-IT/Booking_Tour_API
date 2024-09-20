@@ -21,7 +21,6 @@ namespace OcelotApiGw.Extensions
                     cfg.WithOrigins(origins ?? "*")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials()
                 )
             );
             return services;

@@ -9,8 +9,10 @@ namespace Identity.API.Repositories
 {
     public class RoleRepositoy : RepositoryBase<Role, int, IdentityDbContext>, IRoleRepository
     {
+        private readonly IdentityDbContext _context;    
         public RoleRepositoy(IdentityDbContext dbContext, IUnitOfWork<IdentityDbContext> unitOfWork) : base(dbContext, unitOfWork)
         {
+            _context = dbContext;
         }
 
         public Task CreateRoleAsync(Role role) => CreateAsync(role);
@@ -24,6 +26,12 @@ namespace Identity.API.Repositories
             }    
         }
 
+        public async Task DeleteRoleDetailByRoleIdAsync(int roleId)
+        {
+            var roleDetailsToDelete = await _context.RoleDetails.Where(x => x.RoleId == roleId).ToListAsync();
+            _context.RoleDetails.RemoveRange(roleDetailsToDelete);
+        }
+
         public Task<Role> GetRoleByIdAsync(int id) => FindByCondition(c=>c.Id.Equals(id)).FirstOrDefaultAsync();
 
         public Task<IEnumerable<RoleDetail>> GetRoleDetailsByRoleId(int id)
@@ -35,9 +43,31 @@ namespace Identity.API.Repositories
 
         public Task UpdateRoleAsync(Role role) => UpdateAsync(role);
 
-        public Task<IEnumerable<RoleDetail>> UpdateRoleDetailsByRoleId(int id)
+        public async Task<RoleDetail> UpdateRoleDetailByRoleIdAsync(int id,RoleDetail item)
         {
-            throw new NotImplementedException();
+            var roleDetailEntity = await _context.RoleDetails.Where(c => c.RoleId == id && c.PermissionId == item.PermissionId).FirstOrDefaultAsync();
+            if(roleDetailEntity == null)
+            {
+                var newRoleDetail = new RoleDetail()
+                {
+                    PermissionId = item.PermissionId,
+                    RoleId = item.RoleId,
+                    Status = item.Status,   
+                    ActionName = item.ActionName,
+                };
+                await _context.RoleDetails.AddAsync(newRoleDetail);
+                await _context.SaveChangesAsync();
+                return newRoleDetail;
+            }
+            else
+            {
+                roleDetailEntity.ActionName = item.ActionName;  
+                roleDetailEntity.Status = item.Status;
+
+                _context.RoleDetails.Update(roleDetailEntity);
+                await _context.SaveChangesAsync();  
+                return roleDetailEntity;
+            }
         }
     }
 }

@@ -11,8 +11,7 @@ namespace Identity.API.Repositories.Interfaces
         Task CreateRoleAsync(Role role);
         Task UpdateRoleAsync(Role role);
         Task DeleteRoleAsync(int id);
-        Task<IEnumerable<RoleDetail>> GetRoleDetailsByRoleId(int id);
-
-        Task<IEnumerable<RoleDetail>> UpdateRoleDetailsByRoleId(int id);
+        Task<RoleDetail> UpdateRoleDetailByRoleIdAsync(int id,RoleDetail roleDetail);
+        Task DeleteRoleDetailByRoleIdAsync(int roleId);
     }
 }
