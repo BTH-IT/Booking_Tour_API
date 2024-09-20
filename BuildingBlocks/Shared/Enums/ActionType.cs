@@ -8,9 +8,9 @@ namespace Shared.Enums
 {
     public enum ActionType
     {
-        Create,
-        Update,
-        Delete,
-        Read
+        Create = 1,
+        Update = 2,
+        Delete = 3,
+        Read = 4,
     }
 }

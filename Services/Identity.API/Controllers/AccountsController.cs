@@ -7,7 +7,7 @@ namespace Identity.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountsController : Controller
+    public class AccountsController : ControllerBase
     {
         private readonly IAccountSerivce _accountService;
         public AccountsController(IAccountSerivce accountService)

@@ -8,6 +8,7 @@ namespace Identity.API.Repositories.Interfaces
     {
         Task<IEnumerable<Permission>> GetPermissionsAsync();
         Task<Permission> GetPermissionByIdAsync(int id);
+        Task<Permission> GetPermissionByNameAsync(string name);
         Task CreatePermissionAsync(Permission permission);
         Task UpdatePermissionAsync(Permission permission);
         Task DeletePermissionAsync(int id);
