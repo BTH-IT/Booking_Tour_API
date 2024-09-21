@@ -8,7 +8,7 @@ using Shared.Helper;
 using ILogger = Serilog.ILogger;
 namespace Identity.API.Services
 {
-    public class AccountService : IAccountSerivce
+    public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
