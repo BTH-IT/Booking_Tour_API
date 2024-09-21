@@ -39,6 +39,7 @@ namespace Identity.API.Extensions
                     .AddScoped<IPermissionService, PermissionService>()
                     .AddScoped<IUserService, UserService>() 
                     .AddScoped<IRoleService, RoleService>()
+                    .AddScoped<IAuthService,AuthService>()
                     .AddScoped<IdentityDbContextSeeder>();
                 
         }
