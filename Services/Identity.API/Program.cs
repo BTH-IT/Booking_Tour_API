@@ -3,9 +3,14 @@ using Identity.API;
 using Identity.API.DTO.Validator;
 using Identity.API.Extensions;
 using Identity.API.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.FlowAnalysis;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Shared.DTOs;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +38,57 @@ try
     builder.Services.AddInfrastructureServices();
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
+
+    //Configure authentication
+    builder.Services.AddAuthentication(cfg =>
+    {
+        cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;    
+    }).AddJwtBearer(options => 
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,   
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                    builder.Configuration.GetSection("Jwt:SecretKey").Value    
+                )
+            )
+        }
+    );
+    //Add Swagger Gen
+    builder.Services.AddSwaggerGen(
+        options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingSystem - Identity API", Version = "v1" });
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new List<string>{}
+                }
+            });
+        }    
+    );
     // Configure the HTTP request pipeline.
     var app = builder.Build();
    

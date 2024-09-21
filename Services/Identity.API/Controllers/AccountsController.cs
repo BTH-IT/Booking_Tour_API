@@ -1,4 +1,5 @@
 ﻿using Identity.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Helper;
@@ -7,6 +8,7 @@ namespace Identity.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountSerivce _accountService;

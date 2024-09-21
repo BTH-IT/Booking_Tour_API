@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Identity.API.Services;
 using Identity.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Helper;
@@ -10,6 +11,7 @@ namespace Identity.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RolesController : ControllerBase
     {
         private readonly IRoleService _roleService;
