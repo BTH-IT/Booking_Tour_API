@@ -1,4 +1,5 @@
 ﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Room.API;
 using Room.API.Extensions;
 using Room.API.Persistence;
@@ -15,11 +16,7 @@ try
 {
     builder.AddAppConfigurations();
     // Add services to the container.
-    builder.Services.AddControllers().AddJsonOptions(options =>
-	{
-		options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-		options.JsonSerializerOptions.MaxDepth = 64; // Tùy chọn: Tăng độ sâu tối đa nếu cần
-	}); ;
+    builder.Services.AddControllers() ;
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
@@ -27,12 +24,10 @@ try
     builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
 	// Add Fluent Validator 
 	builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<HotelRequestDTOValidator>());
-	builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<RoomRequestDTOValidator>());
-	//builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<AccountRequestDTOValidator>());
-	//builder.Services.Configure<ApiBehaviorOptions>(options =>
-	//{
-	//    options.SuppressModelStateInvalidFilter = true;
-	//});
+	builder.Services.Configure<ApiBehaviorOptions>(options =>
+	{
+	    options.SuppressModelStateInvalidFilter = true;
+	});
 	// Add DbContext
 	builder.Services.ConfigureIdentityDbContext();
     // Add Infrastructure Services

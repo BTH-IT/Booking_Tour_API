@@ -10,140 +10,147 @@ using Room.API.Persistence;
 
 namespace Room.API.Migrations
 {
-	[DbContext(typeof(RoomDbContext))]
-	partial class RoomDbContextModelSnapshot : ModelSnapshot
-	{
-		protected override void BuildModel(ModelBuilder modelBuilder)
-		{
+    [DbContext(typeof(RoomDbContext))]
+    partial class RoomDbContextModelSnapshot : ModelSnapshot
+    {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
 #pragma warning disable 612, 618
-			modelBuilder
-				.HasAnnotation("ProductVersion", "8.0.8")
-				.HasAnnotation("Relational:MaxIdentifierLength", 64);
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-			MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-			modelBuilder.Entity("Room.API.Entities.Hotel", b =>
-			{
-				b.Property<int>("Id")
-					.ValueGeneratedOnAdd()
-					.HasColumnType("int");
+            modelBuilder.Entity("Room.API.Entities.Hotel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-				MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-				b.Property<string>("ContactInfo")
-					.IsRequired()
-					.HasColumnType("longtext");
+                    b.Property<string>("ContactInfo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-				b.Property<DateTime>("CreatedAt")
-					.HasColumnType("datetime(6)");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
 
-				b.Property<string>("Description")
-					.HasColumnType("longtext");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-				b.Property<string>("Location")
-					.IsRequired()
-					.HasColumnType("longtext");
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-				b.Property<string>("Name")
-					.IsRequired()
-					.HasColumnType("longtext");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-				b.Property<double?>("Rate")
-					.HasColumnType("double");
+                    b.Property<double>("Rate")
+                        .HasColumnType("double");
 
-				b.Property<DateTime?>("UpdatedAt")
-					.HasColumnType("datetime(6)");
+                    b.Property<string>("Reviews")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
-				b.Property<string>("Reviews")
-					.HasColumnType("json");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
 
-				b.HasKey("Id");
+                    b.HasKey("Id");
 
-				b.ToTable("Hotels");
-			});
+                    b.ToTable("Hotels");
+                });
 
-			modelBuilder.Entity("Room.API.Entities.RoomEntity", b =>
-			{
-				b.Property<int>("Id")
-					.ValueGeneratedOnAdd()
-					.HasColumnType("int");
+            modelBuilder.Entity("Room.API.Entities.RoomEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-				MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-				b.Property<int>("BedType")
-					.HasColumnType("int");
+                    b.Property<int>("BedType")
+                        .HasColumnType("int");
 
-				b.Property<DateTime>("CreatedAt")
-					.HasColumnType("datetime(6)");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
 
-				b.Property<string>("Detail")
-					.HasColumnType("longtext");
+                    b.Property<string>("Detail")
+                        .HasColumnType("longtext");
 
-				b.Property<int>("HotelId")
-					.HasColumnType("int");
+                    b.Property<string>("HotelAmenities")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
-				b.Property<bool>("IsAvailable")
-					.HasColumnType("tinyint(1)");
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
 
-				b.Property<string>("Name")
-					.IsRequired()
-					.HasColumnType("longtext");
+                    b.Property<string>("HotelRules")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
-				b.Property<double>("Price")
-					.HasColumnType("double");
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("tinyint(1)");
 
-				b.Property<double?>("Rate")
-					.HasColumnType("double");
+                    b.Property<int>("MaxGuests")
+                        .HasColumnType("int");
 
-				b.Property<int>("Type")
-					.HasColumnType("int");
-				b.Property<int>("MaxGuests")
-					.HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-				b.Property<int>("Size")
-					.HasColumnType("int");
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
 
-				b.Property<string>("Reviews")
-					.HasColumnType("json");
+                    b.Property<double?>("Rate")
+                        .HasColumnType("double");
 
-				b.Property<string>("RoomAmenities")
-					.HasColumnType("json");
+                    b.Property<string>("Reviews")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
-				b.Property<string>("HotelRules")
-					.HasColumnType("json");
+                    b.Property<string>("RoomAmenities")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
-				b.Property<string>("HotelAmenities")
-					.HasColumnType("json");
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
 
-				b.Property<DateTime?>("UpdatedAt")
-					.HasColumnType("datetime(6)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
-				b.Property<string>("Video")
-					.HasColumnType("longtext");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
 
-				b.HasKey("Id");
+                    b.Property<string>("Video")
+                        .HasColumnType("longtext");
 
-				b.HasIndex("HotelId");
+                    b.HasKey("Id");
 
-				b.ToTable("Rooms");
-			});
+                    b.HasIndex("HotelId");
 
-			modelBuilder.Entity("Room.API.Entities.RoomEntity", b =>
-			{
-				b.HasOne("Room.API.Entities.Hotel", "Hotel")
-					.WithMany("Rooms")
-					.HasForeignKey("HotelId")
-					.OnDelete(DeleteBehavior.Cascade)
-					.IsRequired();
+                    b.ToTable("Rooms");
+                });
 
-				b.Navigation("Hotel");
-			});
+            modelBuilder.Entity("Room.API.Entities.RoomEntity", b =>
+                {
+                    b.HasOne("Room.API.Entities.Hotel", "Hotel")
+                        .WithMany("Rooms")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-			modelBuilder.Entity("Room.API.Entities.Hotel", b =>
-			{
-				b.Navigation("Rooms");
-			});
+                    b.Navigation("Hotel");
+                });
+
+            modelBuilder.Entity("Room.API.Entities.Hotel", b =>
+                {
+                    b.Navigation("Rooms");
+                });
 #pragma warning restore 612, 618
-		}
-	}
+        }
+    }
 }
