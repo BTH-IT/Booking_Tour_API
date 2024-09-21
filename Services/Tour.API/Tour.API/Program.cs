@@ -8,6 +8,7 @@ using Tour.API.Entities;
 using Tour.API.Validators;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -38,6 +39,9 @@ try
     // Add DbContext
     builder.Services.ConfigureIdentityDbContext();
 
+    //Add Cors
+    builder.Services.ConfigureCors(builder.Configuration);
+
     // Add Infrastructure Services
     builder.Services.AddInfrastructureServices();
 
@@ -52,7 +56,7 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-
+    app.UseCors("CorsPolicy");
     // app.UseHttpsRedirection(); // Uncomment if you want to enable HTTPS redirection
 
     app.UseAuthorization();

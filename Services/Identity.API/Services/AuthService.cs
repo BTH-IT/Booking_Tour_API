@@ -42,7 +42,7 @@ namespace Identity.API.Services
             {
                 return new ApiResponse<AuthResponseDTO>(400, null, "Thông tin đăng nhập không đúng");
             }
-
+            var user = await _userRepository.FindByCondition(c => c.AccountId.Equals(account.Id),false).FirstOrDefaultAsync();
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]!);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -68,7 +68,9 @@ namespace Identity.API.Services
             return new ApiResponse<AuthResponseDTO>(200, new AuthResponseDTO()
             {
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                Account = _mapper.Map<AccountResponseDTO>(account),
+                User = _mapper.Map<UserResponseDTO>(user),
             },"Đăng nhập thành công");
         }
 

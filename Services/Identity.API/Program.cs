@@ -5,6 +5,7 @@ using Identity.API.Extensions;
 using Identity.API.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -38,7 +39,8 @@ try
     builder.Services.AddInfrastructureServices();
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
-
+    // Add CORS
+    builder.Services.ConfigureCors(builder.Configuration);
     //Configure authentication
     builder.Services.AddAuthentication(cfg =>
     {
@@ -91,13 +93,13 @@ try
     );
     // Configure the HTTP request pipeline.
     var app = builder.Build();
-   
+    
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-
+    app.UseCors("CorsPolicy");
     //app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
