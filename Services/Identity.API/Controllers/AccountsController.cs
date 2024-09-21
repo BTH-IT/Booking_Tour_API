@@ -11,8 +11,8 @@ namespace Identity.API.Controllers
     [Authorize]
     public class AccountsController : ControllerBase
     {
-        private readonly IAccountSerivce _accountService;
-        public AccountsController(IAccountSerivce accountService)
+        private readonly IAccountService _accountService;
+        public AccountsController(IAccountService accountService)
         {
             _accountService = accountService;
         }
