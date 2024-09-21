@@ -6,6 +6,13 @@ using Tour.API.Persistence;
 using Shared.Configurations;
 using Infrastructure.Extensions;
 using Room.API.Persistence;
+using Tour.API.Repositories.Interfaces;
+using Tour.API.Repositories;
+using Tour.API.Services.Interfaces;
+using Tour.API.Services;
+using FluentValidation;
+using Shared.DTOs;
+using Tour.API.Validators;
 namespace Tour.API.Extensions
 {
     public static class ServiceExtensions
@@ -23,10 +30,21 @@ namespace Tour.API.Extensions
             return services;
         }
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
-        {
-            services.AddScoped<TourDbContextSeeder>();
-
-            return services;
+        { 
+            return services
+                .AddScoped<IValidator<DestinationRequestDTO>, DestinationValidator>()
+                .AddScoped<IValidator<ScheduleRequestDTO>, ScheduleValidator>()
+                .AddScoped<IValidator<TourRequestDTO>, TourValidator>()
+                .AddScoped(typeof(IRepositoryBase<,,>), typeof(RepositoryBase<,,>))
+                .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
+                .AddScoped<IScheduleRepository, ScheduleRepository>()
+                .AddScoped<IScheduleService, ScheduleService>()
+                .AddScoped<ITourRepository, TourRepository>()
+                .AddScoped<ITourService, TourService>()
+                .AddScoped<IDestinationRepository, DestinationRepository>()
+                .AddScoped<IDestinationService, DestinationService>()
+                .AddScoped<TourDbContextSeeder>(); 
         }
+
     }
 }
