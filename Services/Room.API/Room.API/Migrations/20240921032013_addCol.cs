@@ -11,7 +11,7 @@ namespace Room.API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Desription",
+                name: "Description",
                 table: "Hotels");
 
             migrationBuilder.DropColumn(

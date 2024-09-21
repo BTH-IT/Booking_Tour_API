@@ -36,5 +36,16 @@ namespace Room.API.Extensions
 					.AddScoped<IRoomService, RoomService>()
 					.AddScoped<RoomDbContextSeeder>();
 		}
+        public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddCors(option =>
+                option.AddPolicy("CorsPolicy", cfg =>
+                    cfg.WithOrigins("*")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                )
+            );
+            return services;
+        }
     }
 }
