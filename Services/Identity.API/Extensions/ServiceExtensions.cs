@@ -43,5 +43,16 @@ namespace Identity.API.Extensions
                     .AddScoped<IdentityDbContextSeeder>();
                 
         }
+        public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddCors(option =>
+                option.AddPolicy("CorsPolicy", cfg =>
+                    cfg.WithOrigins("*")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                )
+            );
+            return services;
+        }
     }
 }
