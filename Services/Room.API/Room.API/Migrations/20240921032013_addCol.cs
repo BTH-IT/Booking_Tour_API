@@ -10,14 +10,6 @@ namespace Room.API.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Description",
-                table: "Hotels");
-
-            migrationBuilder.DropColumn(
-                name: "StarRating",
-                table: "Hotels");
-
             migrationBuilder.AddColumn<string>(
                 name: "HotelAmenities",
                 table: "Rooms",
@@ -85,42 +77,6 @@ namespace Room.API.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "HotelAmenities",
-                table: "Rooms");
-
-            migrationBuilder.DropColumn(
-                name: "HotelRules",
-                table: "Rooms");
-
-            migrationBuilder.DropColumn(
-                name: "MaxGuests",
-                table: "Rooms");
-
-            migrationBuilder.DropColumn(
-                name: "Reviews",
-                table: "Rooms");
-
-            migrationBuilder.DropColumn(
-                name: "RoomAmenities",
-                table: "Rooms");
-
-            migrationBuilder.DropColumn(
-                name: "Size",
-                table: "Rooms");
-
-            migrationBuilder.DropColumn(
-                name: "Description",
-                table: "Hotels");
-
-            migrationBuilder.DropColumn(
-                name: "Rate",
-                table: "Hotels");
-
-            migrationBuilder.DropColumn(
-                name: "Reviews",
-                table: "Hotels");
-
             migrationBuilder.AddColumn<string>(
                 name: "Desription",
                 table: "Hotels",
