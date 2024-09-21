@@ -18,13 +18,26 @@
         public string[] PriceIncludeList { get; set; }
         public string[] ActivityList { get; set; }
         public string[] ImageList { get; set; }
-        /* Lỗi fix sau */
-        //public List<Day> DayList { get; set; }
+        public List<DateTime> DayList { get; set; }
         public int DestinationId { get; set; }
-        /* Lỗi fix sau */
-        //public List<Review> ReviewList { get; set; }
-    }
+        public List<Review> ReviewList { get; set; }
 
+    }
+    public class Review
+    {
+        public int Id { get; set; }
+
+        public string Content { get; set; }
+
+        public float Rating { get; set; }
+
+        public DateTime? CreatedAt { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
+
+        public int TourId { get; set; }
+        public int UserId { get; set; }
+    }
     public class TourResponseDTO
     {
         public int Id { get; set; }
@@ -43,11 +56,8 @@
         public string[] PriceIncludeList { get; set; }
         public string[] ActivityList { get; set; }
         public string[] ImageList { get; set; }
-        /* Lỗi fix sau */
-        //public List<Day> DayList { get; set; }
-        /* Lỗi fix sau */
-        //public Destination Destination { get; set; }
-        /* Lỗi fix sau */
-        //public List<Review> ReviewList { get; set; }
+        public List<DateTime> DayList { get; set; }
+        public DestinationRequestDTO Destination { get; set; }
+        public List<Review> ReviewList { get; set; }
     }
 }

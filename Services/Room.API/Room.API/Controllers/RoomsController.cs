@@ -11,12 +11,10 @@ namespace Room.API.Controllers
 	public class RoomsController : ControllerBase
 	{
 		private readonly IRoomService _roomService;
-		private readonly IValidator<RoomRequestDTO> _roomValidator;
 
-		public RoomsController(IRoomService roomService, IValidator<RoomRequestDTO> roomValidator)
+		public RoomsController(IRoomService roomService)
 		{
 			_roomService = roomService;
-			_roomValidator = roomValidator;
 		}
 
 		[HttpGet]
@@ -38,12 +36,6 @@ namespace Room.API.Controllers
 		[ApiValidationFilter]
 		public async Task<IActionResult> CreateRoomAsync([FromBody] RoomRequestDTO requestDTO)
 		{
-			var validationResult = await _roomValidator.ValidateAsync(requestDTO);
-			if (!validationResult.IsValid)
-			{
-				return BadRequest(validationResult.Errors);
-			}
-
 			var response = await _roomService.CreateAsync(requestDTO);
 			return StatusCode(response.StatusCode, response);
 		}
@@ -52,12 +44,6 @@ namespace Room.API.Controllers
 		[ApiValidationFilter]
 		public async Task<IActionResult> UpdateRoomAsync([FromBody] RoomRequestDTO requestDTO)
 		{
-			var validationResult = await _roomValidator.ValidateAsync(requestDTO);
-			if (!validationResult.IsValid)
-			{
-				return BadRequest(validationResult.Errors);
-			}
-
 			var response = await _roomService.UpdateAsync(requestDTO);
 			return StatusCode(response.StatusCode, response);
 		}

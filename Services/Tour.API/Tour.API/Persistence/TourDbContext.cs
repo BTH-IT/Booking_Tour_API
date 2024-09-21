@@ -6,7 +6,7 @@ namespace Tour.API.Persistence
     public class TourDbContext : DbContext
     {
         public DbSet<Schedule> Schedules { get; set; }
-        public DbSet<Destination> Destinations { get; set; }
+        public DbSet<DestinationEntity> Destinations { get; set; }
         public DbSet<TourEntity> Tours { get; set; }
         public TourDbContext(DbContextOptions<TourDbContext> options) : base(options)
         {
