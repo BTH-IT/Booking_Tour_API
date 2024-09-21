@@ -1,5 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Room.API;
 using Room.API.Extensions;
 using Room.API.Persistence;
@@ -32,6 +33,8 @@ try
 	builder.Services.ConfigureIdentityDbContext();
     // Add Infrastructure Services
     builder.Services.AddInfrastructureServices();
+    // Add Cors
+    builder.Services.ConfigureCors(builder.Configuration);
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
     // Configure the HTTP request pipeline.
@@ -45,7 +48,7 @@ try
     }
 
     //app.UseHttpsRedirection();
-
+    app.UseCors("CorsPolicy");
     app.UseAuthorization();
 
     app.MapControllers();
