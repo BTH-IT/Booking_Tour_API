@@ -1,7 +1,28 @@
 services:
-  rabbitmq:
-    container_name: rabbitmq
-    restart: always
+  identity.api:
+    container_name: identity.api
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - DatabaseSettings:ConnectionString=server=host.docker.internal;port=3306;database=new_booking_identity;user=${DB_USER};password=${DB_PASSWORD}
     ports:
-        - "5672:5672"
-        - "15672:15672"
+        - "5001:80"
+    restart: always
+  room.api:
+    container_name: room.api
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - DatabaseSettings:ConnectionString=server=host.docker.internal;port=3306;database=new_booking_identity;user=${DB_USER};password=${DB_PASSWORD}
+    ports:
+        - "5003:80"
+    restart: always
+  tour.api:
+    container_name: tour.api
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - DatabaseSettings:ConnectionString=server=host.docker.internal;port=3306;database=new_booking_identity;user=${DB_USER};password=${DB_PASSWORD}
+    ports:
+        - "5004:80"
+    restart: always

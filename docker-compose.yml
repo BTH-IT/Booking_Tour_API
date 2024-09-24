@@ -1,6 +1,22 @@
 services:
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  identity.api:
+    image: ${DOCKER_REGISTRY-}identity-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+        context: .
+        dockerfile: Services/Identity.API/Dockerfile
+  room.api:
+    image: ${DOCKER_REGISTRY-}room-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+        context: .
+        dockerfile: Services/Room.API/Dockerfile
+  tour.api:
+    image: ${DOCKER_REGISTRY-}tour-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+        context: .
+        dockerfile: Services/Tour.API/Dockerfile
+       
 networks:
   default:
     name: booking_api
