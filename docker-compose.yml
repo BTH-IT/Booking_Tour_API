@@ -1,7 +1,71 @@
 services:
+  mysql:
+    container_name: mysql-container
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - apis-network
+    restart: always
+    # Healthcheck for mysql container
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 0s
+
+  identity.api:
+    image: identity-api
+    build:
+      context: .
+      dockerfile: Services/Identity.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  room.api:
+    image: room-api
+    build:
+      context: .
+      dockerfile: Services/Room.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  tour.api:
+    image: tour-api
+    build:
+      context: .
+      dockerfile: Services/Tour.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq-container
+    image: rabbitmq:latest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - apis-network
+    restart: always
+
 networks:
-  default:
-    name: booking_api
+  apis-network:
     driver: bridge
+
+volumes:
+  mysql_data:
+    name: mysql_data
