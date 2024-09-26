@@ -24,21 +24,24 @@ namespace Room.API.Services
 			_logger = logger;
 		}
 
-		public async Task<ApiResponse<int>> CreateAsync(HotelRequestDTO item)
+		public async Task<ApiResponse<HotelResponseDTO>> CreateAsync(HotelRequestDTO item)
 		{
 			_logger.Information("Begin: HotelService - CreateAsync");
 
 			var existingHotel = await _hotelRepository.GetHotelByNameAsync(item.Name);
 			if (existingHotel != null)
 			{
-				return new ApiResponse<int>(400, -1, "Hotel already exists");
+				return new ApiResponse<HotelResponseDTO>(400, null, "Hotel already exists");
 			}
 
 			var hotelEntity = _mapper.Map<Hotel>(item);
 			var newId = await _hotelRepository.CreateAsync(hotelEntity);
 
+			var createdHotel = await _hotelRepository.GetHotelByIdAsync(newId);
+			var responseData = _mapper.Map<HotelResponseDTO>(createdHotel);
+
 			_logger.Information("End: HotelService - CreateAsync");
-			return new ApiResponse<int>(200, newId, "Hotel created successfully");
+			return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel created successfully");
 		}
 
 		public async Task<ApiResponse<int>> DeleteAsync(int id)
@@ -155,8 +158,11 @@ namespace Room.API.Services
 
 			if (result > 0)
 			{
+				var updatedHotel = await _hotelRepository.GetHotelByIdAsync(item.Id);
+				var responseData = _mapper.Map<HotelResponseDTO>(updatedHotel);
+
 				_logger.Information("End: HotelService - UpdateAsync");
-				return new ApiResponse<HotelResponseDTO>(200, _mapper.Map<HotelResponseDTO>(hotel), "Hotel updated successfully");
+				return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel updated successfully");
 			}
 
 			_logger.Information("End: HotelService - UpdateAsync");
