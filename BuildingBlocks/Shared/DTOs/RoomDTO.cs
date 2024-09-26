@@ -14,14 +14,14 @@ namespace Shared.DTOs
 		public bool IsAvailable { get; set; }
 		public int MaxGuests { get; set; }
 		public int Size { get; set; }
-		public List<ReviewDTO>? Reviews { get; set; }
+		public List<ReviewRoom>? Reviews { get; set; }
 		public List<RoomAmenitiesDTO>? RoomAmenities { get; set; }
-		public List<HotelRulesDTO>? HotelRules { get; set; }
 		public List<HotelAmenitiesDTO>? HotelAmenities { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
 		public int HotelId { get; set; }
-		public HotelResponseDTO? Hotel { get; set; }
+		public HotelRulesResponseDTO? Hotel { get; set; }
+		public DateTime? DeletedAt { get; set; }
 	}
 
 	public class RoomRequestDTO
@@ -37,12 +37,12 @@ namespace Shared.DTOs
 		public bool IsAvailable { get; set; }
 		public int MaxGuests { get; set; }
 		public int Size { get; set; }
-		public List<ReviewDTO>? Reviews { get; set; }
+		public List<ReviewRoom>? Reviews { get; set; }
 		public List<RoomAmenitiesDTO>? RoomAmenities { get; set; }
-		public List<HotelRulesDTO>? HotelRules { get; set; }
 		public List<HotelAmenitiesDTO>? HotelAmenities { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
 		public int HotelId { get; set; }
+		public DateTime? DeletedAt { get; set; }
 	}
 }

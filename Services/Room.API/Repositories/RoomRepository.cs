@@ -19,17 +19,19 @@ namespace Room.API.Repositories
 			var room = await GetRoomByIdAsync(id);
 			if (room != null)
 			{
-				await DeleteAsync(room);
+				room.DeletedAt = DateTime.UtcNow; 
+				await UpdateAsync(room);
 			}
 		}
 
 		public Task<RoomEntity> GetRoomByIdAsync(int id) =>
-			FindByCondition(r => r.Id.Equals(id), false, r => r.Hotel).SingleOrDefaultAsync();
+			 FindByCondition(r => r.Id == id && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
 
 		public Task<RoomEntity> GetRoomByNameAsync(string name) =>
-			FindByCondition(r => r.Name.Equals(name), false, r => r.Hotel).SingleOrDefaultAsync();
+			 FindByCondition(r => r.Name == name && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
 
-		public async Task<IEnumerable<RoomEntity>> GetRoomsAsync() => await FindAll().ToListAsync();
+		public async Task<IEnumerable<RoomEntity>> GetRoomsAsync() =>
+			await FindAll().Where(r => r.DeletedAt == null).ToListAsync();
 
 		public Task UpdateRoomAsync(RoomEntity room) => UpdateAsync(room);
 	}

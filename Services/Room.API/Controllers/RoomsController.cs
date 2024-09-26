@@ -31,7 +31,6 @@ namespace Room.API.Controllers
 			return StatusCode(response.StatusCode, response);
 		}
 
-		// Tạo một phòng mới
 		[HttpPost]
 		[ApiValidationFilter]
 		public async Task<IActionResult> CreateRoomAsync([FromBody] RoomRequestDTO requestDTO)

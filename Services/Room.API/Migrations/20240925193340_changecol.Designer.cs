@@ -12,8 +12,8 @@ using Room.API.Persistence;
 namespace Room.API.Migrations
 {
     [DbContext(typeof(RoomDbContext))]
-    [Migration("20240921032013_addCol")]
-    partial class addCol
+    [Migration("20240925193340_changecol")]
+    partial class changecol
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,9 +40,16 @@ namespace Room.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<string>("HotelRules")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -81,6 +88,9 @@ namespace Room.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Detail")
                         .HasColumnType("longtext");
 
@@ -90,10 +100,6 @@ namespace Room.API.Migrations
 
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
-
-                    b.Property<string>("HotelRules")
-                        .IsRequired()
-                        .HasColumnType("JSON");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("tinyint(1)");
