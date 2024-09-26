@@ -53,5 +53,12 @@ namespace Room.API.Controllers
 			var response = await _roomService.DeleteAsync(id);
 			return StatusCode(response.StatusCode, response);
 		}
+
+		[HttpPost("search")]
+		public async Task<IActionResult> SearchRooms([FromBody] RoomSearchRequestDTO request)
+		{
+			var rooms = await _roomService.SearchRoomsAsync(request);
+			return Ok(rooms);
+		}
 	}
 }
