@@ -57,8 +57,9 @@ try
     {
         var seeder = scope.ServiceProvider.GetRequiredService<RoomDbContextSeeder>();
         await seeder.InitialiseAsync();
+		await seeder.RoomDbSeedAsync();
     }
-    app.Run();
+	app.Run();
 
 }
 catch (Exception ex)
