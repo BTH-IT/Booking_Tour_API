@@ -1,5 +1,6 @@
 ﻿using Shared.DTOs;
 using Shared.Helper;
+using System.Threading.Tasks;
 
 namespace Room.API.Services.Interfaces
 {
@@ -8,7 +9,7 @@ namespace Room.API.Services.Interfaces
 		Task<ApiResponse<List<HotelResponseDTO>>> GetAllAsync();
 		Task<ApiResponse<HotelResponseDTO>> GetByIdAsync(int id);
 		Task<ApiResponse<HotelResponseDTO>> GetByNameAsync(string name);
-		Task<ApiResponse<int>> CreateAsync(HotelRequestDTO item);
+		Task<ApiResponse<HotelResponseDTO>> CreateAsync(HotelRequestDTO item);
 		Task<ApiResponse<HotelResponseDTO>> UpdateAsync(HotelRequestDTO item);
 		Task<ApiResponse<int>> DeleteAsync(int id);
 	}
