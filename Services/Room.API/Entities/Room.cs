@@ -20,13 +20,12 @@ namespace Room.API.Entities
 		public int MaxGuests { get; set; }
 		public int Size { get; set; }
 		[NotMapped]
-		public Review[] ReviewList { get; set; }
+		public List<ReviewRoom> ReviewList { get; set; }
 		[NotMapped]
-		public RoomAmenities[] RoomAmenitiesList { get; set; }
+		public List<RoomAmenities> RoomAmenitiesList { get; set; }
+
 		[NotMapped]
-		public HotelRules[] HotelRulesList { get; set; }
-		[NotMapped]
-		public HotelAmenities[] HotelAmenitiesList { get; set; }
+		public List<HotelAmenities> HotelAmenitiesList { get; set; }
 		public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
         public int HotelId {  get; set; }   
@@ -35,25 +34,22 @@ namespace Room.API.Entities
 		public string Reviews
 		{
 			get => JsonConvert.SerializeObject(ReviewList);
-			set => ReviewList = JsonConvert.DeserializeObject<Review[]>(value) ?? Array.Empty<Review>();
+			set => ReviewList = JsonConvert.DeserializeObject<List<ReviewRoom>>(value) ?? new List<ReviewRoom>();
+
 		}
 		[Column(TypeName = "JSON")]
 		public string RoomAmenities
 		{
 			get => JsonConvert.SerializeObject(RoomAmenitiesList);
-			set => RoomAmenitiesList = JsonConvert.DeserializeObject<RoomAmenities[]>(value) ?? Array.Empty<RoomAmenities>();
-		}
-		[Column(TypeName = "JSON")]
-		public string HotelRules
-		{
-			get => JsonConvert.SerializeObject(HotelRulesList);
-			set => HotelRulesList = JsonConvert.DeserializeObject<HotelRules[]>(value) ?? Array.Empty<HotelRules>();
+			set => RoomAmenitiesList = JsonConvert.DeserializeObject<List<RoomAmenities>>(value) ?? new List<RoomAmenities>();
+
 		}
 		[Column(TypeName = "JSON")]
 		public string HotelAmenities
 		{
 			get => JsonConvert.SerializeObject(HotelAmenitiesList);
-			set => HotelAmenitiesList = JsonConvert.DeserializeObject<HotelAmenities[]>(value) ?? Array.Empty<HotelAmenities>();
+			set => HotelAmenitiesList = JsonConvert.DeserializeObject<List<HotelAmenities>>(value) ?? new List<HotelAmenities>();
 		}
+		public DateTime? DeletedAt { get; set; }
 	}
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Room.API.Persistence;
 
@@ -11,9 +12,11 @@ using Room.API.Persistence;
 namespace Room.API.Migrations
 {
     [DbContext(typeof(RoomDbContext))]
-    partial class RoomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240925173216_Addcol")]
+    partial class Addcol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,10 +46,6 @@ namespace Room.API.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<string>("HotelRules")
-                        .IsRequired()
-                        .HasColumnType("JSON");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -97,6 +96,10 @@ namespace Room.API.Migrations
 
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
+
+                    b.Property<string>("HotelRules")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("tinyint(1)");
