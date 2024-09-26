@@ -1,6 +1,7 @@
 ﻿using Contracts.Domains.Interfaces;
 using Room.API.Entities;
 using Room.API.Persistence;
+using Shared.DTOs;
 
 namespace Room.API.Repositories.Interfaces
 {
@@ -12,5 +13,7 @@ namespace Room.API.Repositories.Interfaces
 		Task CreateRoomAsync(RoomEntity room);
 		Task UpdateRoomAsync(RoomEntity room);
 		Task DeleteRoomAsync(int id);
+		Task<IEnumerable<RoomEntity>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest);
+
 	}
 }

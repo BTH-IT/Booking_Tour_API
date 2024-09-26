@@ -22,21 +22,24 @@ namespace Room.API.Services
 			_logger = logger;
 		}
 
-		public async Task<ApiResponse<int>> CreateAsync(RoomRequestDTO item)
+		public async Task<ApiResponse<RoomResponseDTO>> CreateAsync(RoomRequestDTO item)
 		{
 			_logger.Information("Begin: RoomService - CreateAsync");
 
 			var existingRoom = await _roomRepository.GetRoomByNameAsync(item.Name);
 			if (existingRoom != null)
 			{
-				return new ApiResponse<int>(400, -1, "Room already exists");
+				return new ApiResponse<RoomResponseDTO>(400, null, "Room already exists");
 			}
 
 			var roomEntity = _mapper.Map<RoomEntity>(item);
 			var newId = await _roomRepository.CreateAsync(roomEntity);
 
+			var createdRoom = await _roomRepository.GetRoomByIdAsync(newId);
+			var responseData = _mapper.Map<RoomResponseDTO>(createdRoom);
+
 			_logger.Information("End: RoomService - CreateAsync");
-			return new ApiResponse<int>(200, newId, "Room created successfully");
+			return new ApiResponse<RoomResponseDTO>(200, responseData, "Room created successfully");
 		}
 
 		public async Task<ApiResponse<int>> DeleteAsync(int id)
@@ -92,7 +95,6 @@ namespace Room.API.Services
 			return new ApiResponse<RoomResponseDTO>(200, data, "Room data retrieved successfully");
 		}
 
-
 		public async Task<ApiResponse<RoomResponseDTO>> GetByNameAsync(string name)
 		{
 			_logger.Information("Begin: RoomService - GetByNameAsync");
@@ -108,7 +110,6 @@ namespace Room.API.Services
 			_logger.Information("End: RoomService - GetByNameAsync");
 			return new ApiResponse<RoomResponseDTO>(200, data, "Room data retrieved successfully");
 		}
-
 
 		public async Task<ApiResponse<RoomResponseDTO>> UpdateAsync(RoomRequestDTO item)
 		{
@@ -132,8 +133,11 @@ namespace Room.API.Services
 
 				if (result > 0)
 				{
+					var updatedRoom = await _roomRepository.GetRoomByIdAsync(item.Id);
+					var responseData = _mapper.Map<RoomResponseDTO>(updatedRoom);
+
 					_logger.Information("End: RoomService - UpdateAsync");
-					return new ApiResponse<RoomResponseDTO>(200, _mapper.Map<RoomResponseDTO>(room), "Room updated successfully");
+					return new ApiResponse<RoomResponseDTO>(200, responseData, "Room updated successfully");
 				}
 
 				_logger.Information("End: RoomService - UpdateAsync");
@@ -144,7 +148,17 @@ namespace Room.API.Services
 				_logger.Error($"Unexpected error occurred while updating room: {ex.Message}");
 				return new ApiResponse<RoomResponseDTO>(500, null, "An unexpected error occurred while updating room.");
 			}
+		}
 
+		public async Task<ApiResponse<List<RoomResponseDTO>>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
+		{
+			_logger.Information("Begin: RoomService - SearchRoomsAsync");
+
+			var rooms = await _roomRepository.SearchRoomsAsync(searchRequest);
+			var data = _mapper.Map<List<RoomResponseDTO>>(rooms);
+
+			_logger.Information("End: RoomService - SearchRoomsAsync");
+			return new ApiResponse<List<RoomResponseDTO>>(200, data, "Rooms retrieved successfully");
 		}
 	}
 }
