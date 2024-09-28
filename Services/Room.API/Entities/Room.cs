@@ -28,8 +28,9 @@ namespace Room.API.Entities
 		public List<HotelAmenities> HotelAmenitiesList { get; set; }
 		public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
-        public int HotelId {  get; set; }   
-        public Hotel? Hotel { get; set; }
+        public int HotelId {  get; set; }
+		public DateTime? DeletedAt { get; set; }
+		public Hotel? Hotel { get; set; }
 		[Column(TypeName = "JSON")]
 		public string Reviews
 		{
@@ -50,6 +51,5 @@ namespace Room.API.Entities
 			get => JsonConvert.SerializeObject(HotelAmenitiesList);
 			set => HotelAmenitiesList = JsonConvert.DeserializeObject<List<HotelAmenities>>(value) ?? new List<HotelAmenities>();
 		}
-		public DateTime? DeletedAt { get; set; }
 	}
 }
