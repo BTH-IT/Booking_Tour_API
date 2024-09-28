@@ -11,6 +11,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ILogger = Serilog.ILogger;
 using System.Security.Claims;
+using Shared.Enums;
 
 namespace Identity.API.Services
 {
@@ -128,31 +129,52 @@ namespace Identity.API.Services
 				return new ApiResponse<string>(401, ex.Message, "Token refresh failed");
 			}
 		}
-
 		public async Task<ApiResponse<UserResponseDTO>> RegisterAsync(AuthRegisterDTO registerDTO)
 		{
-			var checkEmailAccount = await _accountRepository.GetAccountByEmailAsync(registerDTO.Email);
+			var emailCheckResponse = await CheckEmailExists(registerDTO.Email);
+			if (emailCheckResponse != null) return emailCheckResponse;
 
+			var userRole = await GetUserRoleAsync();
+			if (userRole == null) return new ApiResponse<UserResponseDTO>(400, null, "User role not found");
+
+			var newAccountId = await CreateAccountAsync(registerDTO, userRole.Id);
+			if (newAccountId <= 0) return new ApiResponse<UserResponseDTO>(400, null, "Registration failed");
+
+			var newUserId = await CreateUserAsync(registerDTO, newAccountId);
+			if (newUserId <= 0) return new ApiResponse<UserResponseDTO>(400, null, "Registration failed");
+
+			var userDTO = await MapUserToDTOAsync(newUserId, newAccountId, registerDTO, userRole.Id);
+			return new ApiResponse<UserResponseDTO>(200, userDTO, "Registration successful");
+		}
+
+		private async Task<ApiResponse<UserResponseDTO>> CheckEmailExists(string email)
+		{
+			var checkEmailAccount = await _accountRepository.GetAccountByEmailAsync(email);
 			if (checkEmailAccount != null)
 			{
 				return new ApiResponse<UserResponseDTO>(400, null, "Email already exists");
 			}
+			return null;
+		}
 
-			var userRole = await _roleRepository.FindByCondition(c => c.RoleName.Equals(Constants.Role.User)).FirstOrDefaultAsync();
+		private async Task<Role> GetUserRoleAsync()
+		{
+			return await _roleRepository.FindByCondition(c => c.RoleName.Equals(Constants.Role.User)).FirstOrDefaultAsync();
+		}
 
+		private async Task<int> CreateAccountAsync(AuthRegisterDTO registerDTO, int roleId)
+		{
 			var account = new Account()
 			{
 				Email = registerDTO.Email,
 				Password = registerDTO.Password,
-				RoleId = userRole.Id
+				RoleId = roleId
 			};
+			return await _accountRepository.CreateAsync(account);
+		}
 
-			var newAccountId = await _accountRepository.CreateAsync(account);
-			if (newAccountId <= 0)
-			{
-				return new ApiResponse<UserResponseDTO>(400, null, "Registration failed");
-			}
-
+		private async Task<int> CreateUserAsync(AuthRegisterDTO registerDTO, int accountId)
+		{
 			var user = new User()
 			{
 				Fullname = registerDTO.Fullname,
@@ -160,19 +182,40 @@ namespace Identity.API.Services
 				Country = registerDTO.Country,
 				Phone = registerDTO.Phone,
 				Gender = registerDTO.Gender,
-				AccountId = newAccountId,
+				AccountId = accountId,
 				CreatedAt = DateTime.Now,
 			};
+			return await _userRepository.CreateAsync(user);
+		}
 
-			var newUserId = await _userRepository.CreateAsync(user);
-			if (newUserId <= 0)
-			{
-				return new ApiResponse<UserResponseDTO>(400, null, "Registration failed");
-			}
-
+		private async Task<UserResponseDTO> MapUserToDTOAsync(int userId, int accountId, AuthRegisterDTO registerDTO, int roleId)
+		{
+			var user = await _userRepository.GetByIdAsync(userId); 
 			var userDTO = _mapper.Map<UserResponseDTO>(user);
 
-			return new ApiResponse<UserResponseDTO>(200, userDTO, "Registration successful");
+			var role = await _roleRepository.GetRoleByIdAsync(roleId);
+			var roleDetails = await _roleRepository.GetRoleDetailsByRoleIdAsync(role.Id); 
+
+			userDTO.Account = new AccountResponseDTO
+			{
+				Id = accountId,
+				Email = registerDTO.Email,
+				Role = new RoleResponseDTO
+				{
+					Id = role.Id,
+					RoleName = role.RoleName,
+					Status = role.Status,
+					RoleDetails = roleDetails.Select(rd => new RoleDetailDTO
+					{
+						RoleId = rd.RoleId,
+						PermissionId = rd.PermissionId,
+						ActionName = (ActionType)rd.ActionName, 
+						Status = rd.Status
+					}).ToList()
+				}
+			};
+
+			return userDTO;
 		}
 	}
 }
