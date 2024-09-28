@@ -35,7 +35,6 @@ namespace Room.API.Repositories
 		public async Task<IEnumerable<Hotel>> GetHotelsAsync() =>
 			await FindByCondition(h => h.DeletedAt == null).ToListAsync();
 
-
 		public Task UpdateHotelAsync(Hotel hotel) => UpdateAsync(hotel);
 	}
 }
