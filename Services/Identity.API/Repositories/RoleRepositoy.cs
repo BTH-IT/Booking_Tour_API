@@ -69,5 +69,11 @@ namespace Identity.API.Repositories
                 return roleDetailEntity;
             }
         }
-    }
+		public async Task<List<RoleDetail>> GetRoleDetailsByRoleIdAsync(int roleId)
+		{
+			return await _context.RoleDetails
+				.Where(rd => rd.RoleId == roleId)
+				.ToListAsync();
+		}
+	}
 }
