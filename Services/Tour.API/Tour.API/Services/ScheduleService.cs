@@ -48,10 +48,13 @@ namespace Tour.API.Services
         public async Task<ApiResponse<int>> CreateAsync(ScheduleRequestDTO item)
         {
             _logger.Information("Begin: ScheduleService - CreateAsync");
+
             var scheduleEntity = _mapper.Map<Schedule>(item);
-            await _scheduleRepository.CreateAsync(scheduleEntity);
-            var result = await _scheduleRepository.SaveChangesAsync();
+            
+            var result = await _scheduleRepository.CreateAsync(scheduleEntity);
+
             _logger.Information("End: ScheduleService - CreateAsync");
+
             return result > 0
                 ? new ApiResponse<int>(200, scheduleEntity.Id, "Tạo lịch trình thành công")
                 : new ApiResponse<int>(400, 0, "Tạo lịch trình thất bại");
@@ -60,19 +63,25 @@ namespace Tour.API.Services
         public async Task<ApiResponse<ScheduleResponseDTO>> UpdateAsync(ScheduleRequestDTO item)
         {
             _logger.Information($"Begin: ScheduleService - UpdateAsync, id: {item.Id}");
+
             var schedule = await _scheduleRepository.GetScheduleByIdAsync(item.Id.Value);
+
             if (schedule == null)
             {
                 _logger.Information($"Schedule not found, id: {item.Id}");
                 return new ApiResponse<ScheduleResponseDTO>(404, null, "Không tìm thấy lịch trình");
             }
+
             _mapper.Map(item, schedule);
             var result = await _scheduleRepository.SaveChangesAsync();
+
             _logger.Information("End: ScheduleService - UpdateAsync");
+
             return result > 0
                 ? new ApiResponse<ScheduleResponseDTO>(200, _mapper.Map<ScheduleResponseDTO>(schedule), "Cập nhật lịch trình thành công")
                 : new ApiResponse<ScheduleResponseDTO>(400, null, "Cập nhật lịch trình thất bại");
         }
+
 
         public async Task<ApiResponse<int>> DeleteAsync(int id)
         {

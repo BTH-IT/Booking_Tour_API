@@ -6,11 +6,11 @@ namespace Tour.API.Repositories.Interfaces
 {
     public interface ITourRepository : IRepositoryBase<TourEntity, int, TourDbContext>
     {
-        Task<IEnumerable<TourEntity>> GetToursAsync();
-        Task<TourEntity> GetTourByIdAsync(int id);
-        Task<TourEntity> GetTourByNameAsync(string name);
-        Task CreateTourAsync(TourEntity Tour);
-        Task UpdateTourAsync(TourEntity Tour);
-        Task DeleteTourAsync(int id);
+        Task<IEnumerable<TourEntity>> GetToursAsync(); // Lấy các tour chưa bị xóa
+        Task<TourEntity> GetTourByIdAsync(int id); // Lấy tour theo ID nếu chưa bị xóa
+        Task<TourEntity> GetTourByNameAsync(string name); // Lấy tour theo tên nếu chưa bị xóa
+        Task CreateTourAsync(TourEntity tour); // Tạo tour mới
+        Task UpdateTourAsync(TourEntity tour); // Cập nhật tour
+        Task SoftDeleteTourAsync(int id); // Xóa giả (đánh dấu DeletedAt)
     }
 }
