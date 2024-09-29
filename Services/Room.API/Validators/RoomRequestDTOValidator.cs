@@ -38,6 +38,7 @@ namespace Room.API.Validators
 			RuleFor(room => room.Video)
 				.MaximumLength(500)
 				.WithMessage("Video URL must not exceed 500 characters");
+
 			RuleFor(room => room.MaxGuests)
 				.GreaterThan(0)
 				.WithMessage("MaxGuests must be greater than 0");
@@ -46,21 +47,17 @@ namespace Room.API.Validators
 				.GreaterThan(0)
 				.WithMessage("Size must be greater than 0");
 
-			//RuleFor(room => room.Reviews)
-			//	.MaximumLength(2000)
-			//	.WithMessage("Reviews must not exceed 2000 characters");
+			RuleFor(dto => dto.RoomAmenities)
+					   .Must(roomAmenities =>
+						   roomAmenities == null ||
+						   roomAmenities.All(ra => ra.Title.Length <= 1000))
+					   .WithMessage("Each room amenity title must not exceed 1000 characters");
 
-			//RuleFor(room => room.RoomAmenities)
-			//	.MaximumLength(1000)
-			//	.WithMessage("Room amenities must not exceed 1000 characters");
-
-			//RuleFor(room => room.HotelRules)
-			//	.MaximumLength(1000)
-			//	.WithMessage("Hotel rules must not exceed 1000 characters");
-
-			//RuleFor(room => room.HotelAmenities)
-			//	.MaximumLength(1000)
-			//	.WithMessage("Hotel amenities must not exceed 1000 characters");
+			RuleFor(dto => dto.HotelAmenities)
+				.Must(hotelAmenities =>
+					hotelAmenities == null ||
+					hotelAmenities.All(ha => ha.Title.Length <= 1000))
+				.WithMessage("Each hotel amenity title must not exceed 1000 characters");
 
 			RuleFor(room => room.CreatedAt)
 				.GreaterThanOrEqualTo(DateTime.Today)
