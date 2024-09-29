@@ -11,13 +11,13 @@ namespace Tour.API.Entities
     public class TourEntity : EntityBase<int>, IDateTracking
     {
         [MaxLength(255)] // Đặt chiều dài tối đa cho tên tour
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public int MaxGuests { get; set; }
         public bool IsWifi { get; set; }
 
         [MaxLength(1000)] // Đặt chiều dài tối đa cho chi tiết tour
-        public string Detail { get; set; }
+        public string? Detail { get; set; }
 
         [MaxLength(1000)] // Đặt chiều dài tối đa cho kỳ vọng
         public string Expect { get; set; }
@@ -30,7 +30,7 @@ namespace Tour.API.Entities
         public float Rate { get; set; }
 
         [MaxLength(1000)] // Đặt chiều dài tối đa cho video
-        public string Video { get; set; }
+        public string? Video { get; set; }
 
         public float SalePercent { get; set; }
 
@@ -47,7 +47,7 @@ namespace Tour.API.Entities
         public string[] ImageList { get; set; }
 
         [NotMapped]
-        public Day[] DayList { get; set; }
+        public DateTime[] DayList { get; set; }
 
         [NotMapped]
         public Review[] ReviewList { get; set; }
@@ -90,9 +90,21 @@ namespace Tour.API.Entities
         [Column(TypeName = "JSON")]
         public string Days
         {
-            get => JsonConvert.SerializeObject(DayList);
-            set => DayList = JsonConvert.DeserializeObject<Day[]>(value) ?? Array.Empty<Day>();
+            get => JsonConvert.SerializeObject(DayList.Select(d => new { Date = d }));
+            set
+            {
+                try
+                {
+                    var daysList = JsonConvert.DeserializeObject<List<Dictionary<string, DateTime>>>(value);
+                    DayList = daysList?.Select(d => d["Date"]).ToArray() ?? Array.Empty<DateTime>();
+                }
+                catch (JsonException)
+                {
+                    DayList = Array.Empty<DateTime>(); 
+                }
+            }
         }
+
 
         [Column(TypeName = "JSON")]
         public string Reviews
@@ -103,5 +115,6 @@ namespace Tour.API.Entities
 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
     }
 }

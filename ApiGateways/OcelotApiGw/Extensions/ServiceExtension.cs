@@ -26,5 +26,6 @@ namespace OcelotApiGw.Extensions
             );
             return services;
         }
+
     }
 }
