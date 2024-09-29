@@ -32,6 +32,11 @@ namespace Room.API.Validators
 				.MaximumLength(500)
 				.WithMessage("Description must not exceed 500 characters");
 
+			RuleFor(dto => dto.HotelRules)
+				.Must(HotelRules =>
+					HotelRules == null ||
+					HotelRules.All(ha => ha.Title.Length <= 1000))
+				.WithMessage("Each hotel rules title must not exceed 1000 characters");
 
 			RuleFor(hotel => hotel.CreatedAt)
 				.GreaterThanOrEqualTo(DateTime.Today)
