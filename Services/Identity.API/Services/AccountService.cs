@@ -8,7 +8,7 @@ using Shared.Helper;
 using ILogger = Serilog.ILogger;
 namespace Identity.API.Services
 {
-    public class AccountService : IAccountSerivce
+    public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
@@ -72,7 +72,7 @@ namespace Identity.API.Services
         {
             _logger.Information($"Begin : AccountService - GetByIdAsync");
             
-            var account = await _accountRepository.GetAccountByIdAsync(id);
+            var account = await _accountRepository.GetByIdAsync(id, account => account.Role, account => account.Role.RoleDetails);
             if (account == null) 
             {
                 return new ApiResponse<AccountResponseDTO>(404, null, "Không tìm thấy tài khoản");

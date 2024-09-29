@@ -5,12 +5,11 @@ namespace Identity.API.Services.Interfaces
 {
     public interface IRoleService
     {
-        Task<List<RoleResponseDTO>> GetAll();
-        Task<RoleResponseDTO> GetById(int id);
-        Task<List<RoleDetailDTO>> GetRoleDetailAllByRoleId(int id);
-        Task<RoleDetailDTO> UpdateRoleDetailByRoleId(RoleDetailDTO item);
-        Task<ApiResponse<int>> Insert(RoleRequestDTO item);
-        Task<RoleResponseDTO> Update(RoleRequestDTO item);
-        Task<ApiResponse<int>> Delete(int id);
+        Task<ApiResponse<List<RoleResponseDTO>>> GetAllAsync();
+        Task<ApiResponse<RoleResponseDTO>> GetByIdAsync(int id);
+        Task<ApiResponse<RoleDetailDTO>> UpdateRoleDetailByRoleIdAsync(string roleId,RoleDetailDTO item);
+        Task<ApiResponse<int>> InsertAsync(RoleRequestDTO item);
+        Task<ApiResponse<RoleResponseDTO>> UpdateAsync(RoleRequestDTO item);
+        Task<ApiResponse<int>> DeleteAsync(int id);
     }
 }

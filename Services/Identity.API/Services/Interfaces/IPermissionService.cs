@@ -5,10 +5,10 @@ namespace Identity.API.Services.Interfaces
 {
     public interface IPermissionService
     {
-        Task<List<PermissionResponseDTO>> GetAll();
-        Task<PermissionResponseDTO> GetById(int id);
-        Task<ApiResponse<int>> Insert(PermissionRequestDTO item);
-        Task<PermissionResponseDTO> Update(PermissionRequestDTO item);
-        Task<ApiResponse<int>> Delete(int id);
+        Task<ApiResponse<List<PermissionResponseDTO>>> GetAllAsync();
+        Task<ApiResponse<PermissionResponseDTO>> GetByIdAsync(int id);
+        Task<ApiResponse<int>> InsertAsync(PermissionRequestDTO item);
+        Task<ApiResponse<PermissionResponseDTO>> UpdateAsync(PermissionRequestDTO item);
+        Task<ApiResponse<int>> DeleteAsync(int id);
     }
 }
