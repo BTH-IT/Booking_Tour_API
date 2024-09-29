@@ -25,6 +25,8 @@ namespace Identity.API.Repositories
         }
         public Task<Permission> GetPermissionByIdAsync(int id) => FindByCondition(c=>c.Id.Equals(id)).FirstOrDefaultAsync();
 
+        public Task<Permission> GetPermissionByNameAsync(string name) => FindByCondition(c => c.Name.Equals(name)).FirstOrDefaultAsync();
+
         public async Task<IEnumerable<Permission>> GetPermissionsAsync() => await FindAll().ToListAsync();
 
         public Task UpdatePermissionAsync(Permission permission) => UpdateAsync(permission);
