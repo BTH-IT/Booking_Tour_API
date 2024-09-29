@@ -50,5 +50,16 @@ namespace Tour.API.Repositories
 
         // Cập nhật thông tin của Tour
         public Task UpdateTourAsync(TourEntity tour) => UpdateAsync(tour);
+
+        public async Task SoftDeleteTourAsync(int id)
+        {
+            var tour = await GetTourByIdAsync(id);
+            if (tour != null)
+            {
+                tour.DeletedAt = DateTime.UtcNow;
+                await UpdateAsync(tour); // Cập nhật trạng thái xóa giả
+            }
+        }
+
     }
 }

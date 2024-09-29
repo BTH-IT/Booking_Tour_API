@@ -2,37 +2,36 @@
 using Shared.DTOs;
 using Tour.API.Entities;
 
-namespace Tour.API
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile()
     {
-        public MappingProfile() {
+        // Ánh xạ giữa DestinationEntity và DestinationResponseDTO
+        CreateMap<DestinationEntity, DestinationResponseDTO>().ReverseMap();
+        CreateMap<DestinationRequestDTO, DestinationEntity>();
 
-            CreateMap<DestinationEntity, DestinationResponseDTO>().ReverseMap();
-            CreateMap<DestinationRequestDTO, DestinationEntity>();
+        // Ánh xạ giữa TourEntity và TourResponseDTO
+        CreateMap<TourEntity, TourResponseDTO>().ReverseMap();
 
-            CreateMap<TourEntity, TourResponseDTO>().ReverseMap();
-            CreateMap<TourRequestDTO, TourEntity>();
-
-            CreateMap<Schedule, ScheduleResponseDTO>().ReverseMap();
-            CreateMap<ScheduleRequestDTO, Schedule>();
-
-            CreateMap<TourRequestDTO, TourEntity>()
-            .ForMember(dest => dest.DayList, opt => opt.MapFrom(src =>
-                src.DayList.Select(date => new Day { Date = date })))
+        // Ánh xạ giữa TourRequestDTO và TourEntity
+        CreateMap<TourRequestDTO, TourEntity>()
+            .ForMember(dest => dest.DayList, opt => opt.MapFrom(src => src.DayList))
             .ForMember(dest => dest.ReviewList, opt => opt.MapFrom(src =>
-                src.ReviewList.Select(review => new Entities.Review
+                src.ReviewList.Select(review => new Tour.API.Entities.Review
                 {
                     Content = review.Content,
                     Rating = review.Rating,
-                    CreatedAt = DateTime.UtcNow, 
-                    UpdatedAt = DateTime.UtcNow, 
-                    TourId = 0, 
-                    UserId = 0 
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    TourId = 0,
+                    UserId = 0
                 })));
-            CreateMap<Entities.Review, Entities.Review>() 
-            .ForMember(dest => dest.TourId, opt => opt.Ignore()) 
-            .ForMember(dest => dest.UserId, opt => opt.Ignore());
-        }
+
+        // Ánh xạ giữa Schedule và ScheduleResponseDTO
+        CreateMap<Schedule, ScheduleResponseDTO>().ReverseMap();
+        CreateMap<ScheduleRequestDTO, Schedule>();
+
+        // Ánh xạ giữa Review (Entities.Review) và Review (DTOs.Review)
+        CreateMap<Tour.API.Entities.Review, Shared.DTOs.Review>().ReverseMap();
     }
 }
