@@ -12,7 +12,6 @@ namespace Room.API.Entities
 		public string Location { get; set; }		
 		public string Description { get; set; }		
 		public string ContactInfo { get; set; }		
-		public double Rate { get; set; }		
 		[NotMapped]
 		public List<ReviewHotel> ReviewList { get; set; }
 		[NotMapped]

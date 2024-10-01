@@ -52,7 +52,6 @@ namespace Room.API.Persistence
 							Location = $"Address {i}, City, Country",
 							Description = $"Description for Hotel {i}",
 							ContactInfo = $"+1-305-{i}23-4567",
-							Rate = 4.5 + (i * 0.02), 
 							CreatedAt = DateTime.UtcNow,
 							UpdatedAt = DateTime.UtcNow,
 							ReviewList = new List<ReviewHotel>(),
@@ -66,14 +65,10 @@ namespace Room.API.Persistence
 							var room = new RoomEntity
 							{
 								Name = $"Room {j} in Hotel {i}",
-								Type = (RoomType) 2, 
-								BedType = (BedType) 1, 
-								Rate = 4.5,
 								Detail = $"Detail for Room {j} in Hotel {i}",
 								Price = 100 + (j * 10), 
 								IsAvailable = true,
 								MaxGuests = 2,
-								Size = 40 + (j * 5), 
 								CreatedAt = DateTime.UtcNow,
 								UpdatedAt = DateTime.UtcNow,
 								ReviewList = new List<ReviewRoom>(),

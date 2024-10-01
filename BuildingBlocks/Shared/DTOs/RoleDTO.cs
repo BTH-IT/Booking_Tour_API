@@ -18,5 +18,6 @@
         public string RoleName { get; set; }
 
         public bool Status { get; set; }
-    }
+		public DateTime? DeletedAt { get; set; }
+	}
 }

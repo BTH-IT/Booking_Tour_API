@@ -11,18 +11,6 @@ namespace Room.API.Validators
 				.NotEmpty()
 				.WithMessage("Room name is required");
 
-			RuleFor(room => room.Type)
-				.IsInEnum()
-				.WithMessage("Invalid room type");
-
-			RuleFor(room => room.BedType)
-				.IsInEnum()
-				.WithMessage("Invalid bed type");
-
-			RuleFor(room => room.Rate)
-				.GreaterThanOrEqualTo(0)
-				.WithMessage("Rate must be a positive value or zero");
-
 			RuleFor(room => room.Price)
 				.GreaterThanOrEqualTo(0)
 				.WithMessage("Price must be a positive value or zero");
@@ -42,10 +30,6 @@ namespace Room.API.Validators
 			RuleFor(room => room.MaxGuests)
 				.GreaterThan(0)
 				.WithMessage("MaxGuests must be greater than 0");
-
-			RuleFor(room => room.Size)
-				.GreaterThan(0)
-				.WithMessage("Size must be greater than 0");
 
 			RuleFor(dto => dto.RoomAmenities)
 					   .Must(roomAmenities =>

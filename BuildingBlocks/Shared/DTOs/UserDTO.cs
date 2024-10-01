@@ -31,5 +31,6 @@ namespace Shared.DTOs
 
         public string Gender { get; set; }
         public int AccountId { get; set; }
-    }
+		public DateTime? DeletedAt { get; set; }
+	}
 }
