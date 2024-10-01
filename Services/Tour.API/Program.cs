@@ -67,6 +67,7 @@ try
     {
         var seeder = scope.ServiceProvider.GetRequiredService<TourDbContextSeeder>();
         await seeder.InitialiseAsync();
+        await seeder.SeedAsync();
     }
     app.Run();
 
