@@ -56,6 +56,9 @@ namespace Room.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("LocationCode")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -91,6 +94,10 @@ namespace Room.API.Migrations
 
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("tinyint(1)");
