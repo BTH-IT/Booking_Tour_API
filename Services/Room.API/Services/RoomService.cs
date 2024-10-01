@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
@@ -12,14 +13,42 @@ namespace Room.API.Services
 	public class RoomService : IRoomService
 	{
 		private readonly IRoomRepository _roomRepository;
+		private readonly IHotelRepository _hotelRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
 
-		public RoomService(IRoomRepository roomRepository, IMapper mapper, ILogger logger)
+		public RoomService(IRoomRepository roomRepository, IHotelRepository hotelRepository, IMapper mapper, ILogger logger)
 		{
 			_roomRepository = roomRepository;
+			_hotelRepository = hotelRepository;
 			_mapper = mapper;
 			_logger = logger;
+		}
+
+		private HotelRulesResponseDTO MapHotelRules(string hotelRulesJson)
+		{
+			return new HotelRulesResponseDTO
+			{
+				HotelRules = JsonConvert.DeserializeObject<List<HotelRules>>(hotelRulesJson)?
+							  .Select(rule => new HotelRulesDTO
+							  {
+								  Id = rule.Id,
+								  Title = rule.Title
+							  }).ToList()
+			};
+		}
+
+		private HotelAmenitiesResponseDTO MapHotelAmenities(string hotelAmenitiesJson)
+		{
+			return new HotelAmenitiesResponseDTO
+			{
+				HotelAmenities = JsonConvert.DeserializeObject<List<HotelAmenities>>(hotelAmenitiesJson)?
+								  .Select(amenity => new HotelAmenitiesDTO
+								  {
+									  Id = amenity.Id,
+									  Title = amenity.Title
+								  }).ToList()
+			};
 		}
 
 		public async Task<ApiResponse<RoomResponseDTO>> CreateAsync(RoomRequestDTO item)
@@ -69,14 +98,26 @@ namespace Room.API.Services
 			_logger.Information("Begin: RoomService - GetAllAsync");
 
 			var rooms = await _roomRepository.FindAll(false, room => room.Hotel)
-											 .Where(r => r.DeletedAt == null) 
+											 .Where(r => r.DeletedAt == null)
 											 .ToListAsync();
 
-			_logger.Information("Mapping list of rooms to DTO");
-			var data = _mapper.Map<List<RoomResponseDTO>>(rooms);
+			var roomResponseList = new List<RoomResponseDTO>();
+
+			foreach (var room in rooms)
+			{
+				var hotel = await _hotelRepository.GetHotelByIdAsync(room.HotelId);
+
+				var roomResponse = _mapper.Map<RoomResponseDTO>(room);
+
+				roomResponse.HotelRules = MapHotelRules(hotel.HotelRules);
+				roomResponse.HotelAmenities = MapHotelAmenities(hotel.HotelAmenities);
+
+				roomResponseList.Add(roomResponse);
+			}
 
 			_logger.Information("End: RoomService - GetAllAsync");
-			return new ApiResponse<List<RoomResponseDTO>>(200, data, "Data retrieved successfully");
+
+			return new ApiResponse<List<RoomResponseDTO>>(200, roomResponseList, "Data retrieved successfully");
 		}
 
 		public async Task<ApiResponse<RoomResponseDTO>> GetByIdAsync(int id)
@@ -89,10 +130,15 @@ namespace Room.API.Services
 				return new ApiResponse<RoomResponseDTO>(404, null, "Room not found");
 			}
 
-			var data = _mapper.Map<RoomResponseDTO>(room);
+			var hotel = await _hotelRepository.GetHotelByIdAsync(room.HotelId);
+
+			var roomResponse = _mapper.Map<RoomResponseDTO>(room);
+
+			roomResponse.HotelRules = MapHotelRules(hotel.HotelRules);
+			roomResponse.HotelAmenities = MapHotelAmenities(hotel.HotelAmenities);
 
 			_logger.Information("End: RoomService - GetByIdAsync");
-			return new ApiResponse<RoomResponseDTO>(200, data, "Room data retrieved successfully");
+			return new ApiResponse<RoomResponseDTO>(200, roomResponse, "Room data retrieved successfully");
 		}
 
 		public async Task<ApiResponse<RoomResponseDTO>> GetByNameAsync(string name)
@@ -105,10 +151,15 @@ namespace Room.API.Services
 				return new ApiResponse<RoomResponseDTO>(404, null, "Room not found");
 			}
 
-			var data = _mapper.Map<RoomResponseDTO>(room);
+			var hotel = await _hotelRepository.GetHotelByIdAsync(room.HotelId);
+
+			var roomResponse = _mapper.Map<RoomResponseDTO>(room);
+
+			roomResponse.HotelRules = MapHotelRules(hotel.HotelRules);
+			roomResponse.HotelAmenities = MapHotelAmenities(hotel.HotelAmenities);
 
 			_logger.Information("End: RoomService - GetByNameAsync");
-			return new ApiResponse<RoomResponseDTO>(200, data, "Room data retrieved successfully");
+			return new ApiResponse<RoomResponseDTO>(200, roomResponse, "Room data retrieved successfully");
 		}
 
 		public async Task<ApiResponse<RoomResponseDTO>> UpdateAsync(RoomRequestDTO item)
@@ -155,10 +206,22 @@ namespace Room.API.Services
 			_logger.Information("Begin: RoomService - SearchRoomsAsync");
 
 			var rooms = await _roomRepository.SearchRoomsAsync(searchRequest);
-			var data = _mapper.Map<List<RoomResponseDTO>>(rooms);
+			var roomResponseList = new List<RoomResponseDTO>();
+
+			foreach (var room in rooms)
+			{
+				var hotel = await _hotelRepository.GetHotelByIdAsync(room.HotelId);
+
+				var roomResponse = _mapper.Map<RoomResponseDTO>(room);
+
+				roomResponse.HotelRules = MapHotelRules(hotel.HotelRules);
+				roomResponse.HotelAmenities = MapHotelAmenities(hotel.HotelAmenities);
+
+				roomResponseList.Add(roomResponse);
+			}
 
 			_logger.Information("End: RoomService - SearchRoomsAsync");
-			return new ApiResponse<List<RoomResponseDTO>>(200, data, "Rooms retrieved successfully");
+			return new ApiResponse<List<RoomResponseDTO>>(200, roomResponseList, "Rooms retrieved successfully");
 		}
 	}
 }

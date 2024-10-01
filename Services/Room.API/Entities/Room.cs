@@ -24,8 +24,6 @@ namespace Room.API.Entities
 		[NotMapped]
 		public List<RoomAmenities> RoomAmenitiesList { get; set; }
 
-		[NotMapped]
-		public List<HotelAmenities> HotelAmenitiesList { get; set; }
 		public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
         public int HotelId {  get; set; }
@@ -44,12 +42,6 @@ namespace Room.API.Entities
 			get => JsonConvert.SerializeObject(RoomAmenitiesList);
 			set => RoomAmenitiesList = JsonConvert.DeserializeObject<List<RoomAmenities>>(value) ?? new List<RoomAmenities>();
 
-		}
-		[Column(TypeName = "JSON")]
-		public string HotelAmenities
-		{
-			get => JsonConvert.SerializeObject(HotelAmenitiesList);
-			set => HotelAmenitiesList = JsonConvert.DeserializeObject<List<HotelAmenities>>(value) ?? new List<HotelAmenities>();
 		}
 	}
 }
