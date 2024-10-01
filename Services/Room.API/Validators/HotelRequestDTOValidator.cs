@@ -24,10 +24,6 @@ namespace Room.API.Validators
 				.NotEmpty()
 				.WithMessage("Contact information is required");
 
-			RuleFor(hotel => hotel.Rate)
-				.InclusiveBetween(1, 5)
-				.WithMessage("Star rating must be between 1 and 5");
-
 			RuleFor(hotel => hotel.Description)
 				.MaximumLength(500)
 				.WithMessage("Description must not exceed 500 characters");
