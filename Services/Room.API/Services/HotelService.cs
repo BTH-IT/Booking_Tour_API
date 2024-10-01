@@ -34,10 +34,10 @@ namespace Room.API.Services
 			}
 
 			var newId = await _hotelRepository.CreateAsync(_mapper.Map<Hotel>(item));
-			var responseData = _mapper.Map<HotelResponseDTO>(await GetHotelByIdAsync(newId));
+			var data = _mapper.Map<HotelResponseDTO>(await GetHotelByIdAsync(newId));
 
 			_logger.Information("End: HotelService - CreateAsync");
-			return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel created successfully");
+			return new ApiResponse<HotelResponseDTO>(200, data, "Hotel created successfully");
 		}
 
 		public async Task<ApiResponse<int>> DeleteAsync(int id)
@@ -103,9 +103,10 @@ namespace Room.API.Services
 			{
 				return new ApiResponse<HotelResponseDTO>(404, null, "Hotel not found");
 			}
+			var data = _mapper.Map<HotelResponseDTO>(hotel);
 
 			_logger.Information("End: HotelService - GetByIdAsync");
-			return new ApiResponse<HotelResponseDTO>(200, _mapper.Map<HotelResponseDTO>(hotel), "Hotel data retrieved successfully");
+			return new ApiResponse<HotelResponseDTO>(200, data, "Hotel data retrieved successfully");
 		}
 
 		public async Task<ApiResponse<HotelResponseDTO>> GetByNameAsync(string name)
@@ -117,9 +118,9 @@ namespace Room.API.Services
 			{
 				return new ApiResponse<HotelResponseDTO>(404, null, "Hotel not found");
 			}
-
+			var data = _mapper.Map<HotelResponseDTO>(hotel);
 			_logger.Information("End: HotelService - GetByNameAsync");
-			return new ApiResponse<HotelResponseDTO>(200, _mapper.Map<HotelResponseDTO>(hotel), "Hotel data retrieved successfully");
+			return new ApiResponse<HotelResponseDTO>(200, data, "Hotel data retrieved successfully");
 		}
 
 		public async Task<ApiResponse<HotelResponseDTO>> UpdateAsync(HotelRequestDTO item)
@@ -142,6 +143,7 @@ namespace Room.API.Services
 
 			if (result > 0)
 			{
+				var data = _mapper.Map<HotelResponseDTO>(hotel);
 				_logger.Information("End: HotelService - UpdateAsync");
 				return new ApiResponse<HotelResponseDTO>(200, _mapper.Map<HotelResponseDTO>(hotel), "Hotel updated successfully");
 			}
