@@ -21,5 +21,6 @@ namespace Identity.API.Entites
         public bool Status { get; set; } = false;
         public Role Role { get; set; }
         public Permission Permission { get; set; }
-    }
+		public DateTime? DeletedAt { get; set; }
+	}
 }

@@ -10,22 +10,16 @@ namespace Room.API.Entities
     public class RoomEntity : EntityBase<int>, IDateTracking
     {
         public string Name { get; set; }    
-        public RoomType Type { get; set; }  
-        public BedType BedType { get; set; }
-        public double? Rate {  get; set; }   
         public string? Video { get; set; }
         public string? Detail { get; set; }
         public double Price { get;set; }
         public bool IsAvailable { get; set; }
 		public int MaxGuests { get; set; }
-		public int Size { get; set; }
 		[NotMapped]
 		public List<ReviewRoom> ReviewList { get; set; }
 		[NotMapped]
 		public List<RoomAmenities> RoomAmenitiesList { get; set; }
 
-		[NotMapped]
-		public List<HotelAmenities> HotelAmenitiesList { get; set; }
 		public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
         public int HotelId {  get; set; }
@@ -44,12 +38,6 @@ namespace Room.API.Entities
 			get => JsonConvert.SerializeObject(RoomAmenitiesList);
 			set => RoomAmenitiesList = JsonConvert.DeserializeObject<List<RoomAmenities>>(value) ?? new List<RoomAmenities>();
 
-		}
-		[Column(TypeName = "JSON")]
-		public string HotelAmenities
-		{
-			get => JsonConvert.SerializeObject(HotelAmenitiesList);
-			set => HotelAmenitiesList = JsonConvert.DeserializeObject<List<HotelAmenities>>(value) ?? new List<HotelAmenities>();
 		}
 	}
 }

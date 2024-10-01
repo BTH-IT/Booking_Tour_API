@@ -10,5 +10,6 @@ namespace Shared.DTOs
         public ActionType ActionName { get; set; }
 
         public bool Status { get; set; }
-    }
+		public DateTime? DeletedAt { get; set; }
+	}
 }

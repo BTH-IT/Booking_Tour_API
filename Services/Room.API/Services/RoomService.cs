@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using ILogger = Serilog.ILogger;
 
 namespace Room.API.Services
@@ -12,12 +14,14 @@ namespace Room.API.Services
 	public class RoomService : IRoomService
 	{
 		private readonly IRoomRepository _roomRepository;
+		private readonly IHotelRepository _hotelRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
 
-		public RoomService(IRoomRepository roomRepository, IMapper mapper, ILogger logger)
+		public RoomService(IRoomRepository roomRepository, IHotelRepository hotelRepository, IMapper mapper, ILogger logger)
 		{
 			_roomRepository = roomRepository;
+			_hotelRepository = hotelRepository;
 			_mapper = mapper;
 			_logger = logger;
 		}
@@ -36,10 +40,10 @@ namespace Room.API.Services
 			var newId = await _roomRepository.CreateAsync(roomEntity);
 
 			var createdRoom = await _roomRepository.GetRoomByIdAsync(newId);
-			var responseData = _mapper.Map<RoomResponseDTO>(createdRoom);
+			var data = _mapper.Map<RoomResponseDTO>(createdRoom);
 
 			_logger.Information("End: RoomService - CreateAsync");
-			return new ApiResponse<RoomResponseDTO>(200, responseData, "Room created successfully");
+			return new ApiResponse<RoomResponseDTO>(200, data, "Room created successfully");
 		}
 
 		public async Task<ApiResponse<int>> DeleteAsync(int id)
@@ -69,13 +73,13 @@ namespace Room.API.Services
 			_logger.Information("Begin: RoomService - GetAllAsync");
 
 			var rooms = await _roomRepository.FindAll(false, room => room.Hotel)
-											 .Where(r => r.DeletedAt == null) 
+											 .Where(r => r.DeletedAt == null)
 											 .ToListAsync();
 
-			_logger.Information("Mapping list of rooms to DTO");
 			var data = _mapper.Map<List<RoomResponseDTO>>(rooms);
 
 			_logger.Information("End: RoomService - GetAllAsync");
+
 			return new ApiResponse<List<RoomResponseDTO>>(200, data, "Data retrieved successfully");
 		}
 
@@ -88,7 +92,6 @@ namespace Room.API.Services
 			{
 				return new ApiResponse<RoomResponseDTO>(404, null, "Room not found");
 			}
-
 			var data = _mapper.Map<RoomResponseDTO>(room);
 
 			_logger.Information("End: RoomService - GetByIdAsync");
@@ -134,10 +137,10 @@ namespace Room.API.Services
 				if (result > 0)
 				{
 					var updatedRoom = await _roomRepository.GetRoomByIdAsync(item.Id);
-					var responseData = _mapper.Map<RoomResponseDTO>(updatedRoom);
+					var data = _mapper.Map<RoomResponseDTO>(updatedRoom);
 
 					_logger.Information("End: RoomService - UpdateAsync");
-					return new ApiResponse<RoomResponseDTO>(200, responseData, "Room updated successfully");
+					return new ApiResponse<RoomResponseDTO>(200, data, "Room updated successfully");
 				}
 
 				_logger.Information("End: RoomService - UpdateAsync");

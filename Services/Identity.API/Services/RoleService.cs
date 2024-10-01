@@ -41,19 +41,9 @@ namespace Identity.API.Services
 				return new ApiResponse<int>(400, 0, "Cannot delete Admin or User role");
 			}
 			await _roleRepository.DeleteRoleDetailByRoleIdAsync(role.Id);
-			_roleRepository.Delete(role);
-
-			var result = await _roleRepository.SaveChangesAsync();
-			if (result > 0)
-			{
-				_logger.Information($"End : RoleService - DeleteAsync : {id} - Deletion successful");
-				return new ApiResponse<int>(200, result, "Role deleted successfully");
-			}
-			else
-			{
-				_logger.Information($"End : RoleService - DeleteAsync : {id} - Deletion failed");
-				return new ApiResponse<int>(400, result, "Role deletion failed");
-			}
+			await _roleRepository.DeleteRoleAsync(role.Id);
+			_logger.Information($"End : RoleService - DeleteAsync : {id} - Deletion successful");
+			return new ApiResponse<int>(200, id, "Role deleted successfully");
 		}
 
 		public async Task<ApiResponse<List<RoleResponseDTO>>> GetAllAsync()
