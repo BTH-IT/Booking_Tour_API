@@ -1,9 +1,10 @@
 services:
   mysql:
     container_name: mysql-container
-    image: mysql:latest
+    image: mysql:9.0.1
     environment:
       MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_HOST: "%" # Allow root access from any host
     ports:
       - "3307:3306"
     volumes:
@@ -51,6 +52,18 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+
+  api_gateway:
+    image: api-gateway
+    build:
+      context: .
+      dockerfile: ApiGateways/OcelotApiGw/Dockerfile
+    depends_on:
+      - identity.api
+      - room.api
+      - tour.api
+    networks:
+      - apis-network
 
   rabbitmq:
     container_name: rabbitmq-container

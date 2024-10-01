@@ -52,11 +52,11 @@ namespace Room.API.Persistence
 							Location = $"Address {i}, City, Country",
 							Description = $"Description for Hotel {i}",
 							ContactInfo = $"+1-305-{i}23-4567",
-							Rate = 4.5 + (i * 0.02), 
 							CreatedAt = DateTime.UtcNow,
 							UpdatedAt = DateTime.UtcNow,
 							ReviewList = new List<ReviewHotel>(),
 							HotelRulesList = new List<HotelRules>(),
+							HotelAmenitiesList = new List<HotelAmenities>(),
 							Rooms = new List<RoomEntity>()
 						};
 
@@ -65,19 +65,14 @@ namespace Room.API.Persistence
 							var room = new RoomEntity
 							{
 								Name = $"Room {j} in Hotel {i}",
-								Type = (RoomType) 2, 
-								BedType = (BedType) 1, 
-								Rate = 4.5,
 								Detail = $"Detail for Room {j} in Hotel {i}",
 								Price = 100 + (j * 10), 
 								IsAvailable = true,
 								MaxGuests = 2,
-								Size = 40 + (j * 5), 
 								CreatedAt = DateTime.UtcNow,
 								UpdatedAt = DateTime.UtcNow,
 								ReviewList = new List<ReviewRoom>(),
 								RoomAmenitiesList = new List<RoomAmenities>(),
-								HotelAmenitiesList = new List<HotelAmenities>()
 							};
 
 							room.ReviewList.Add(new ReviewRoom
@@ -93,10 +88,6 @@ namespace Room.API.Persistence
 							room.RoomAmenitiesList.Add(new RoomAmenities { Title = "Free Wi-Fi" });
 							room.RoomAmenitiesList.Add(new RoomAmenities { Title = "Air Conditioning" });
 							room.RoomAmenitiesList.Add(new RoomAmenities { Title = "Flat Screen TV" });
-
-							room.HotelAmenitiesList.Add(new HotelAmenities { Title = "Outdoor Pool" });
-							room.HotelAmenitiesList.Add(new HotelAmenities { Title = "Gym" });
-							room.HotelAmenitiesList.Add(new HotelAmenities { Title = "Spa" });
 
 							hotel.Rooms.Add(room);
 						}
@@ -116,7 +107,9 @@ namespace Room.API.Persistence
 
 						hotel.HotelRulesList.Add(new HotelRules { Title = "No pets allowed." });
 						hotel.HotelRulesList.Add(new HotelRules { Title = "Quiet hours from 10 PM to 6 AM." });
-
+						hotel.HotelAmenitiesList.Add(new HotelAmenities { Title = "Outdoor Pool" });
+						hotel.HotelAmenitiesList.Add(new HotelAmenities { Title = "Gym" });
+						hotel.HotelAmenitiesList.Add(new HotelAmenities { Title = "Spa" });
 						hotels.Add(hotel);
 					}
 

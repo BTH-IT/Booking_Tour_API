@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Room.API.Persistence;
 
@@ -11,9 +12,11 @@ using Room.API.Persistence;
 namespace Room.API.Migrations
 {
     [DbContext(typeof(RoomDbContext))]
-    partial class RoomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241001023917_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,6 +63,9 @@ namespace Room.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<double>("Rate")
+                        .HasColumnType("double");
+
                     b.Property<string>("Reviews")
                         .IsRequired()
                         .HasColumnType("JSON");
@@ -79,6 +85,9 @@ namespace Room.API.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BedType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -105,6 +114,9 @@ namespace Room.API.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
+                    b.Property<double?>("Rate")
+                        .HasColumnType("double");
+
                     b.Property<string>("Reviews")
                         .IsRequired()
                         .HasColumnType("JSON");
@@ -112,6 +124,12 @@ namespace Room.API.Migrations
                     b.Property<string>("RoomAmenities")
                         .IsRequired()
                         .HasColumnType("JSON");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");

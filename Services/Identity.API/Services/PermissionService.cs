@@ -33,24 +33,15 @@ namespace Identity.API.Services
 			{
 				return new ApiResponse<int>(404, 0, "Permission not found");
 			}
-			_permissionRepository.Delete(permission);
-			var result = await _permissionRepository.SaveChangesAsync();
-			if (result > 0)
-			{
-				_logger.Information($"End : PermissionService - DeleteAsync : {id} - Deletion successful");
-				return new ApiResponse<int>(200, result, "Permission deleted successfully");
-			}
-			else
-			{
-				_logger.Information($"End : PermissionService - DeleteAsync : {id} - Deletion failed");
-				return new ApiResponse<int>(400, result, "Permission deletion failed");
-			}
+			 await _permissionRepository.DeletePermissionAsync(id);
+			_logger.Information($"End : PermissionService - DeleteAsync : {id} - Deletion successful");
+			return new ApiResponse<int>(200, id, "Permission deleted successfully");
 		}
 
 		public async Task<ApiResponse<List<PermissionResponseDTO>>> GetAllAsync()
 		{
 			_logger.Information($"Begin : PermissionService - GetAllAsync");
-			var permissions = await _permissionRepository.FindAll(false).ToListAsync();
+			var permissions = await _permissionRepository.GetPermissionsAsync();
 			_logger.Information($"Mapping list of permissions to DTO");
 			var data = _mapper.Map<List<PermissionResponseDTO>>(permissions);
 			_logger.Information($"End : PermissionService - GetAllAsync");

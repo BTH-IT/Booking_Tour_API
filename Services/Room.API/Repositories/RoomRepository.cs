@@ -32,7 +32,7 @@ namespace Room.API.Repositories
 			 FindByCondition(r => r.Name == name && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
 
 		public async Task<IEnumerable<RoomEntity>> GetRoomsAsync() =>
-			await FindAll().Where(r => r.DeletedAt == null).ToListAsync();
+		    await FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel).ToListAsync();
 
 		public async Task<IEnumerable<RoomEntity>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
 		{
@@ -50,26 +50,8 @@ namespace Room.API.Repositories
 				var filteredRooms = allRooms.Where(r => searchRequest.Facilities.All(f => r.RoomAmenitiesList.Any(ra => ra.Title == f))).ToList();
 				return filteredRooms;
 			}
-
-			if (!string.IsNullOrEmpty(searchRequest.RoomSize))
-			{
-				query = FilterByRoomSize(query, searchRequest.RoomSize);
-			}
-
+			
 			return await query.ToListAsync();
-		}
-
-
-		private IQueryable<RoomEntity> FilterByRoomSize(IQueryable<RoomEntity> query, string roomSize)
-		{
-			return roomSize switch
-			{
-				"30-40" => query.Where(r => r.Size >= 30 && r.Size <= 40),
-				"40-55" => query.Where(r => r.Size > 40 && r.Size <= 55),
-				"55-80" => query.Where(r => r.Size > 55 && r.Size <= 80),
-				"80+" => query.Where(r => r.Size > 80),
-				_ => query
-			};
 		}
 
 		public Task UpdateRoomAsync(RoomEntity room) => UpdateAsync(room);
