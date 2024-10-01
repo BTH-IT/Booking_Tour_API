@@ -1,6 +1,7 @@
 ﻿using Contracts.Domains;
 using Contracts.Domains.Interfaces;
 using Newtonsoft.Json;
+using Shared.DTOs;
 using Shared.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,7 +12,7 @@ namespace Room.API.Entities
     {
         public string Name { get; set; }
 		[NotMapped]
-		public List<Image> ImagesList { get; set; } = new List<Image>();
+		public List<Image> ImagesList { get; set; }
 		public string? Video { get; set; }
 		public string? Detail { get; set; }
         public double Price { get;set; }

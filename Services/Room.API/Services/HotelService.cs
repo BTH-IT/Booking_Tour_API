@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using ILogger = Serilog.ILogger;
 
 namespace Room.API.Services
@@ -28,16 +30,19 @@ namespace Room.API.Services
 		{
 			_logger.Information("Begin: HotelService - CreateAsync");
 
-			if (await HotelExistsAsync(item.Name))
+			var existingHotel = await _hotelRepository.GetHotelByNameAsync(item.Name);
+			if (existingHotel != null)
 			{
 				return new ApiResponse<HotelResponseDTO>(400, null, "Hotel already exists");
 			}
 
-			var newId = await _hotelRepository.CreateAsync(_mapper.Map<Hotel>(item));
-			var data = _mapper.Map<HotelResponseDTO>(await GetHotelByIdAsync(newId));
+			var hotelEntity = _mapper.Map<Hotel>(item);
+			var newId = await _hotelRepository.CreateAsync(hotelEntity);
+			var createdHotel = await _hotelRepository.GetHotelByIdAsync(newId);
+			var responseData = _mapper.Map<HotelResponseDTO>(createdHotel);
 
 			_logger.Information("End: HotelService - CreateAsync");
-			return new ApiResponse<HotelResponseDTO>(200, data, "Hotel created successfully");
+			return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel created successfully");
 		}
 
 		public async Task<ApiResponse<int>> DeleteAsync(int id)
@@ -47,14 +52,14 @@ namespace Room.API.Services
 			using var transaction = await _hotelRepository.BeginTransactionAsync();
 			try
 			{
-				var hotel = await GetHotelByIdAsync(id);
+				var hotel = await _hotelRepository.GetHotelByIdAsync(id);
 				if (hotel == null)
 				{
 					return new ApiResponse<int>(404, 0, "Hotel not found.");
 				}
 
 				hotel.DeletedAt = DateTime.UtcNow;
-				var rooms = await GetRoomsByHotelIdAsync(id);
+				var rooms = await _roomRepository.FindByCondition(r => r.HotelId == id).ToListAsync();
 				if (rooms.Any(r => r.IsAvailable))
 				{
 					return new ApiResponse<int>(400, 0, $"Rooms {string.Join(", ", rooms.Where(r => r.IsAvailable).Select(r => r.Id))} are currently booked and cannot be deleted.");
@@ -97,7 +102,7 @@ namespace Room.API.Services
 		public async Task<ApiResponse<HotelResponseDTO>> GetByIdAsync(int id)
 		{
 			_logger.Information("Begin: HotelService - GetByIdAsync");
-			var hotel = await GetHotelByIdAsync(id);
+			var hotel = await _hotelRepository.GetHotelByIdAsync(id);
 
 			if (hotel == null)
 			{
@@ -126,46 +131,31 @@ namespace Room.API.Services
 		public async Task<ApiResponse<HotelResponseDTO>> UpdateAsync(HotelRequestDTO item)
 		{
 			_logger.Information("Begin: HotelService - UpdateAsync");
-			var hotel = await GetHotelByIdAsync(item.Id);
 
-			if (hotel == null)
+			var hotel = await _hotelRepository.GetHotelByIdAsync(item.Id);
+			if (hotel == null || hotel.DeletedAt != null)
 			{
 				return new ApiResponse<HotelResponseDTO>(404, null, "Hotel not found");
 			}
 
-			if (await HotelExistsAsync(item.Name, item.Id))
+			if (await _hotelRepository.FindByCondition(h => h.Name.Equals(item.Name) && h.Id != item.Id && h.DeletedAt == null).FirstOrDefaultAsync() != null)
 			{
 				return new ApiResponse<HotelResponseDTO>(400, null, "Hotel name already exists");
 			}
 
-			_mapper.Map(item, hotel);
+			hotel = _mapper.Map<Hotel>(item);
 			var result = await _hotelRepository.UpdateAsync(hotel);
 
 			if (result > 0)
 			{
-				var data = _mapper.Map<HotelResponseDTO>(hotel);
+				var updatedHotel = await _hotelRepository.GetHotelByIdAsync(item.Id);
+				var responseData = _mapper.Map<HotelResponseDTO>(updatedHotel);
 				_logger.Information("End: HotelService - UpdateAsync");
-				return new ApiResponse<HotelResponseDTO>(200, _mapper.Map<HotelResponseDTO>(hotel), "Hotel updated successfully");
+				return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel updated successfully");
 			}
 
 			_logger.Information("End: HotelService - UpdateAsync");
 			return new ApiResponse<HotelResponseDTO>(400, null, "Error occurred while updating hotel");
-		}
-
-		private async Task<bool> HotelExistsAsync(string name, int? id = null)
-		{
-			return await _hotelRepository.FindByCondition(h => h.Name.Equals(name) && (!id.HasValue || h.Id != id.Value) && h.DeletedAt == null)
-										  .AnyAsync();
-		}
-
-		private async Task<Hotel?> GetHotelByIdAsync(int id)
-		{
-			return await _hotelRepository.GetHotelByIdAsync(id);
-		}
-
-		private async Task<List<RoomEntity>> GetRoomsByHotelIdAsync(int hotelId)
-		{
-			return await _roomRepository.FindByCondition(r => r.HotelId == hotelId).ToListAsync();
 		}
 	}
 }
