@@ -15,13 +15,13 @@ namespace Room.API
 				.ForMember(dest => dest.HotelRules, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<HotelRulesDTO>>(src.HotelRules)))
 				.ForMember(dest => dest.HotelAmenities, opt =>
-				opt.MapFrom(src => JsonConvert.DeserializeObject<List<HotelAmenitiesDTO>>(src.HotelAmenities)))
+					opt.MapFrom(src => JsonConvert.DeserializeObject<List<HotelAmenitiesDTO>>(src.HotelAmenities)))
 				.ReverseMap()
 				.ForMember(dest => dest.Reviews, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.Reviews)))
 				.ForMember(dest => dest.HotelRules, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.HotelRules)))
-					.ForMember(dest => dest.HotelAmenities, opt =>
+				.ForMember(dest => dest.HotelAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.HotelAmenities)));
 
 			CreateMap<HotelRequestDTO, Hotel>()
@@ -45,30 +45,29 @@ namespace Room.API
 				.ForMember(dest => dest.RoomAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<RoomAmenitiesDTO>>(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
-					opt.MapFrom(src => src.ImagesList))  
+					opt.MapFrom(src => JsonConvert.DeserializeObject<List<ImagesDTO>>(src.Images)))
 				.ReverseMap()
 				.ForMember(dest => dest.Reviews, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.Reviews)))
 				.ForMember(dest => dest.RoomAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
-					opt.MapFrom(src => JsonConvert.SerializeObject(src.Images))); 
+					opt.MapFrom(src => JsonConvert.SerializeObject(src.Images)));
 
 			CreateMap<RoomRequestDTO, RoomEntity>()
 				.ForMember(dest => dest.Reviews, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.Reviews)))
 				.ForMember(dest => dest.RoomAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.RoomAmenities)))
-				.ForMember(dest => dest.ImagesList, opt =>
-					opt.MapFrom(src => src.Images))  
+				.ForMember(dest => dest.Images, opt =>
+					opt.MapFrom(src => JsonConvert.SerializeObject(src.Images)))
 				.ReverseMap()
 				.ForMember(dest => dest.Reviews, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<Shared.DTOs.ReviewRoom>>(src.Reviews)))
 				.ForMember(dest => dest.RoomAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<RoomAmenitiesDTO>>(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
-					opt.MapFrom(src => JsonConvert.SerializeObject(src.Images)));
-
+					opt.MapFrom(src => JsonConvert.DeserializeObject<List<Image>>(src.Images)));
 		}
 	}
 }
