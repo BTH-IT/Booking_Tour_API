@@ -10,15 +10,11 @@ namespace Room.API.Entities
     public class RoomEntity : EntityBase<int>, IDateTracking
     {
         public string Name { get; set; }    
-        public RoomType Type { get; set; }  
-        public BedType BedType { get; set; }
-        public double? Rate {  get; set; }   
         public string? Video { get; set; }
         public string? Detail { get; set; }
         public double Price { get;set; }
         public bool IsAvailable { get; set; }
 		public int MaxGuests { get; set; }
-		public int Size { get; set; }
 		[NotMapped]
 		public List<ReviewRoom> ReviewList { get; set; }
 		[NotMapped]
