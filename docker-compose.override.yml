@@ -26,3 +26,11 @@ services:
     ports:
       - "5004:80"
     restart: always
+  api_gateway:
+    container_name: api_gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=new_booking_tour;user=${DB_USER};password=${DB_PASSWORD}
+    ports:
+      - "5000:80"

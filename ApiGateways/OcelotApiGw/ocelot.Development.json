@@ -1,8 +1,71 @@
 ﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/identity/{allendpoints}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "room.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/room/{allendpoints}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tour.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/tour/{allendpoints}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    }
+  ],
   "GlobalConfiguration": {
+    "RequestIdKey": "OcelotRequestId",
     "BaseUrl": "http://localhost:5000"
-  },
-  "Route": {
-
   }
 }
