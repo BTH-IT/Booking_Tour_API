@@ -16,6 +16,7 @@ namespace Shared.DTOs
 		public double? Rate { get; set; }
 		public List<ReviewHotel>? Reviews { get; set; }
 		public List<HotelRulesDTO>? HotelRules { get; set; }
+		public List<HotelAmenitiesDTO>? HotelAmenities { get; set; }
 		public IEnumerable<RoomResponseDTO> Rooms { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
@@ -25,6 +26,12 @@ namespace Shared.DTOs
 	{
 		public int Id { get; set; }
 		public List<HotelRulesDTO>? HotelRules { get; set; }
+	}
+	
+	public class HotelAmenitiesResponseDTO
+	{
+		public int Id { get; set; }
+		public List<HotelAmenitiesDTO>? HotelAmenities { get; set; }
 	}
 
 	public class HotelRequestDTO
@@ -37,6 +44,7 @@ namespace Shared.DTOs
 		public double? Rate { get; set; }
 		public List<ReviewHotel>? Reviews { get; set; }
 		public List<HotelRulesDTO>? HotelRules { get; set; }
+		public List<HotelAmenitiesDTO>? HotelAmenities { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
 		public DateTime? DeletedAt { get; set; }

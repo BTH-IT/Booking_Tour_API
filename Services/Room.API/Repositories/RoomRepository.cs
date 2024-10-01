@@ -59,7 +59,6 @@ namespace Room.API.Repositories
 			return await query.ToListAsync();
 		}
 
-
 		private IQueryable<RoomEntity> FilterByRoomSize(IQueryable<RoomEntity> query, string roomSize)
 		{
 			return roomSize switch
