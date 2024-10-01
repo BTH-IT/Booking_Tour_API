@@ -24,9 +24,9 @@ namespace Identity.API.Repositories
 				await UpdateAsync(user);
 			}
 		}
-        public async Task<User> GetUserByIdAsync(int id) => await FindByCondition(c=>c.Id.Equals(id) && c.DeletedAt == null).FirstOrDefaultAsync();
+        public async Task<User> GetUserByIdAsync(int id) => await FindByCondition(c=>c.Id.Equals(id) && c.DeletedAt == null, false, c => c.Account).FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<User>> GetUsersAsync() => await FindByCondition(c => c.DeletedAt == null).ToListAsync();
+        public async Task<IEnumerable<User>> GetUsersAsync() => await FindByCondition(c => c.DeletedAt == null,false, c=>c.Account).ToListAsync();
 
         public Task UpdateUserAsync(User user) => UpdateAsync(user);
     }
