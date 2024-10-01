@@ -5,6 +5,7 @@ namespace Shared.DTOs
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
+		public List<ImagesDTO> Images { get; set; } = new List<ImagesDTO>();
 		public string? Video { get; set; }
 		public string? Detail { get; set; }
 		public double Price { get; set; }
@@ -22,6 +23,7 @@ namespace Shared.DTOs
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
+		public List<ImagesDTO> Images { get; set; } = new List<ImagesDTO>();
 		public string? Video { get; set; }
 		public string? Detail { get; set; }
 		public double Price { get; set; }

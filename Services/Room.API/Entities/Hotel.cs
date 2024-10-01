@@ -10,6 +10,7 @@ namespace Room.API.Entities
 	{
 		public string Name { get; set; }
 		public string Location { get; set; }		
+		public int LocationCode { get; set; }
 		public string Description { get; set; }		
 		public string ContactInfo { get; set; }		
 		[NotMapped]

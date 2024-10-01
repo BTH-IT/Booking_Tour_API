@@ -9,9 +9,11 @@ namespace Room.API.Entities
     [Table("Rooms")]
     public class RoomEntity : EntityBase<int>, IDateTracking
     {
-        public string Name { get; set; }    
-        public string? Video { get; set; }
-        public string? Detail { get; set; }
+        public string Name { get; set; }
+		[NotMapped]
+		public List<Image> ImagesList { get; set; } = new List<Image>();
+		public string? Video { get; set; }
+		public string? Detail { get; set; }
         public double Price { get;set; }
         public bool IsAvailable { get; set; }
 		public int MaxGuests { get; set; }
@@ -38,6 +40,12 @@ namespace Room.API.Entities
 			get => JsonConvert.SerializeObject(RoomAmenitiesList);
 			set => RoomAmenitiesList = JsonConvert.DeserializeObject<List<RoomAmenities>>(value) ?? new List<RoomAmenities>();
 
+		}
+		[Column(TypeName = "JSON")]
+		public string Images
+		{
+			get => JsonConvert.SerializeObject(ImagesList);
+			set => ImagesList = JsonConvert.DeserializeObject<List<Image>>(value) ?? new List<Image>();
 		}
 	}
 }

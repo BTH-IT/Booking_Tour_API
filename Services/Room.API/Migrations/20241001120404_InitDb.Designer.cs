@@ -12,8 +12,8 @@ using Room.API.Persistence;
 namespace Room.API.Migrations
 {
     [DbContext(typeof(RoomDbContext))]
-    [Migration("20240925193340_changecol")]
-    partial class changecol
+    [Migration("20241001120404_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,10 @@ namespace Room.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("HotelAmenities")
+                        .IsRequired()
+                        .HasColumnType("JSON");
+
                     b.Property<string>("HotelRules")
                         .IsRequired()
                         .HasColumnType("JSON");
@@ -55,12 +59,12 @@ namespace Room.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("LocationCode")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<double>("Rate")
-                        .HasColumnType("double");
 
                     b.Property<string>("Reviews")
                         .IsRequired()
@@ -82,9 +86,6 @@ namespace Room.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BedType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -94,12 +95,12 @@ namespace Room.API.Migrations
                     b.Property<string>("Detail")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("HotelAmenities")
-                        .IsRequired()
-                        .HasColumnType("JSON");
-
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("tinyint(1)");
@@ -114,9 +115,6 @@ namespace Room.API.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
-                    b.Property<double?>("Rate")
-                        .HasColumnType("double");
-
                     b.Property<string>("Reviews")
                         .IsRequired()
                         .HasColumnType("JSON");
@@ -124,12 +122,6 @@ namespace Room.API.Migrations
                     b.Property<string>("RoomAmenities")
                         .IsRequired()
                         .HasColumnType("JSON");
-
-                    b.Property<int>("Size")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
