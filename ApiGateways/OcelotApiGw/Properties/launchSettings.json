@@ -48,5 +48,14 @@
       "applicationUrl": "http://localhost:29641",
       "sslPort": 44346
     }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:50420/",
+      "sslPort": 44387
+    }
   }
 }

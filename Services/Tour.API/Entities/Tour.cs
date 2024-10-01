@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Tour.API.Entities
 {
     [Table("tours")]
+
     public class TourEntity : EntityBase<int>, IDateTracking
     {
         [MaxLength(255)] // Đặt chiều dài tối đa cho tên tour

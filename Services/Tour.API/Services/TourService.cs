@@ -52,11 +52,9 @@ namespace Tour.API.Services
             _logger.Information("Begin: TourService - CreateAsync");
 
             var tourEntity = _mapper.Map<TourEntity>(item);
-           
-            var result = await _tourRepository.CreateAsync(tourEntity);
-
+            await _tourRepository.CreateAsync(tourEntity);
+            var result = await _tourRepository.SaveChangesAsync();
             _logger.Information("End: TourService - CreateAsync");
-
             return result > 0
                 ? new ApiResponse<int>(200, tourEntity.Id, "Tạo tour thành công")
                 : new ApiResponse<int>(400, 0, "Tạo tour thất bại");
