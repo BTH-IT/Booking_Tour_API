@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "Room.API.GrpcServer.Protos";
+
+service RoomGrpcService{
+	rpc GetRoomById (GetRoomByIdRequest) returns (GetRoomByIdResponse);
+}
+
+message GetRoomByIdRequest{
+	int32 Id = 1;
+}
+message GetRoomByIdResponse{
+	int32 Result = 2;
+}
