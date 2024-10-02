@@ -37,6 +37,7 @@ namespace Room.API.Services
 			}
 
 			var hotelEntity = _mapper.Map<Hotel>(item);
+			hotelEntity.CreatedAt = DateTime.UtcNow;
 			var newId = await _hotelRepository.CreateAsync(hotelEntity);
 			var createdHotel = await _hotelRepository.GetHotelByIdAsync(newId);
 			var responseData = _mapper.Map<HotelResponseDTO>(createdHotel);
@@ -144,6 +145,7 @@ namespace Room.API.Services
 			}
 
 			hotel = _mapper.Map<Hotel>(item);
+			hotel.UpdatedAt = DateTime.UtcNow;
 			var result = await _hotelRepository.UpdateAsync(hotel);
 
 			if (result > 0)
