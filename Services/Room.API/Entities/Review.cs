@@ -2,7 +2,7 @@
 {
     public class ReviewRoom
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 		public string Content { get; set; }
 		public float Rating { get; set; }
 		public DateTime? CreatedAt { get; set; }
@@ -12,7 +12,7 @@
 	}
 	public class ReviewHotel
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 		public string Content { get; set; }
 		public float Rating { get; set; }
 		public DateTime? CreatedAt { get; set; }

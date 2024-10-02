@@ -54,6 +54,7 @@ namespace Room.API.Persistence
 					};
 
 					var hotels = new List<Hotel>();
+					int count = 1;
 
 					foreach (var province in provinces)
 					{
@@ -63,7 +64,7 @@ namespace Room.API.Persistence
 							{
 								Name = $"Khách sạn {province} {i}",
 								Location = $"{province}",
-								LocationCode = i,
+								LocationCode = count,
 								Description = $"Mô tả cho Khách sạn {province} {i}",
 								ContactInfo = $"+84-24-1234-567{i}",
 								CreatedAt = DateTime.UtcNow,
@@ -74,7 +75,7 @@ namespace Room.API.Persistence
 								Rooms = new List<RoomEntity>()
 							};
 
-							for (int j = 1; j <= 10; j++)
+							for (int j = 1; j <= 5; j++)
 							{
 								var room = new RoomEntity
 								{
@@ -136,6 +137,7 @@ namespace Room.API.Persistence
 
 							hotels.Add(hotel);
 						}
+						count++;
 					}
 
 					await _context.Hotels.AddRangeAsync(hotels);
