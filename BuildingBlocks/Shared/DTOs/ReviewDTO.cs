@@ -8,7 +8,7 @@ namespace Shared.DTOs
 {
 	public class ReviewRoom
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 
 		public string Content { get; set; }
 
@@ -23,7 +23,7 @@ namespace Shared.DTOs
 	}
 	public class ReviewHotel
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 
 		public string Content { get; set; }
 
