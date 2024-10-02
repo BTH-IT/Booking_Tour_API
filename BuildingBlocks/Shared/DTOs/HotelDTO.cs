@@ -32,8 +32,6 @@ namespace Shared.DTOs
 		public List<ReviewHotel>? Reviews { get; set; }
 		public List<HotelRulesDTO>? HotelRules { get; set; }
 		public List<HotelAmenitiesDTO>? HotelAmenities { get; set; }
-		public DateTime CreatedAt { get; set; }
-		public DateTime? UpdatedAt { get; set; }
 		public DateTime? DeletedAt { get; set; }
 	}
 }

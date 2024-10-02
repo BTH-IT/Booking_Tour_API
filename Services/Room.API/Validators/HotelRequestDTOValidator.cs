@@ -39,15 +39,6 @@ namespace Room.API.Validators
 					hotelAmenities == null ||
 					hotelAmenities.All(ha => ha.Title.Length <= 1000))
 				.WithMessage("Each hotel amenity title must not exceed 1000 characters");
-
-			RuleFor(hotel => hotel.CreatedAt)
-				.GreaterThanOrEqualTo(DateTime.Today)
-				.WithMessage("CreatedAt cannot be before today");
-
-			RuleFor(hotel => hotel.UpdatedAt)
-				.GreaterThanOrEqualTo(hotel => hotel.CreatedAt)
-				.When(hotel => hotel.UpdatedAt.HasValue)
-				.WithMessage("UpdatedAt cannot be before CreatedAt");
 		}
 	}
 }
