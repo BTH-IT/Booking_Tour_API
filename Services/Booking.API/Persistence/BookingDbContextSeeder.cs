@@ -20,7 +20,7 @@ namespace Booking.API.Persistence
                 if (_context.Database.IsMySql())
                 {
                     await _context.Database.MigrateAsync();
-                    _logger.Information("Initialed Db");
+                    _logger.Information("Initialized Db");
                 }
             }
             catch (Exception ex)

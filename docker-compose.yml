@@ -1,23 +1,81 @@
 services:
-  # rabbitmq:
-  #   image: rabbitmq:3-management-alpine
-  identity.api:
-    image: ${DOCKER_REGISTRY-}identity-api:${PLATFORM:-linux}-${TAG:-latest}
+  mysql:
+    container_name: mysql-container
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - apis-network
+    restart: always
+    # Healthcheck for mysql container
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  identity:
+    image: identity-api
     build:
-        context: .
-        dockerfile: Services/Identity.API/Dockerfile
+      context: .
+      dockerfile: Services/Identity.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   room.api:
-    image: ${DOCKER_REGISTRY-}room-api:${PLATFORM:-linux}-${TAG:-latest}
+    image: room-api
     build:
-        context: .
-        dockerfile: Services/Room.API/Dockerfile
+      context: .
+      dockerfile: Services/Room.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   tour.api:
-    image: ${DOCKER_REGISTRY-}tour-api:${PLATFORM:-linux}-${TAG:-latest}
+    image: tour-api
     build:
-        context: .
-        dockerfile: Services/Tour.API/Dockerfile
-       
+      context: .
+      dockerfile: Services/Tour.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  booking.api:
+    image: booking-api
+    build: 
+      context: .
+      dockerfile: Services/Booking.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  rabbitmq:
+    container_name: rabbitmq-container
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - apis-network
+    restart: always
+
 networks:
-  default:
-    name: booking_api
-    driver: bridge
+  apis-network:
+
+volumes:
+  mysql_data:
+    name: mysql_data

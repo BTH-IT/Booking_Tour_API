@@ -9,6 +9,7 @@
 *.dll.config
 *.cache
 *.suo
+*.pfx
 # Include dlls if they�re in the NuGet packages directory
 !/packages/*/lib/*.dll
 !/packages/*/lib/*/*.dll

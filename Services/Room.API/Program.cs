@@ -1,8 +1,10 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Contracts.Exceptions;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Room.API;
 using Room.API.Extensions;
+using Room.API.GrpcServer.Services;
 using Room.API.Persistence;
 using Room.API.Validators;
 using Serilog;
@@ -35,13 +37,18 @@ try
     builder.Services.AddInfrastructureServices();
     // Add Cors
     builder.Services.ConfigureCors(builder.Configuration);
+    // Add Grpc
+    builder.Services.AddGrpc(options =>
+    {
+        options.Interceptors.Add<GrpcExceptionInterceptor>();
+    });
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
     // Configure the HTTP request pipeline.
 
     var app = builder.Build();
 
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
     {
         app.UseSwagger();
         app.UseSwaggerUI();
@@ -50,7 +57,7 @@ try
     //app.UseHttpsRedirection();
     app.UseCors("CorsPolicy");
     app.UseAuthorization();
-
+    app.MapGrpcService<RoomProtoService>();
     app.MapControllers();
     // Seeding database async
     using (var scope = app.Services.CreateScope())

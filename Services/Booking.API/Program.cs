@@ -1,5 +1,8 @@
+using Booking.API;
 using Booking.API.Extensions;
 using Booking.API.Persistence;
+using Booking.API.Validators;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +10,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Shared.DTOs;
 using System.Text;
-
+using EventBus.Masstransit;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -17,13 +20,14 @@ try
     builder.AddAppConfigurations();
     // Add services to the container.
     builder.Services.AddControllers();
+    builder.Services.AddConfigurationSettings(builder.Configuration);
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     // Add Auto Mapper
-    //builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+    builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     // Add Fluent Validator 
-    //builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<AccountRequestDTOValidator>());
+    builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<BookingTourRequestDtoValidator>());
     builder.Services.Configure<ApiBehaviorOptions>(options =>
     {
         options.SuppressModelStateInvalidFilter = true;
@@ -86,16 +90,19 @@ try
             });
         }
     );
+    //Masstransit and RabbitMq
+    builder.Services.AddCustomMassTransit(builder.Environment,typeof(Program).Assembly);
+    //Add GrpcClient
+    builder.Services.AddGrpcClients();
     // Configure the HTTP request pipeline.
     var app = builder.Build();
-
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
     app.UseCors("CorsPolicy");
-    //app.UseHttpsRedirection();
+    app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
 
