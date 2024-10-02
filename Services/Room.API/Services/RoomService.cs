@@ -37,6 +37,7 @@ namespace Room.API.Services
 			}
 
 			var roomEntity = _mapper.Map<RoomEntity>(item);
+			roomEntity.CreatedAt = DateTime.UtcNow;
 			var newId = await _roomRepository.CreateAsync(roomEntity);
 
 			var createdRoom = await _roomRepository.GetRoomByIdAsync(newId);
@@ -132,6 +133,7 @@ namespace Room.API.Services
 				}
 
 				room = _mapper.Map<RoomEntity>(item);
+				room.UpdatedAt = DateTime.UtcNow;
 				var result = await _roomRepository.UpdateAsync(room);
 
 				if (result > 0)
