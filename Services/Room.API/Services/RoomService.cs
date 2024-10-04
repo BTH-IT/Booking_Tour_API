@@ -9,7 +9,7 @@ using Shared.Helper;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using ILogger = Serilog.ILogger;
 
-namespace Room.API.Services
+namespace Room.API.Services 
 {
 	public class RoomService : IRoomService
 	{

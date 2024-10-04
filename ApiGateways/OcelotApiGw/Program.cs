@@ -23,54 +23,11 @@ try
 	builder.Services.ConfigureOcelot(builder.Configuration);
 	//Add Cors
 	builder.Services.ConfigureCors(builder.Configuration);
-	//Configure authentication
-	builder.Services.AddAuthentication(cfg =>
-	{
-		cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-		cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-		cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-	}).AddJwtBearer(options =>
-		options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-		{
-			ValidateIssuer = false,
-			ValidateAudience = false,
-			ValidateLifetime = true,
-			ValidateIssuerSigningKey = true,
-			ClockSkew = TimeSpan.Zero,
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-					builder.Configuration.GetSection("Jwt:SecretKey").Value
-				)
-			)
-		}
-	);
 	builder.Services.AddEndpointsApiExplorer();
 	builder.Services.AddSwaggerGen(
 		options =>
 		{
-			options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingSystem - Identity API", Version = "v1" });
-			options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-			{
-				In = ParameterLocation.Header,
-				Description = "Please enter a valid token",
-				Name = "Authorization",
-				Type = SecuritySchemeType.Http,
-				BearerFormat = "JWT",
-				Scheme = "Bearer"
-			});
-			options.AddSecurityRequirement(new OpenApiSecurityRequirement
-			{
-				{
-					new OpenApiSecurityScheme
-					{
-						Reference = new OpenApiReference
-						{
-							Type=ReferenceType.SecurityScheme,
-							Id="Bearer"
-						}
-					},
-					new List<string>{}
-				}
-			});
+			options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingSystem - Ocelot API Gateway", Version = "v1" });
 		}
 	);
 
