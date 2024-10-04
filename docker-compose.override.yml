@@ -26,6 +26,16 @@ services:
     ports:
       - "5004:80"
     restart: always
+  upload.api:
+    container_name: upload.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5005:80"
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    restart: always 
   api_gateway:
     container_name: api_gateway
     environment:
