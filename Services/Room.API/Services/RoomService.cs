@@ -159,10 +159,12 @@ namespace Room.API.Services
 		{
 			_logger.Information("Begin: RoomService - SearchRoomsAsync");
 
-			var rooms = await _roomRepository.SearchRoomsAsync(searchRequest);
-			var data = _mapper.Map<List<RoomResponseDTO>>(rooms);
+			var pagedResult = await _roomRepository.SearchRoomsAsync(searchRequest);
+
+			var data = _mapper.Map<List<RoomResponseDTO>>(pagedResult.Items);
 
 			_logger.Information("End: RoomService - SearchRoomsAsync");
+
 			return new ApiResponse<List<RoomResponseDTO>>(200, data, "Rooms retrieved successfully");
 		}
 	}
