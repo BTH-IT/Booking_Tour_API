@@ -52,7 +52,13 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-
+  upload.api:
+    image: upload-api
+    build:
+        context: .
+        dockerfile: Services/Upload.API/Dockerfile
+    networks:
+      - apis-network  
   api_gateway:
     image: api-gateway
     build:
@@ -64,7 +70,7 @@ services:
       - tour.api
     networks:
       - apis-network
-
+  
   rabbitmq:
     container_name: rabbitmq-container
     image: rabbitmq:latest
