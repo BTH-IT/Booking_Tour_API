@@ -5,6 +5,8 @@ using Room.API.Entities;
 using Room.API.Persistence;
 using Room.API.Repositories.Interfaces;
 using Shared.DTOs;
+using Shared.Helper;
+using System.Xml.Linq;
 
 namespace Room.API.Repositories
 {
@@ -34,24 +36,64 @@ namespace Room.API.Repositories
 		public async Task<IEnumerable<RoomEntity>> GetRoomsAsync() =>
 		    await FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel).ToListAsync();
 
-		public async Task<IEnumerable<RoomEntity>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
+		public async Task<PagedResult<RoomEntity>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
 		{
-			var query = FindAll().Where(r => r.DeletedAt == null);
+			var query = FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel);
 
-			if (searchRequest.Guests != null)
+			if (!string.IsNullOrEmpty(searchRequest.Name))
 			{
-				var totalGuests = searchRequest.Guests.Adults + searchRequest.Guests.Children;
-				query = query.Where(r => r.MaxGuests >= totalGuests);
+				query = query.Where(r => r.Name.Contains(searchRequest.Name));
 			}
 
-			if (searchRequest.Facilities?.Any() == true)
+			if (!string.IsNullOrEmpty(searchRequest.Location))
 			{
-				var allRooms = await query.ToListAsync(); 
-				var filteredRooms = allRooms.Where(r => searchRequest.Facilities.All(f => r.RoomAmenitiesList.Any(ra => ra.Title == f))).ToList();
-				return filteredRooms;
+				query = query.Where(r => r.Hotel.Location.Contains(searchRequest.Location));
 			}
-			
-			return await query.ToListAsync();
+
+			if (searchRequest.MaxGuests.HasValue)
+			{
+				query = query.Where(r => r.MaxGuests >= searchRequest.MaxGuests);
+			}
+
+			if (searchRequest.MinPrice.HasValue)
+			{
+				query = query.Where(r => r.Price >= searchRequest.MinPrice);
+			}
+
+			if (searchRequest.MaxPrice.HasValue)
+			{
+				query = query.Where(r => r.Price <= searchRequest.MaxPrice);
+			}
+
+			switch (searchRequest.SortBy?.ToLower())
+			{
+				case "price":
+					query = searchRequest.SortOrder == "desc"
+						? query.OrderByDescending(r => r.Price)
+						: query.OrderBy(r => r.Price);
+					break;
+				case "maxguests":
+					query = searchRequest.SortOrder == "desc"
+						? query.OrderByDescending(r => r.MaxGuests)
+						: query.OrderBy(r => r.MaxGuests);
+					break;
+				case "name":
+					query = searchRequest.SortOrder == "desc"
+						? query.OrderByDescending(r => r.Name)
+						: query.OrderBy(r => r.Name);
+					break;
+				default:
+					query = query.OrderBy(r => r.Name);
+					break;
+			}
+
+			var totalItems = await query.CountAsync();
+			var rooms = await query
+				.Skip((searchRequest.PageNumber - 1) * searchRequest.PageSize)
+				.Take(searchRequest.PageSize)
+				.ToListAsync();
+
+			return new PagedResult<RoomEntity>(rooms, totalItems, searchRequest.PageNumber, searchRequest.PageSize);
 		}
 
 		public Task UpdateRoomAsync(RoomEntity room) => UpdateAsync(room);
