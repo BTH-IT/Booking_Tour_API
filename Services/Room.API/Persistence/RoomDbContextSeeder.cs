@@ -85,55 +85,55 @@ namespace Room.API.Persistence
 									IsAvailable = true,
 									MaxGuests = 2,
 									CreatedAt = DateTime.UtcNow,
-									UpdatedAt = DateTime.UtcNow,
 									ReviewList = new List<ReviewRoom>(),
 									RoomAmenitiesList = new List<RoomAmenities>(),
 									ImagesList = new List<Image>(),
 									Video = $"https://realvideos.com/{province}/khachsan{i}/phong{j}.mp4" 
 								};
-
+								int Counter = 0;
 								for (int k = 1; k <= 5; k++)
 								{
 									room.ImagesList.Add(new Image
 									{
+										Id = $"{++Counter}",
 										Url = $"https://realimages.com/{province}/hotel{i}/room{j}/image{k}.jpg"
+									});
+									room.ReviewList.Add(new ReviewRoom
+									{
+										Id = $"{Counter}",
+										Content = $"Đánh giá tuyệt vời cho phòng {j} tại khách sạn {province} {i}.",
+										Rating = 4.5f,
+										CreatedAt = DateTime.UtcNow,
+										RoomId = room.Id,
+										UserId = j
 									});
 								}
 
-								room.ReviewList.Add(new ReviewRoom
-								{
-									Content = $"Đánh giá tuyệt vời cho phòng {j} tại khách sạn {province} {i}.",
-									Rating = 4.5f,
-									CreatedAt = DateTime.UtcNow,
-									UpdatedAt = DateTime.UtcNow,
-									RoomId = room.Id,
-									UserId = j
-								});
-
-								room.RoomAmenitiesList.Add(new RoomAmenities { Title = "Wi-Fi miễn phí" });
-								room.RoomAmenitiesList.Add(new RoomAmenities { Title = "Điều hòa nhiệt độ" });
-								room.RoomAmenitiesList.Add(new RoomAmenities { Title = "TV màn hình phẳng" });
+								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"1", Title = "Wi-Fi miễn phí" });
+								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"2", Title = "Điều hòa nhiệt độ" });
+								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"3", Title = "TV màn hình phẳng" });
 
 								hotel.Rooms.Add(room);
 							}
 							for (int k = 1; k <= 5; k++)
 							{
+								int Counter = 0;
 								hotel.ReviewList.Add(new ReviewHotel
 								{
+									Id = $"{++Counter}",
 									Content = $"Excellent hotel experience. Review {k} for Hotel {i}",
 									Rating = 4 + (k % 2),
 									CreatedAt = DateTime.UtcNow,
-									UpdatedAt = DateTime.UtcNow,
 									HotelId = hotel.Id,
 									UserId = k + 100
 								});
 							}
 
-							hotel.HotelRulesList.Add(new HotelRules { Title = "Không hút thuốc trong phòng." });
-							hotel.HotelRulesList.Add(new HotelRules { Title = "Giữ yên lặng từ 22h đến 6h sáng." });
-							hotel.HotelAmenitiesList.Add(new HotelAmenities { Title = "Bể bơi ngoài trời" });
-							hotel.HotelAmenitiesList.Add(new HotelAmenities { Title = "Phòng Gym" });
-							hotel.HotelAmenitiesList.Add(new HotelAmenities { Title = "Spa" });
+							hotel.HotelRulesList.Add(new HotelRules { Id = $"1", Title = "Không hút thuốc trong phòng." });
+							hotel.HotelRulesList.Add(new HotelRules { Id = $"2", Title = "Giữ yên lặng từ 22h đến 6h sáng." });
+							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"1", Title = "Bể bơi ngoài trời" });
+							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"2", Title = "Phòng Gym" });
+							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"3", Title = "Spa" });
 
 							hotels.Add(hotel);
 						}
