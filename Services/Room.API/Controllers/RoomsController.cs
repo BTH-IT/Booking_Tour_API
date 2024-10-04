@@ -54,7 +54,7 @@ namespace Room.API.Controllers
 			return StatusCode(response.StatusCode, response);
 		}
 
-		[HttpPost("search")]
+		[HttpGet("search")]
 		public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchRequestDTO request)
 		{
 			var rooms = await _roomService.SearchRoomsAsync(request);
