@@ -40,7 +40,7 @@ namespace Upload.API.Controllers
             }
             return Ok(new ApiResponse<List<FileDTO>>(200, uploadResults, "Thành công"));
         }
-        [HttpDelete("s3/mutiple")]
+        [HttpDelete("s3/multiple")]
         public async Task<IActionResult> DeleteMultipleFilesAsync(string[] fileNames)
         {
             if (fileNames == null || fileNames.Count() == 0)
@@ -64,9 +64,9 @@ namespace Upload.API.Controllers
             var response = await _s3Client.ListObjectsV2Async(request);
 
             var files = response.S3Objects.Select(o => new FileDTO(
-                 $"https://{_bucketName}.s3.amazonaws.com/{o.Key}",
-            o.Key.Split('.').Last(),
-                 o.Key)
+                $"https://{_bucketName}.s3.amazonaws.com/{o.Key}",
+                o.Key,
+                o.Key.Split('.').Last())
             ).ToList();
 
             return Ok(new ApiResponse<List<FileDTO>>(200,files,"Thành công"));
