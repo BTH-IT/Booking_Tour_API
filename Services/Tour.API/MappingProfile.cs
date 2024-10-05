@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Shared.DTOs;
+using Shared.Helper;
 using Tour.API.Entities;
 
 public class MappingProfile : Profile
@@ -33,5 +34,15 @@ public class MappingProfile : Profile
 
         // Ánh xạ giữa Review (Entities.Review) và Review (DTOs.Review)
         CreateMap<Tour.API.Entities.Review, Shared.DTOs.Review>().ReverseMap();
+
+        // Ánh xạ giữa PagedResult<TourEntity> và PagedResult<TourResponseDTO>
+        /* 
+          CreateMap<PagedResult<TourEntity>, PagedResult<TourResponseDTO>>()
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items.Select(item =>
+               Mapper.Map<TourResponseDTO>(item)).ToList()))
+            .ForMember(dest => dest.TotalItems, opt => opt.MapFrom(src => src.TotalItems))
+            .ForMember(dest => dest.PageNumber, opt => opt.MapFrom(src => src.PageNumber))
+            .ForMember(dest => dest.PageSize, opt => opt.MapFrom(src => src.PageSize));
+        */
     }
 }

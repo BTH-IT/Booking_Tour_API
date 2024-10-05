@@ -25,7 +25,7 @@ try
     builder.Services.AddSwaggerGen();
 
     // Add Auto Mapper
-    builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+    builder.Services.AddAutoMapper(typeof(MappingProfile));
 
     // Add Fluent Validator 
     builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<TourValidator>());

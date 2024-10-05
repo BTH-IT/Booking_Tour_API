@@ -1,5 +1,6 @@
 ﻿using Contracts.Domains.Interfaces;
 using Shared.DTOs;
+using Shared.Helper;
 using Tour.API.Entities;
 using Tour.API.Persistence;
 
