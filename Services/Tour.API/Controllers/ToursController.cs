@@ -59,5 +59,21 @@ namespace Tour.API.Controllers
             var response = await _tourService.DeleteAsync(id);
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchTours([FromQuery] TourSearchRequestDTO request)
+        {
+            if (request.PageNumber.HasValue && request.PageSize.HasValue)
+            {
+                var paginatedResult = await _tourService.SearchToursWithPaginationAsync(request);
+                return Ok(paginatedResult);
+            }
+            else
+            {
+                var fullResult = await _tourService.SearchToursAsync(request);
+                return Ok(fullResult);
+            }
+        }
+
     }
 }
