@@ -103,6 +103,15 @@ namespace Tour.API.Services
 
             return new ApiResponse<int>(200, id, "Xóa tour thành công (xóa giả)");
         }
+        public async Task<ApiResponse<List<TourResponseDTO>>> SearchToursAsync(TourSearchRequestDTO searchRequest)
+        {
+            _logger.Information("Begin: TourService - SearchToursAsync");
 
+            var tours = await _tourRepository.SearchToursAsync(searchRequest);
+            var data = _mapper.Map<List<TourResponseDTO>>(tours);
+
+            _logger.Information("End: TourService - SearchToursAsync");
+            return new ApiResponse<List<TourResponseDTO>>(200, data, "Tours retrieved successfully");
+        }
     }
 }
