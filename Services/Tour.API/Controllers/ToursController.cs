@@ -59,5 +59,13 @@ namespace Tour.API.Controllers
             var response = await _tourService.DeleteAsync(id);
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchTours([FromQuery] TourSearchRequestDTO request)
+        {
+                var fullResult = await _tourService.SearchToursAsync(request);
+                return Ok(fullResult);
+        }
+
     }
 }
