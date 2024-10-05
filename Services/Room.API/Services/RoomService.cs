@@ -155,7 +155,7 @@ namespace Room.API.Services
 			}
 		}
 
-		public async Task<ApiResponse<List<RoomResponseDTO>>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
+		public async Task<ApiResponse<PagedRoomResponseDTO>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
 		{
 			_logger.Information("Begin: RoomService - SearchRoomsAsync");
 
@@ -163,9 +163,17 @@ namespace Room.API.Services
 
 			var data = _mapper.Map<List<RoomResponseDTO>>(pagedResult.Items);
 
+			var pagedResponse = new PagedRoomResponseDTO
+			{
+				Rooms = data,
+				TotalItems = pagedResult.TotalItems,
+				PageNumber = pagedResult.PageNumber,
+				PageSize = pagedResult.PageSize
+			};
+
 			_logger.Information("End: RoomService - SearchRoomsAsync");
 
-			return new ApiResponse<List<RoomResponseDTO>>(200, data, "Rooms retrieved successfully");
+			return new ApiResponse<PagedRoomResponseDTO>(200, pagedResponse, "Rooms retrieved successfully");
 		}
 	}
 }
