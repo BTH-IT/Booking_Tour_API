@@ -2,6 +2,7 @@
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
+using Shared.Helper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -67,6 +68,7 @@ namespace Tour.API.Repositories
         {
             var query = FindAll().Where(t => t.DeletedAt == null);
 
+            // Filter theo các điều kiện tìm kiếm
             if (!string.IsNullOrWhiteSpace(searchRequest.Keyword))
             {
                 query = query.Where(t => t.Name.Contains(searchRequest.Keyword) || t.Detail.Contains(searchRequest.Keyword));
@@ -91,151 +93,72 @@ namespace Tour.API.Repositories
             {
                 query = query.Where(t => t.Rate <= searchRequest.Rating);
             }
-
-            var result = await query.ToListAsync();
-
-            if (searchRequest.Activities?.Any() == true)
-            {
-                result = result.Where(t => t.ActivityList.Any(a => searchRequest.Activities.Contains(a))).ToList();
-            }
-            if (searchRequest.Destinations?.Any() == true)
-            {
-                result = result.Where(t => searchRequest.Destinations.Contains(t.DestinationId.ToString())).ToList();
-            }
-            if (!string.IsNullOrEmpty(searchRequest.SortBy))
-            {
-                switch (searchRequest.SortBy.ToLower())
-                {
-                    case "releasedate":
-                        result = searchRequest.IsDescending
-                            ? result.OrderByDescending(t => (DateTime.Now - t.DateFrom).TotalDays).ToList()
-                            : result.OrderBy(t => (DateTime.Now - t.DateFrom).TotalDays).ToList();
-                        break;
-
-                    case "tourdate":
-                        result = searchRequest.IsDescending
-                            ? result.OrderByDescending(t => (t.DateTo - t.DateFrom).TotalDays).ToList()
-                            : result.OrderBy(t => (t.DateTo - t.DateFrom).TotalDays).ToList();
-                        break;
-
-                    case "name":
-                        result = searchRequest.IsDescending
-                            ? result.OrderByDescending(t => t.Name).ToList()
-                            : result.OrderBy(t => t.Name).ToList();
-                        break;
-
-                    case "price":
-                        result = searchRequest.IsDescending
-                            ? result.OrderByDescending(t => t.Price).ToList()
-                            : result.OrderBy(t => t.Price).ToList();
-                        break;
-
-                    case "rating":
-                        result = searchRequest.IsDescending
-                            ? result.OrderByDescending(t => t.Rate).ToList()
-                            : result.OrderBy(t => t.Rate).ToList();
-                        break;
-
-                    default:
-                        result = result.OrderBy(t => t.Name).ToList();
-                        break;
-                }
-            }
-            return result;
-        }
-        public async Task<object> SearchToursWithPaginationAsync(TourSearchRequestDTO searchRequest)
-        {
-            var query = FindAll().Where(t => t.DeletedAt == null);
-
-            if (!string.IsNullOrWhiteSpace(searchRequest.Keyword))
-            {
-                query = query.Where(t => t.Name.Contains(searchRequest.Keyword) || t.Detail.Contains(searchRequest.Keyword));
-            }
-            if (searchRequest.MinPrice.HasValue && searchRequest.MaxPrice.HasValue)
-            {
-                query = query.Where(t => t.Price >= searchRequest.MinPrice.Value && t.Price <= searchRequest.MaxPrice.Value);
-            }
-            if (searchRequest.StartDate.HasValue && searchRequest.EndDate.HasValue)
-            {
-                query = query.Where(t => t.DateFrom >= searchRequest.StartDate && t.DateTo <= searchRequest.EndDate);
-            }
-            else if (searchRequest.StartDate.HasValue)
-            {
-                query = query.Where(t => t.DateFrom >= searchRequest.StartDate);
-            }
-            else if (searchRequest.EndDate.HasValue)
-            {
-                query = query.Where(t => t.DateTo <= searchRequest.EndDate);
-            }
-            if (searchRequest.Rating.HasValue)
-            {
-                query = query.Where(t => t.Rate >= searchRequest.Rating);
-            }
-
             if (searchRequest.Activities?.Any() == true)
             {
                 query = query.Where(t => t.ActivityList.Any(a => searchRequest.Activities.Contains(a)));
             }
-
             if (searchRequest.Destinations?.Any() == true)
             {
                 query = query.Where(t => searchRequest.Destinations.Contains(t.DestinationId.ToString()));
             }
 
+            // Đếm tổng số kết quả trước khi sắp xếp
+            var totalItems = await query.CountAsync();
+
+            // Lấy danh sách TourEntity từ database
+            var queryResult = await query.ToListAsync();
+
+            // Thực hiện sắp xếp trên bộ nhớ
             if (!string.IsNullOrEmpty(searchRequest.SortBy))
             {
                 switch (searchRequest.SortBy.ToLower())
                 {
                     case "releasedate":
-                        query = searchRequest.IsDescending
-                            ? query.OrderByDescending(t => (DateTime.Now - t.DateFrom).TotalDays)
-                            : query.OrderBy(t => (DateTime.Now - t.DateFrom).TotalDays);
+                        queryResult = searchRequest.IsDescending
+                            ? queryResult.OrderByDescending(t => (DateTime.Now - t.DateFrom).TotalDays).ToList()
+                            : queryResult.OrderBy(t => (DateTime.Now - t.DateFrom).TotalDays).ToList();
                         break;
 
                     case "tourdate":
-                        query = searchRequest.IsDescending
-                            ? query.OrderByDescending(t => (t.DateTo - t.DateFrom).TotalDays)
-                            : query.OrderBy(t => (t.DateTo - t.DateFrom).TotalDays);
+                        queryResult = searchRequest.IsDescending
+                            ? queryResult.OrderByDescending(t => (t.DateTo - t.DateFrom).TotalDays).ToList()
+                            : queryResult.OrderBy(t => (t.DateTo - t.DateFrom).TotalDays).ToList();
                         break;
 
                     case "name":
-                        query = searchRequest.IsDescending
-                            ? query.OrderByDescending(t => t.Name)
-                            : query.OrderBy(t => t.Name);
+                        queryResult = searchRequest.IsDescending
+                            ? queryResult.OrderByDescending(t => t.Name).ToList()
+                            : queryResult.OrderBy(t => t.Name).ToList();
                         break;
 
                     case "price":
-                        query = searchRequest.IsDescending
-                            ? query.OrderByDescending(t => t.Price)
-                            : query.OrderBy(t => t.Price);
+                        queryResult = searchRequest.IsDescending
+                            ? queryResult.OrderByDescending(t => t.Price).ToList()
+                            : queryResult.OrderBy(t => t.Price).ToList();
                         break;
 
                     case "rating":
-                        query = searchRequest.IsDescending
-                            ? query.OrderByDescending(t => t.Rate)
-                            : query.OrderBy(t => t.Rate);
+                        queryResult = searchRequest.IsDescending
+                            ? queryResult.OrderByDescending(t => t.Rate).ToList()
+                            : queryResult.OrderBy(t => t.Rate).ToList();
                         break;
 
                     default:
-                        query = query.OrderBy(t => t.Name);
+                        queryResult = queryResult.OrderBy(t => t.Name).ToList();
                         break;
                 }
             }
 
-            var totalRecords = await query.CountAsync();
+            // Thực hiện phân trang
+            var tours = queryResult
+                .Skip((searchRequest.PageNumber - 1) * searchRequest.PageSize)
+                .Take(searchRequest.PageSize)
+                .ToList();
 
-            var tours = await query
-                .Skip((searchRequest.PageNumber.Value - 1) * searchRequest.PageSize.Value)
-                .Take(searchRequest.PageSize.Value)
-                .ToListAsync();
-
-            return new
-            {
-                TotalRecords = totalRecords,
-                PageNumber = searchRequest.PageNumber,
-                PageSize = searchRequest.PageSize,
-                Tours = tours
-            };
+            return tours;
         }
+
+
+
     }
 }

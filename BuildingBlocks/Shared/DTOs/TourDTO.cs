@@ -73,9 +73,9 @@
         public double? Rating { get; set; } 
         public List<string>? Activities { get; set; } 
         public List<string>? Destinations { get; set; }
-        public string? SortBy { get; set; } 
+        public string? SortBy { get; set; } = "releasedate";
         public bool IsDescending { get; set; } = false;
-        public int? PageNumber { get; set; } = 1;
-        public int? PageSize { get; set; } = 10;
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 2; 
     }
 }
