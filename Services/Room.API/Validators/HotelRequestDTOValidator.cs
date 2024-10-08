@@ -15,6 +15,10 @@ namespace Room.API.Validators
 				.NotEmpty()
 				.WithMessage("Hotel location is required");
 
+			RuleFor(hotel => hotel.LocationCode)
+				.NotEmpty()
+				.WithMessage("Hotel LocationCode is required");
+
 			RuleFor(hotel => hotel.Description)
 				.NotNull()
 				.MaximumLength(500)
@@ -23,22 +27,6 @@ namespace Room.API.Validators
 			RuleFor(hotel => hotel.ContactInfo)
 				.NotEmpty()
 				.WithMessage("Contact information is required");
-
-			RuleFor(hotel => hotel.Description)
-				.MaximumLength(500)
-				.WithMessage("Description must not exceed 500 characters");
-
-			RuleFor(dto => dto.HotelRules)
-				.Must(HotelRules =>
-					HotelRules == null ||
-					HotelRules.All(ha => ha.Title.Length <= 1000))
-				.WithMessage("Each hotel rules title must not exceed 1000 characters");
-
-			RuleFor(dto => dto.HotelAmenities)
-				.Must(hotelAmenities =>
-					hotelAmenities == null ||
-					hotelAmenities.All(ha => ha.Title.Length <= 1000))
-				.WithMessage("Each hotel amenity title must not exceed 1000 characters");
 		}
 	}
 }

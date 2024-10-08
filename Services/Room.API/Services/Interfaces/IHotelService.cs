@@ -1,6 +1,5 @@
 ﻿using Shared.DTOs;
 using Shared.Helper;
-using System.Threading.Tasks;
 
 namespace Room.API.Services.Interfaces
 {

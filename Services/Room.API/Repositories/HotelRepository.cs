@@ -1,11 +1,9 @@
 ﻿using Contracts.Domains.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Persistence;
 using Room.API.Repositories.Interfaces;
-using Shared.DTOs;
 
 namespace Room.API.Repositories
 {
