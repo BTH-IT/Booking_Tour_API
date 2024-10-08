@@ -18,7 +18,6 @@ namespace Room.API.Entities
         public double Price { get;set; }
         public bool IsAvailable { get; set; }
 		public int MaxGuests { get; set; }
-		public int Size { get; set; }
 		[NotMapped]
 		public List<ReviewRoom> ReviewList { get; set; }
 		[NotMapped]

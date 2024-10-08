@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Tour.API.GrpcServer.Services;
 using Contracts.Exceptions;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -27,7 +28,7 @@ try
     builder.Services.AddSwaggerGen();
 
     // Add Auto Mapper
-    builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+    builder.Services.AddAutoMapper(typeof(MappingProfile));
 
     // Add Fluent Validator 
     builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<TourValidator>());
@@ -55,6 +56,36 @@ try
     {
         options.Interceptors.Add<GrpcExceptionInterceptor>(); 
     });
+    //Add Swagger Gen
+    builder.Services.AddSwaggerGen(
+        options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingSystem - Tour API", Version = "v1" });
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new List<string>{}
+                }
+            });
+        }
+    );
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
@@ -65,7 +96,7 @@ try
     }
     app.UseCors("CorsPolicy");
     app.UseHttpsRedirection(); // Uncomment if you want to enable HTTPS redirection
-
+    app.UseAuthentication(); 
     app.UseAuthorization();
     app.MapControllers();
     app.MapGrpcService<TourProtoService>();

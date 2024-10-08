@@ -49,14 +49,10 @@
         "POST",
         "PUT",
         "DELETE"
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
+      ]
     },
     {
-      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamPathTemplate": "/s3/{allendpoints}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -68,13 +64,8 @@
       "UpstreamHttpMethod": [
         "GET",
         "POST",
-        "PUT",
         "DELETE"
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
+      ]
     }
   ],
   "GlobalConfiguration": {

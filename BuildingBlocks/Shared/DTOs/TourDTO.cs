@@ -63,4 +63,19 @@
         public DateTime? DeletedAt { get; set; }
 
     }
+    public class TourSearchRequestDTO
+    {
+        public string? Keyword { get; set; } 
+        public decimal? MinPrice { get; set; }
+        public decimal? MaxPrice { get; set; }
+        public DateTime? StartDate { get; set; } 
+        public DateTime? EndDate { get; set; } 
+        public double? Rating { get; set; } 
+        public List<string>? Activities { get; set; } 
+        public List<string>? Destinations { get; set; }
+        public string? SortBy { get; set; } = "releasedate";
+        public bool IsDescending { get; set; } = false;
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 2; 
+    }
 }

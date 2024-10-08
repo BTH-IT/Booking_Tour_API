@@ -21,5 +21,4 @@ namespace Shared.Helper
 			PageSize = pageSize;
 		}
 	}
-
 }
