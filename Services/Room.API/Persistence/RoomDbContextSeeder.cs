@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ILogger = Serilog.ILogger; // Use Serilog for logging
-using Room.API.Entities; // Ensure this is the correct namespace for your entities
-using System.Collections.Generic;
-using Shared.Enums; // For List<T>
+using ILogger = Serilog.ILogger;
+using Room.API.Entities; 
 
 namespace Room.API.Persistence
 {
@@ -88,7 +86,7 @@ namespace Room.API.Persistence
 									ReviewList = new List<ReviewRoom>(),
 									RoomAmenitiesList = new List<RoomAmenities>(),
 									ImagesList = new List<Image>(),
-									Video = $"https://realvideos.com/{province}/khachsan{i}/phong{j}.mp4" 
+									VideosList = new List<Video>(),
 								};
 								int Counter = 0;
 								for (int k = 1; k <= 5; k++)
@@ -97,6 +95,12 @@ namespace Room.API.Persistence
 									{
 										Id = $"{++Counter}",
 										Url = $"https://realimages.com/{province}/hotel{i}/room{j}/image{k}.jpg"
+									});
+									room.VideosList.Add(new Video
+									{
+										Id = $"{++Counter}",
+										Url = $"https://realvideos.com/{province}/khachsan{i}/phong{j}.mp4",
+										Type =$"mp4"
 									});
 									room.ReviewList.Add(new ReviewRoom
 									{
