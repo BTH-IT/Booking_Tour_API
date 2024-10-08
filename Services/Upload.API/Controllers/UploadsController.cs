@@ -35,7 +35,7 @@ namespace Upload.API.Controllers
                 var s3Url = await UploadFileAsync(filePath, file.FileName);
                 var fileType = file.ContentType;
 
-                uploadResults.Add(new FileDTO(s3Url, fileType, file.FileName)
+                uploadResults.Add(new FileDTO(s3Url, file.FileName, fileType)
                 );
             }
             return Ok(new ApiResponse<List<FileDTO>>(200, uploadResults, "Thành công"));
