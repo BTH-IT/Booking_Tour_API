@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Room.API.Persistence;
 
@@ -11,9 +12,11 @@ using Room.API.Persistence;
 namespace Room.API.Migrations
 {
     [DbContext(typeof(RoomDbContext))]
-    partial class RoomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241008021446_BDupdate")]
+    partial class BDupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,6 +137,29 @@ namespace Room.API.Migrations
                     b.ToTable("Rooms");
                 });
 
+            modelBuilder.Entity("Room.API.Entities.Video", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("RoomEntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomEntityId");
+
+                    b.ToTable("Video");
+                });
+
             modelBuilder.Entity("Room.API.Entities.RoomEntity", b =>
                 {
                     b.HasOne("Room.API.Entities.Hotel", "Hotel")
@@ -145,9 +171,21 @@ namespace Room.API.Migrations
                     b.Navigation("Hotel");
                 });
 
+            modelBuilder.Entity("Room.API.Entities.Video", b =>
+                {
+                    b.HasOne("Room.API.Entities.RoomEntity", null)
+                        .WithMany("VideosList")
+                        .HasForeignKey("RoomEntityId");
+                });
+
             modelBuilder.Entity("Room.API.Entities.Hotel", b =>
                 {
                     b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("Room.API.Entities.RoomEntity", b =>
+                {
+                    b.Navigation("VideosList");
                 });
 #pragma warning restore 612, 618
         }

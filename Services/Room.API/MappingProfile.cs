@@ -46,13 +46,17 @@ namespace Room.API
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<RoomAmenitiesDTO>>(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<ImagesDTO>>(src.Images)))
+				.ForMember(dest => dest.Videos, opt =>
+					opt.MapFrom(src => JsonConvert.DeserializeObject<List<VideosDTO>>(src.Videos)))
 				.ReverseMap()
 				.ForMember(dest => dest.Reviews, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.Reviews)))
 				.ForMember(dest => dest.RoomAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
-					opt.MapFrom(src => JsonConvert.SerializeObject(src.Images)));
+					opt.MapFrom(src => JsonConvert.SerializeObject(src.Images)))
+				.ForMember(dest => dest.Videos, opt =>
+						opt.MapFrom(src => JsonConvert.SerializeObject(src.Videos)));
 
 			CreateMap<RoomRequestDTO, RoomEntity>()
 				.ForMember(dest => dest.Reviews, opt =>
@@ -61,13 +65,17 @@ namespace Room.API
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.Images)))
+				.ForMember(dest => dest.Videos, opt =>
+						opt.MapFrom(src => JsonConvert.SerializeObject(src.Videos)))
 				.ReverseMap()
 				.ForMember(dest => dest.Reviews, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<Shared.DTOs.ReviewRoom>>(src.Reviews)))
 				.ForMember(dest => dest.RoomAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<RoomAmenitiesDTO>>(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
-					opt.MapFrom(src => JsonConvert.DeserializeObject<List<Image>>(src.Images)));
+					opt.MapFrom(src => JsonConvert.DeserializeObject<List<Image>>(src.Images)))
+				.ForMember(dest => dest.Videos, opt =>
+						opt.MapFrom(src => JsonConvert.DeserializeObject<List<Video>>(src.Videos)));
 		}
 	}
 }

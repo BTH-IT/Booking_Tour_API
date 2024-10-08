@@ -6,7 +6,6 @@ using Room.API.Persistence;
 using Room.API.Repositories.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
-using System.Xml.Linq;
 
 namespace Room.API.Repositories
 {

@@ -1,5 +1,4 @@
-﻿
-using Shared.DTOs;
+﻿using Shared.DTOs;
 using Shared.Helper;
 
 namespace Room.API.Services.Interfaces
