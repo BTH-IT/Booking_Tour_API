@@ -11,18 +11,6 @@ namespace Room.API.Validators
 				.NotEmpty()
 				.WithMessage("Room name is required");
 
-			RuleFor(room => room.Type)
-				.IsInEnum()
-				.WithMessage("Invalid room type");
-
-			RuleFor(room => room.BedType)
-				.IsInEnum()
-				.WithMessage("Invalid bed type");
-
-			RuleFor(room => room.Rate)
-				.GreaterThanOrEqualTo(0)
-				.WithMessage("Rate must be a positive value or zero");
-
 			RuleFor(room => room.Price)
 				.GreaterThanOrEqualTo(0)
 				.WithMessage("Price must be a positive value or zero");
@@ -42,34 +30,11 @@ namespace Room.API.Validators
 				.GreaterThan(0)
 				.WithMessage("MaxGuests must be greater than 0");
 
-			RuleFor(room => room.Size)
-				.GreaterThan(0)
-				.WithMessage("Size must be greater than 0");
-
-			//RuleFor(room => room.Reviews)
-			//	.MaximumLength(2000)
-			//	.WithMessage("Reviews must not exceed 2000 characters");
-
-			//RuleFor(room => room.RoomAmenities)
-			//	.MaximumLength(1000)
-			//	.WithMessage("Room amenities must not exceed 1000 characters");
-
-			//RuleFor(room => room.HotelRules)
-			//	.MaximumLength(1000)
-			//	.WithMessage("Hotel rules must not exceed 1000 characters");
-
-			//RuleFor(room => room.HotelAmenities)
-			//	.MaximumLength(1000)
-			//	.WithMessage("Hotel amenities must not exceed 1000 characters");
-
-			RuleFor(room => room.CreatedAt)
-				.GreaterThanOrEqualTo(DateTime.Today)
-				.WithMessage("CreatedAt cannot be before today");
-
-			RuleFor(room => room.UpdatedAt)
-				.GreaterThanOrEqualTo(room => room.CreatedAt)
-				.When(room => room.UpdatedAt.HasValue)
-				.WithMessage("UpdatedAt cannot be before CreatedAt");
+			RuleFor(dto => dto.RoomAmenities)
+					   .Must(roomAmenities =>
+						   roomAmenities == null ||
+						   roomAmenities.All(ra => ra.Title.Length <= 1000))
+					   .WithMessage("Each room amenity title must not exceed 1000 characters");
 
 			RuleFor(room => room.HotelId)
 				.GreaterThan(0)

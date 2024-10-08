@@ -8,7 +8,7 @@ namespace Shared.DTOs
 {
 	public class RoomAmenitiesDTO
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 		public string Title { get; set; }
 	}
 }

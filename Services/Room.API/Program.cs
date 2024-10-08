@@ -54,7 +54,7 @@ try
         app.UseSwaggerUI();
     }
 
-    //app.UseHttpsRedirection();
+    app.UseHttpsRedirection();
     app.UseCors("CorsPolicy");
     app.UseAuthorization();
     app.MapGrpcService<RoomProtoService>();
@@ -64,8 +64,9 @@ try
     {
         var seeder = scope.ServiceProvider.GetRequiredService<RoomDbContextSeeder>();
         await seeder.InitialiseAsync();
+		await seeder.RoomDbSeedAsync();
     }
-    app.Run();
+	app.Run();
 
 }
 catch (Exception ex)

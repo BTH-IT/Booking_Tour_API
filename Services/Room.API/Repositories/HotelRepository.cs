@@ -1,9 +1,11 @@
 ﻿using Contracts.Domains.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Persistence;
 using Room.API.Repositories.Interfaces;
+using Shared.DTOs;
 
 namespace Room.API.Repositories
 {
@@ -20,16 +22,20 @@ namespace Room.API.Repositories
 			var hotel = await GetHotelByIdAsync(id);
 			if (hotel != null)
 			{
-				await DeleteAsync(hotel);
+				hotel.DeletedAt = DateTime.UtcNow;
+
+				await UpdateAsync(hotel);
 			}
 		}
+
 		public Task<Hotel> GetHotelByNameAsync(string name) =>
-			FindByCondition(h => h.Name.Equals(name), false, h => h.Rooms).SingleOrDefaultAsync();
+			FindByCondition(h => h.Name.Equals(name) && h.DeletedAt == null, false, h => h.Rooms).SingleOrDefaultAsync();
 
 		public Task<Hotel> GetHotelByIdAsync(int id) =>
-			FindByCondition(h => h.Id.Equals(id), false, h => h.Rooms).SingleOrDefaultAsync();
+			FindByCondition(h => h.Id.Equals(id) && h.DeletedAt == null, false, h => h.Rooms).SingleOrDefaultAsync();
 
-		public async Task<IEnumerable<Hotel>> GetHotelsAsync() => await FindAll().ToListAsync();
+		public async Task<IEnumerable<Hotel>> GetHotelsAsync() =>
+			await FindByCondition(h => h.DeletedAt == null).ToListAsync();
 
 		public Task UpdateHotelAsync(Hotel hotel) => UpdateAsync(hotel);
 	}

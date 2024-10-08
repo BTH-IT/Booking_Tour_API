@@ -1,9 +1,10 @@
 services:
   mysql:
     container_name: mysql-container
-    image: mysql:latest
+    image: mysql:9.0.1
     environment:
       MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_HOST: "%" # Allow root access from any host
     ports:
       - "3307:3306"
     volumes:
@@ -14,11 +15,11 @@ services:
     # Healthcheck for mysql container
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 0s
+      
   identity.api:
     image: identity-api
     build:
@@ -66,16 +67,28 @@ services:
   rabbitmq:
     container_name: rabbitmq-container
     image: rabbitmq:3-management-alpine
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+
+  upload.api:
+    image: upload-api
+    build:
+        context: .
+        dockerfile: Services/Upload.API/Dockerfile
+    networks:
+      - apis-network  
+  api_gateway:
+    image: api-gateway
+    build:
+      context: .
+      dockerfile: ApiGateways/OcelotApiGw/Dockerfile
+    depends_on:
+      - identity.api
+      - room.api
+      - tour.api
     networks:
       - apis-network
-    restart: always
-
 networks:
   apis-network:
-
+    
 volumes:
   mysql_data:
     name: mysql_data

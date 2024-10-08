@@ -9,5 +9,6 @@ namespace Identity.API.Entites
         public string Name { get; set; }
         public bool Status { get; set; } = false;
         public ICollection<RoleDetail>? RoleDetails { get; set; }
-    }
+		public DateTime? DeletedAt { get; set; }
+	}
 }

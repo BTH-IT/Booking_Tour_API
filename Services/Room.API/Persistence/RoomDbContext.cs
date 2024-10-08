@@ -9,7 +9,6 @@ namespace Room.API.Persistence
         public DbSet<RoomEntity> Rooms { get; set; }  
         public RoomDbContext(DbContextOptions<RoomDbContext> options) : base(options)
         {
-
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

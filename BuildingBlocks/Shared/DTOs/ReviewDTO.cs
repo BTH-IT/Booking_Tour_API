@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs
 {
-	public class ReviewDTO
+	public class ReviewRoom
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 
 		public string Content { get; set; }
 
@@ -21,4 +21,20 @@ namespace Shared.DTOs
 		public int RoomId { get; set; }
 		public int UserId { get; set; }
 	}
+	public class ReviewHotel
+	{
+		public string Id { get; set; }
+
+		public string Content { get; set; }
+
+		public float Rating { get; set; }
+
+		public DateTime? CreatedAt { get; set; }
+
+		public DateTime? UpdatedAt { get; set; }
+
+		public int HotelId { get; set; }
+		public int UserId { get; set; }
+	}
+
 }

@@ -31,7 +31,6 @@ namespace Room.API.Controllers
 			return StatusCode(response.StatusCode, response);
 		}
 
-		// Tạo một phòng mới
 		[HttpPost]
 		[ApiValidationFilter]
 		public async Task<IActionResult> CreateRoomAsync([FromBody] RoomRequestDTO requestDTO)
@@ -53,6 +52,13 @@ namespace Room.API.Controllers
 		{
 			var response = await _roomService.DeleteAsync(id);
 			return StatusCode(response.StatusCode, response);
+		}
+
+		[HttpGet("search")]
+		public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchRequestDTO request)
+		{
+			var rooms = await _roomService.SearchRoomsAsync(request);
+			return Ok(rooms);
 		}
 	}
 }
