@@ -120,11 +120,11 @@ namespace Identity.API.Persistence
 		{
 			return new List<Permission>
 			{
-				new Permission { Name = "View" },
-				new Permission { Name = "Create" },
-				new Permission { Name = "Edit" },
-				new Permission { Name = "Delete" },
-				new Permission { Name = "Manage" },
+				new Permission { Name = "View",Status = true },
+				new Permission { Name = "Create",Status = true },
+				new Permission { Name = "Edit" , Status = true },
+				new Permission { Name = "Delete" , Status = true },
+				new Permission { Name = "Manage" , Status = true },
 			};
 		}
 

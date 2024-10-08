@@ -10,5 +10,5 @@ message GetRoomByIdRequest{
 	int32 Id = 1;
 }
 message GetRoomByIdResponse{
-	int32 Result = 2;
+	int32 Result=1;
 }

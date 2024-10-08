@@ -12,6 +12,6 @@ namespace Room.API.Services.Interfaces
 		Task<ApiResponse<RoomResponseDTO>> CreateAsync(RoomRequestDTO item);
 		Task<ApiResponse<RoomResponseDTO>> UpdateAsync(RoomRequestDTO item);
 		Task<ApiResponse<int>> DeleteAsync(int id);
-		Task<ApiResponse<List<RoomResponseDTO>>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest);
+		Task<ApiResponse<PagedRoomResponseDTO>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest);
 	}
 }
