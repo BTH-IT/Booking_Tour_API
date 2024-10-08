@@ -9,6 +9,7 @@
 *.dll.config
 *.cache
 *.suo
+*.pfx
 .env
 # Include dlls if they�re in the NuGet packages directory
 !/packages/*/lib/*.dll
@@ -76,3 +77,4 @@ _[Ss]cripts
 *.dot[Cc]over
 1
 /.vs
+.env
