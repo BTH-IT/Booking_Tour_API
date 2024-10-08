@@ -13,5 +13,6 @@ namespace Identity.API.Repositories.Interfaces
         Task DeleteRoleAsync(int id);
         Task<RoleDetail> UpdateRoleDetailByRoleIdAsync(int id,RoleDetail roleDetail);
         Task DeleteRoleDetailByRoleIdAsync(int roleId);
-    }
+        Task<List<RoleDetail>> GetRoleDetailsByRoleIdAsync(int roleId);
+	}
 }

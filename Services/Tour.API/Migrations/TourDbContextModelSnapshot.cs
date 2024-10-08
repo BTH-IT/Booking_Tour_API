@@ -22,7 +22,7 @@ namespace Tour.API.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("Tour.API.Entities.Destination", b =>
+            modelBuilder.Entity("Tour.API.Entities.DestinationEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,11 +110,13 @@ namespace Tour.API.Migrations
                         .IsRequired()
                         .HasColumnType("JSON");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("DestinationId")
                         .HasColumnType("int");
 
                     b.Property<string>("Detail")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -134,7 +136,6 @@ namespace Tour.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -163,7 +164,6 @@ namespace Tour.API.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Video")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
@@ -187,7 +187,7 @@ namespace Tour.API.Migrations
 
             modelBuilder.Entity("Tour.API.Entities.TourEntity", b =>
                 {
-                    b.HasOne("Tour.API.Entities.Destination", "Destination")
+                    b.HasOne("Tour.API.Entities.DestinationEntity", "Destination")
                         .WithMany("Tours")
                         .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -196,7 +196,7 @@ namespace Tour.API.Migrations
                     b.Navigation("Destination");
                 });
 
-            modelBuilder.Entity("Tour.API.Entities.Destination", b =>
+            modelBuilder.Entity("Tour.API.Entities.DestinationEntity", b =>
                 {
                     b.Navigation("Tours");
                 });

@@ -4,6 +4,7 @@ using Identity.API.Persistence;
 using Identity.API.Repositories.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace Identity.API.Repositories
 {
@@ -18,16 +19,18 @@ namespace Identity.API.Repositories
         public async Task DeleteAccountAsync(int id)
         {
             var account = await GetAccountByIdAsync(id);
-            if (account != null) 
-            { 
-                await DeleteAsync(account);
-            }
-        }
+			if (account != null)
+			{
+				account.DeletedAt = DateTime.UtcNow;
+				await UpdateAsync(account);
+			}
+		}
 
-        public Task<Account> GetAccountByEmailAsync(string email) => FindByCondition(c => c.Email.Equals(email),false,c => c.Role, c => c.Role.RoleDetails).SingleOrDefaultAsync();
-        public Task<Account> GetAccountByIdAsync(int id) => FindByCondition(c => c.Id.Equals(id),false,c=>c.Role,c=>c.Role.RoleDetails).SingleOrDefaultAsync();
+        public Task<Account> GetAccountByEmailAsync(string email) => FindByCondition(c => c.Email.Equals(email) && c.DeletedAt == null, false,c => c.Role, c => c.Role.RoleDetails).SingleOrDefaultAsync();
 
-        public async Task<IEnumerable<Account>> GetAccountsAsync() => await FindAll().ToListAsync();
+		public Task<Account> GetAccountByIdAsync(int id) => FindByCondition(c => c.Id.Equals(id) && c.DeletedAt == null, false,c=>c.Role,c=>c.Role.RoleDetails).SingleOrDefaultAsync();
+
+        public async Task<IEnumerable<Account>> GetAccountsAsync() => await FindByCondition(c => c.DeletedAt == null, false, c => c.Role, c => c.Role.RoleDetails).ToListAsync();
 
         public Task UpdateAccountAsync(Account account) => UpdateAsync(account);
     }

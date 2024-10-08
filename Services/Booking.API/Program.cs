@@ -91,7 +91,7 @@ try
         }
     );
     //Masstransit and RabbitMq
-    builder.Services.AddCustomMassTransit(builder.Environment,typeof(Program).Assembly);
+    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
     //Add GrpcClient
     builder.Services.AddGrpcClients();
     // Configure the HTTP request pipeline.

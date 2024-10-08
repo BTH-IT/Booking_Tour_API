@@ -10,13 +10,15 @@
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:5002"
     },
-    "IIS Express": {
-      "commandName": "IISExpress",
+    "http": {
+      "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5002"
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",

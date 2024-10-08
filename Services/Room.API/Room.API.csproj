@@ -3,7 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>1dec5ecc-f752-40ca-9686-d2e555773d84</UserSecretsId>
+    <UserSecretsId>cf1475bf-af92-4247-82ea-5b67a073da4b</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
@@ -28,10 +28,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,7 +40,12 @@
     <ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
   </ItemGroup>
+
   <ItemGroup>
 	  <Protobuf Include="GrpcServer\Protos\room.proto" GrpcServices="Both" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>
