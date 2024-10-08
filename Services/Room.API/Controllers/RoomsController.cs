@@ -2,8 +2,6 @@
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
-using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Room.API.Controllers
 {

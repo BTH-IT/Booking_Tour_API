@@ -1,8 +1,6 @@
 ﻿using Contracts.Domains;
 using Contracts.Domains.Interfaces;
 using Newtonsoft.Json;
-using Shared.DTOs;
-using Shared.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Room.API.Entities
@@ -13,7 +11,8 @@ namespace Room.API.Entities
         public string Name { get; set; }
 		[NotMapped]
 		public List<Image> ImagesList { get; set; }
-		public string? Video { get; set; }
+		[NotMapped]
+		public List<Video>? VideosList { get; set; }
 		public string? Detail { get; set; }
         public double Price { get;set; }
         public bool IsAvailable { get; set; }
@@ -47,6 +46,12 @@ namespace Room.API.Entities
 		{
 			get => JsonConvert.SerializeObject(ImagesList);
 			set => ImagesList = JsonConvert.DeserializeObject<List<Image>>(value) ?? new List<Image>();
+		}
+		[Column(TypeName = "JSON")]
+		public string Videos
+		{
+			get => JsonConvert.SerializeObject(VideosList);
+			set => VideosList = JsonConvert.DeserializeObject<List<Video>>(value) ?? new List<Video>();
 		}
 	}
 }

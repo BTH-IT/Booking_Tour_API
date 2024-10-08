@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using ILogger = Serilog.ILogger;
 
 namespace Room.API.Services 
@@ -57,7 +55,7 @@ namespace Room.API.Services
 				return new ApiResponse<int>(404, 0, "Room not found");
 			}
 
-			if (!room.IsAvailable)
+			if (room.IsAvailable)
 			{
 				return new ApiResponse<int>(400, 0, "Room is currently booked and cannot be deleted");
 			}
