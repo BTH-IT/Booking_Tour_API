@@ -9,9 +9,17 @@ namespace Booking.API.Repositories
     public class BookingRoomRepository :RepositoryBase<BookingRoom, int, BookingDbContext>
     {
         private readonly BookingDbContext _context;
-    public BookingRoomRepository(BookingDbContext dbContext, IUnitOfWork<BookingDbContext> unitOfWork) : base(dbContext, unitOfWork)
-    {
-        _context = dbContext;
+        public BookingRoomRepository(BookingDbContext dbContext, IUnitOfWork<BookingDbContext> unitOfWork) : base(dbContext, unitOfWork)
+        {
+            _context = dbContext;
+        }
+        public void AddDetailBookingRooms(List<DetailBookingRoom> detailBookingRooms)
+        {
+            _context.AddRange(detailBookingRooms);
+        }
+        public void RemoveDetailBookingRooms(List<DetailBookingRoom> detailBookingRooms)
+        {
+            _context.RemoveRange(detailBookingRooms);
+        }
     }
-}
 }

@@ -95,7 +95,7 @@ try
         app.UseSwaggerUI();
     }
     app.UseCors("CorsPolicy");
-    app.UseHttpsRedirection(); // Uncomment if you want to enable HTTPS redirection
+    //app.UseHttpsRedirection(); // Uncomment if you want to enable HTTPS redirection
     app.UseAuthentication(); 
     app.UseAuthorization();
     app.MapControllers();
