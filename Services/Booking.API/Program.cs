@@ -91,7 +91,7 @@ try
         }
     );
     //Masstransit and RabbitMq
-    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
+    //builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
     //Add GrpcClient
     builder.Services.AddGrpcClients();
     // Configure the HTTP request pipeline.
@@ -102,7 +102,7 @@ try
         app.UseSwaggerUI();
     }
     app.UseCors("CorsPolicy");
-    app.UseHttpsRedirection();
+    //app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthentication();
     app.UseAuthorization();
