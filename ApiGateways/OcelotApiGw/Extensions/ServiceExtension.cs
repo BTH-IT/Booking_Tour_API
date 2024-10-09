@@ -1,15 +1,25 @@
 ﻿using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
+using System.Configuration;
 
 namespace OcelotApiGw.Extensions
 {
     public static class ServiceExtension
     {
-        public static IServiceCollection ConfigureOcelot(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection ConfigureOcelot(this IServiceCollection services,IConfiguration configuration,string environment)
         {
-            services.AddOcelot(configuration)
+  
+            var configurationBuilder = new ConfigurationBuilder()
+                    .AddConfiguration(configuration)  
+                    .SetBasePath(Directory.GetCurrentDirectory()) 
+                    .AddJsonFile($"ocelot.{environment}.json", optional: true, reloadOnChange: true);
+
+            var ocelotConfiguration = configurationBuilder.Build();
+
+            services.AddOcelot(ocelotConfiguration)
                 .AddCacheManager(c=>c.WithDictionaryHandle());
-            services.AddSwaggerForOcelot(configuration,
+
+            services.AddSwaggerForOcelot(ocelotConfiguration,
                 x=>x.GenerateDocsForGatewayItSelf = false);
             return services;
         }
