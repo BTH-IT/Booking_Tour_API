@@ -38,8 +38,9 @@ services:
       - "6004:80"
     volumes:
       - ~/.aspnet/https:/https:ro
+
   booking.api:
-    container_name: booking-api
+    container_name: booking.api
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -52,6 +53,7 @@ services:
     volumes:
       - ~/.aspnet/https:/https:ro
     restart: always
+    
   upload.api:
     container_name: upload.api
     environment:
@@ -62,11 +64,16 @@ services:
     volumes:
       - ~/.aspnet/https:/https:ro
     restart: always 
+    
   api_gateway:
     container_name: api_gateway
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=http://+:80
-      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=new_booking_tour;user=${DB_USER};password=${DB_PASSWORD}
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
     ports:
+      - "6000:443"
       - "5000:80"
