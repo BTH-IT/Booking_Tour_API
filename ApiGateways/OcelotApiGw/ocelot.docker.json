@@ -2,11 +2,11 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/{allendpoints}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "identity.api",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/identity/{allendpoints}",
@@ -19,11 +19,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/{allendpoints}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "room.api",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/room/{allendpoints}",
@@ -36,11 +36,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/{allendpoints}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "tour.api",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/tour/{allendpoints}",
@@ -53,11 +53,11 @@
     },
     {
       "DownstreamPathTemplate": "/s3/{allendpoints}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "upload.api",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/upload/{allendpoints}",
@@ -69,11 +69,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/{allendpoints}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "booking.api",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/booking/{allendpoints}",
@@ -84,9 +84,8 @@
       ]
     }
   ],
-  "DangerousAcceptAnyServerCertificateValidator": false,
   "GlobalConfiguration": {
     "RequestIdKey": "OcelotRequestId",
-    "BaseUrl": "https://localhost:5000"
+    "BaseUrl": "http://api_gateway:80"
   }
 }
