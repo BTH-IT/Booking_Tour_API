@@ -34,27 +34,23 @@ try
 	var app = builder.Build();
 
 	// Configure the HTTP request pipeline.
-	if (app.Environment.IsDevelopment())
+	if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
 	{
 		app.UseSwagger();
-		app.UseSwaggerUI();
+		app.UseSwaggerForOcelotUI();
 	}
 	app.UseCors("CorsPolicy");
 
-	//app.UseHttpsRedirection();
-	//app.UseSwaggerForOcelotUI(options =>
-	//{
-	//	options.PathToSwaggerGenerator = "/swagger/docs";
-	//});
 	app.UseRouting();
 
 	app.UseAuthentication();
+
+	app.UseOcelot().Wait();
 
 	app.UseAuthorization();
 
 	app.MapControllers();
 
-	app.UseOcelot();
 
 	app.Run();
 

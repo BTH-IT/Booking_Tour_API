@@ -1,7 +1,7 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,16 +9,17 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/identity/{allendpoints}",
+      "UpstreamPathTemplate": "/identity/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "PUT",
         "DELETE"
-      ]
+      ],
+      "SwaggerKey": "identity.api"
     },
     {
-      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -26,16 +27,17 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/room/{allendpoints}",
+      "UpstreamPathTemplate": "/room/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "PUT",
         "DELETE"
-      ]
+      ],
+      "SwaggerKey": "room.api"
     },
     {
-      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -43,16 +45,17 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/tour/{allendpoints}",
+      "UpstreamPathTemplate": "/tour/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "PUT",
         "DELETE"
-      ]
+      ],
+      "SwaggerKey": "tour.api"
     },
     {
-      "DownstreamPathTemplate": "/s3/{allendpoints}",
+      "DownstreamPathTemplate": "/s3/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -60,15 +63,17 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/upload/{allendpoints}",
+      "UpstreamPathTemplate": "/upload/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "DELETE"
-      ]
+      ],
+      "SwaggerKey": "upload.api"
+
     },
     {
-      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -76,11 +81,64 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/booking/{allendpoints}",
+      "UpstreamPathTemplate": "/booking/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "DELETE"
+      ],
+      "SwaggerKey": "booking.api"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "identity.api",
+      "Config": [
+        {
+          "Name": "Identity API",
+          "Version": "v1",
+          "Url": "http://identity.api:80/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "booking.api",
+      "Config": [
+        {
+          "Name": "Booking API",
+          "Version": "v1",
+          "Url": "http://booking.api:80/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "room.api",
+      "Config": [
+        {
+          "Name": "Room API",
+          "Version": "v1",
+          "Url": "http://room.api:80/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "tour.api",
+      "Config": [
+        {
+          "Name": "Tour API",
+          "Version": "v1",
+          "Url": "http://tour.api:80/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "upload.api",
+      "Config": [
+        {
+          "Name": "Upload API",
+          "Version": "v1",
+          "Url": "http://upload.api:80/swagger/v1/swagger.json"
+        }
       ]
     }
   ],
