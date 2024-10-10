@@ -56,28 +56,19 @@ namespace Booking.API.Extensions
                 {
                     option.Address = new Uri(grpcOptions.IdentityAddress ?? throw new Exception("Configration Not found"));
                 }
-            ).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            });
+            );
             services.AddGrpcClient<TourGrpcService.TourGrpcServiceClient>(
                 option =>
                 {
                     option.Address = new Uri(grpcOptions.TourAddress ?? throw new Exception("Configration Not found"));
                 }
-            ).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            });
+            );
             services.AddGrpcClient<RoomGrpcService.RoomGrpcServiceClient>(
                 option =>
                 {
                     option.Address = new Uri(grpcOptions.RoomAddress ?? throw new Exception("Configration Not found"));
                 }
-            ).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            });
+            );
             return services;
         }
     }
