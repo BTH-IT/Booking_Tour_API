@@ -3,57 +3,39 @@ services:
     container_name: identity-api
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_URLS=http://+:80;http://+:81
       - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_identity;user=${DB_USER};password=${DB_PASSWORD}
     ports:
-      - "5001:443"
-      - "6001:80"
-    volumes:
-      - ~/.aspnet/https:/https:ro
+      - "5001:80"
+      - "5101:81"
   room.api:
     container_name: room-api
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_URLS=http://+:80;http://+:81
       - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_room;user=${DB_USER};password=${DB_PASSWORD}
     ports:
-      - "5003:443"
-      - "6003:80"
-    volumes:
-      - ~/.aspnet/https:/https:ro
+      - "5003:80"
+      - "5103:81"
   tour.api:
     container_name: tour-api
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_URLS=http://+:80;http://+:81
       - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_tour;user=${DB_USER};password=${DB_PASSWORD}
     ports:
-      - "5004:443"
-      - "6004:80"
-    volumes:
-      - ~/.aspnet/https:/https:ro
-
+      - "5004:80"
+      - "5104:81"
   booking.api:
     container_name: booking.api
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_URLS=http://+:80;http://+:81
       - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_bookingdata;user=${DB_USER};password=${DB_PASSWORD}
     ports:
-      - "5002:443"
-      - "6002:80"
-    volumes:
-      - ~/.aspnet/https:/https:ro
+      - "5002:80"
+      - "5102:81"
     restart: always
-    
   upload.api:
     container_name: upload.api
     environment:
@@ -61,19 +43,12 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "5005:80"
-    volumes:
-      - ~/.aspnet/https:/https:ro
     restart: always 
-    
   api_gateway:
     container_name: api_gateway
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
-      - ASPNETCORE_URLS=http://+:80;https://+:443
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-    volumes:
-      - ~/.aspnet/https:/https:ro
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "6000:443"
       - "5000:80"

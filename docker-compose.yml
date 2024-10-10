@@ -19,7 +19,6 @@ services:
       timeout: 3s
       retries: 2
       start_period: 0s
-      
   identity.api:
     image: identity-api
     build:
@@ -30,7 +29,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-
   room.api:
     image: room-api
     build:
@@ -41,7 +39,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-
   tour.api:
     image: tour-api
     build:
@@ -52,7 +49,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-
   booking.api:
     image: booking-api
     build: 
@@ -71,11 +67,6 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-    healthcheck:
-      test: ["CMD-SHELL", "rabbitmq-diagnostics ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 2
   upload.api:
     image: upload-api
     build:

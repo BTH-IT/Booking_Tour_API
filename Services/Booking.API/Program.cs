@@ -64,7 +64,7 @@ try
     builder.Services.AddSwaggerGen(
         options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingSystem - Identity API", Version = "v1" });
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingSystem - Booking API", Version = "v1" });
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -91,7 +91,7 @@ try
         }
     );
     //Masstransit and RabbitMq
-    //builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
+    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
     //Add GrpcClient
     builder.Services.AddGrpcClients();
     // Configure the HTTP request pipeline.

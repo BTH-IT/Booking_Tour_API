@@ -7,6 +7,7 @@ using Identity.API.GrpcServer.Services;
 using Identity.API.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -94,6 +95,25 @@ try
     {
         options.Interceptors.Add<GrpcExceptionInterceptor>();
     }) ;
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if(builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5001);
+            options.ListenAnyIP(5101, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+        else if (builder.Environment.IsEnvironment("docker"))
+        {
+            options.ListenAnyIP(80);
+            options.ListenAnyIP(81, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        } 
+    });
     // Configure the HTTP request pipeline.
     var app = builder.Build();
     
@@ -103,7 +123,6 @@ try
         app.UseSwaggerUI();
     }
     app.UseCors("CorsPolicy");
-    //app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapGrpcService<IdentityProtoService>();
