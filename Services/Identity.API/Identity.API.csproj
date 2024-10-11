@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>c7ed1895-f0ed-4c0a-9b58-e56a5cf3f380</UserSecretsId>
+    <UserSecretsId>ded7eaa3-9f47-4261-bb80-1e89587129a4</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
@@ -14,6 +14,8 @@
     <PackageReference Include="FluentValidation" Version="11.10.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.66.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
@@ -36,5 +38,7 @@
     <ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+	<Protobuf Include="GrpcServer\Protos\identity.proto" GrpcServices="Both" />
+  </ItemGroup>
 </Project>

@@ -1,11 +1,18 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Contracts.Exceptions;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Room.API;
 using Room.API.Extensions;
+using Room.API.GrpcServer.Services;
 using Room.API.Persistence;
 using Room.API.Validators;
 using Serilog;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,19 +36,93 @@ try
 	{
 	    options.SuppressModelStateInvalidFilter = true;
 	});
-	// Add DbContext
-	builder.Services.ConfigureIdentityDbContext();
+    // Add Authentication
+    builder.Services.AddAuthentication(cfg =>
+    {
+        cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                    builder.Configuration.GetSection("Jwt:SecretKey").Value
+                )
+            )
+        }
+    );
+    //Add Swagger Gen
+    builder.Services.AddSwaggerGen(
+        options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingSystem - Room API", Version = "v1" });
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new List<string>{}
+                }
+            });
+        }
+    );
+    // Add DbContext
+    builder.Services.ConfigureIdentityDbContext();
     // Add Infrastructure Services
     builder.Services.AddInfrastructureServices();
     // Add Cors
     builder.Services.ConfigureCors(builder.Configuration);
+    // Add Grpc
+    builder.Services.AddGrpc(options =>
+    {
+        options.Interceptors.Add<GrpcExceptionInterceptor>();
+    });
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5003);
+            options.ListenAnyIP(5103, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+        else if (builder.Environment.IsEnvironment("docker"))
+        {
+            options.ListenAnyIP(80);
+            options.ListenAnyIP(81, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+    });
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
     // Configure the HTTP request pipeline.
 
     var app = builder.Build();
 
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
     {
         app.UseSwagger();
         app.UseSwaggerUI();
@@ -49,8 +130,9 @@ try
 
     //app.UseHttpsRedirection();
     app.UseCors("CorsPolicy");
+    app.UseAuthentication();
     app.UseAuthorization();
-
+    app.MapGrpcService<RoomProtoService>();
     app.MapControllers();
     // Seeding database async
     using (var scope = app.Services.CreateScope())

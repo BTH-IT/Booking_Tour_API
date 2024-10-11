@@ -9,6 +9,10 @@ using Tour.API.Validators;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Tour.API.GrpcServer.Services;
+using Contracts.Exceptions;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -48,20 +52,74 @@ try
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
 
+    // Add Grpc
+    builder.Services.AddGrpc(options =>
+    {
+        options.Interceptors.Add<GrpcExceptionInterceptor>(); 
+    });
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5004);
+            options.ListenAnyIP(5104, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+        else if (builder.Environment.IsEnvironment("docker"))
+        {
+            options.ListenAnyIP(80);
+            options.ListenAnyIP(81, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+    });
+    //Add Swagger Gen
+    builder.Services.AddSwaggerGen(
+        options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingSystem - Tour API", Version = "v1" });
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new List<string>{}
+                }
+            });
+        }
+    );
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
     app.UseCors("CorsPolicy");
-    // app.UseHttpsRedirection(); // Uncomment if you want to enable HTTPS redirection
-
+    //app.UseHttpsRedirection(); // Uncomment if you want to enable HTTPS redirection
+    app.UseAuthentication(); 
     app.UseAuthorization();
     app.MapControllers();
-
+    app.MapGrpcService<TourProtoService>();
     // Seeding database async
     using (var scope = app.Services.CreateScope())
     {
