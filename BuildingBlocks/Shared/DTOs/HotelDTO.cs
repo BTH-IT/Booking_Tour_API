@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.DTOs
+﻿namespace Shared.DTOs
 {
 	public class HotelResponseDTO
 	{
@@ -14,7 +8,7 @@ namespace Shared.DTOs
 		public int LocationCode { get; set; }
 		public string Description { get; set; }
 		public string ContactInfo { get; set; }
-		public List<ReviewHotel>? Reviews { get; set; }
+		public List<ReviewHotelDTO>? Reviews { get; set; }
 		public List<HotelRulesDTO>? HotelRules { get; set; }
 		public List<HotelAmenitiesDTO>? HotelAmenities { get; set; }
 		public DateTime CreatedAt { get; set; }
@@ -29,7 +23,7 @@ namespace Shared.DTOs
 		public int LocationCode { get; set; }
 		public string Description { get; set; }
 		public string ContactInfo { get; set; }
-		public List<ReviewHotel>? Reviews { get; set; }
+		public List<ReviewHotelDTO>? Reviews { get; set; }
 		public List<HotelRulesDTO>? HotelRules { get; set; }
 		public List<HotelAmenitiesDTO>? HotelAmenities { get; set; }
 		public DateTime? DeletedAt { get; set; }
