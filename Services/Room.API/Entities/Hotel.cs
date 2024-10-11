@@ -28,7 +28,7 @@ namespace Room.API.Entities
 		public string Reviews
 		{
 			get => JsonConvert.SerializeObject(ReviewList);
-			set => ReviewList = JsonConvert.DeserializeObject<List<ReviewHotel>>(value) ?? new List<ReviewHotel>();
+			set => ReviewList = JsonConvert.DeserializeObject<List<ReviewHotel>>(value).Where(r => r.DeletedAt == null).ToList() ?? new List<ReviewHotel>();
 		}
 		[Column(TypeName = "JSON")]
 		public string HotelRules

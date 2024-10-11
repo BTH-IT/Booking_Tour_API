@@ -34,6 +34,8 @@ namespace Room.API.Extensions
 					.AddScoped<IRoomRepository, RoomRepository>()
 					.AddScoped<IHotelService, HotelService>()
 					.AddScoped<IRoomService, RoomService>()
+					.AddScoped<IReviewHotelService, ReviewHotelService>()
+					.AddScoped<IReviewRoomService, ReviewRoomService>()
 					.AddScoped<RoomDbContextSeeder>();
 		}
         public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
