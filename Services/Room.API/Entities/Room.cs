@@ -31,7 +31,7 @@ namespace Room.API.Entities
 		public string Reviews
 		{
 			get => JsonConvert.SerializeObject(ReviewList);
-			set => ReviewList = JsonConvert.DeserializeObject<List<ReviewRoom>>(value) ?? new List<ReviewRoom>();
+			set => ReviewList = JsonConvert.DeserializeObject<List<ReviewRoom>>(value).Where(r => r.DeletedAt == null).ToList() ?? new List<ReviewRoom>();
 
 		}
 		[Column(TypeName = "JSON")]
