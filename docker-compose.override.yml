@@ -1,46 +1,54 @@
 services:
   identity.api:
-    container_name: identity.api
+    container_name: identity-api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=new_booking_identity;user=${DB_USER};password=${DB_PASSWORD}
+      - ASPNETCORE_ENVIRONMENT=docker
+      - ASPNETCORE_URLS=http://+:80;http://+:81
+      - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_identity;user=${DB_USER};password=${DB_PASSWORD}
     ports:
       - "5001:80"
-    restart: always
+      - "5101:81"
   room.api:
-    container_name: room.api
+    container_name: room-api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=new_booking_room;user=${DB_USER};password=${DB_PASSWORD}
+      - ASPNETCORE_ENVIRONMENT=docker
+      - ASPNETCORE_URLS=http://+:80;http://+:81
+      - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_room;user=${DB_USER};password=${DB_PASSWORD}
     ports:
       - "5003:80"
-    restart: always
+      - "5103:81"
   tour.api:
-    container_name: tour.api
+    container_name: tour-api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=new_booking_tour;user=${DB_USER};password=${DB_PASSWORD}
+      - ASPNETCORE_ENVIRONMENT=docker
+      - ASPNETCORE_URLS=http://+:80;http://+:81
+      - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_tour;user=${DB_USER};password=${DB_PASSWORD}
     ports:
       - "5004:80"
+      - "5104:81"
+  booking.api:
+    container_name: booking.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=docker
+      - ASPNETCORE_URLS=http://+:80;http://+:81
+      - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_bookingdata;user=${DB_USER};password=${DB_PASSWORD}
+    ports:
+      - "5002:80"
+      - "5102:81"
     restart: always
   upload.api:
     container_name: upload.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=docker
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "5005:80"
-    volumes:
-      - ~/.aws:/root/.aws:ro
     restart: always 
   api_gateway:
     container_name: api_gateway
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=docker
       - ASPNETCORE_URLS=http://+:80
-      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=new_booking_tour;user=${DB_USER};password=${DB_PASSWORD}
     ports:
+      - "6000:443"
       - "5000:80"

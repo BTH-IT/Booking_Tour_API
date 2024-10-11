@@ -1,73 +1,147 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity.api",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5001
         }
       ],
-      "UpstreamPathTemplate": "/identity/{allendpoints}",
+      "UpstreamPathTemplate": "/identity/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "PUT",
         "DELETE"
-      ]
+      ],
+      "SwaggerKey": "identity.api"
     },
     {
-      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "room.api",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5003
         }
       ],
-      "UpstreamPathTemplate": "/room/{allendpoints}",
+      "UpstreamPathTemplate": "/room/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "PUT",
         "DELETE"
-      ]
+      ],
+      "SwaggerKey": "room.api"
     },
     {
-      "DownstreamPathTemplate": "/api/{allendpoints}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "tour.api",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5004
         }
       ],
-      "UpstreamPathTemplate": "/tour/{allendpoints}",
+      "UpstreamPathTemplate": "/tour/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "PUT",
         "DELETE"
-      ]
+      ],
+      "SwaggerKey": "tour.api"
     },
     {
-      "DownstreamPathTemplate": "/s3/{allendpoints}",
+      "DownstreamPathTemplate": "/s3/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "upload.api",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5005
         }
       ],
-      "UpstreamPathTemplate": "/upload/{allendpoints}",
+      "UpstreamPathTemplate": "/upload/{everything}",
       "UpstreamHttpMethod": [
         "GET",
         "POST",
         "DELETE"
+      ],
+      "SwaggerKey": "upload.api"
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "UpstreamPathTemplate": "/booking/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "SwaggerKey": "booking.api"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "identity.api",
+      "Config": [
+        {
+          "Name": "Identity API",
+          "Version": "v1",
+          "Url": "http://localhost:5001/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "booking.api",
+      "Config": [
+        {
+          "Name": "Booking API",
+          "Version": "v1",
+          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "room.api",
+      "Config": [
+        {
+          "Name": "Room API",
+          "Version": "v1",
+          "Url": "http://localhost:5003/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "tour.api",
+      "Config": [
+        {
+          "Name": "Tour API",
+          "Version": "v1",
+          "Url": "http://localhost:5004/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "upload.api",
+      "Config": [
+        {
+          "Name": "Upload API",
+          "Version": "v1",
+          "Url": "http://localhost:5005/swagger/v1/swagger.json"
+        }
       ]
     }
   ],
+  "DangerousAcceptAnyServerCertificateValidator": false,
   "GlobalConfiguration": {
     "RequestIdKey": "OcelotRequestId",
     "BaseUrl": "http://localhost:5000"
