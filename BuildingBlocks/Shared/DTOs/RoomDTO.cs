@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Shared.Enums;
-namespace Shared.DTOs
+﻿namespace Shared.DTOs
 {
 	public class RoomResponseDTO
 	{
@@ -12,7 +10,7 @@ namespace Shared.DTOs
 		public double Price { get; set; }
 		public bool IsAvailable { get; set; }
 		public int MaxGuests { get; set; }
-		public List<ReviewRoom>? Reviews { get; set; }
+		public List<ReviewRoomDTO>? Reviews { get; set; }
 		public List<RoomAmenitiesDTO>? RoomAmenities { get; set; }
 		public int HotelId { get; set; }
 		public HotelResponseDTO Hotel { get; set; }
@@ -28,7 +26,7 @@ namespace Shared.DTOs
 		public double Price { get; set; }
 		public bool? IsAvailable { get; set; } = true;
 		public int MaxGuests { get; set; }
-		public List<ReviewRoom>? Reviews { get; set; }
+		public List<ReviewRoomDTO>? Reviews { get; set; }
 		public List<RoomAmenitiesDTO>? RoomAmenities { get; set; }
 		public int HotelId { get; set; }
 	}
