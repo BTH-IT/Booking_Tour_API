@@ -1,5 +1,5 @@
 ﻿
-using CloudinaryDotNet;
+using Amazon.S3;
 
 namespace Upload.API.Extensions
 {
@@ -16,15 +16,11 @@ namespace Upload.API.Extensions
             );
             return services;
         }
-        public static IServiceCollection ConfigureCloudinary(this IServiceCollection services)
+        public static IServiceCollection AddAwsStorageService(this IServiceCollection services, IConfiguration configuration)
         {
-            var cloudinaryAccount = new Account(
-                    Environment.GetEnvironmentVariable("CLOUDINARY_CLOUD_NAME"),
-                    Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY"),
-                    Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET")
-                );
-            Cloudinary cloudinary = new Cloudinary(cloudinaryAccount);
-            services.AddSingleton(cloudinary);
+            var awsOptions = configuration.GetAWSOptions("AWS");
+            services.AddDefaultAWSOptions(awsOptions);
+            services.AddAWSService<IAmazonS3>();
             return services;
         }
     }
