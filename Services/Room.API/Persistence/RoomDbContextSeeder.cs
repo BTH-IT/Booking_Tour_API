@@ -96,12 +96,7 @@ namespace Room.API.Persistence
 										Id = $"{++Counter}",
 										Url = $"https://realimages.com/{province}/hotel{i}/room{j}/image{k}.jpg"
 									});
-									room.VideosList.Add(new Video
-									{
-										Id = $"{++Counter}",
-										Url = $"https://realvideos.com/{province}/khachsan{i}/phong{j}.mp4",
-										Type =$"mp4"
-									});
+									
 									room.ReviewList.Add(new ReviewRoom
 									{
 										Id = $"{Counter}",
@@ -112,19 +107,19 @@ namespace Room.API.Persistence
 										UserId = j
 									});
 								}
-
+								room.VideosList.Add(new Video{Id = $"1",Url = $"https://realvideos.com/{province}/khachsan{i}/phong{j}.mp4",Type = $"mp4"});
 								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"1", Title = "Wi-Fi miễn phí" });
 								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"2", Title = "Điều hòa nhiệt độ" });
 								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"3", Title = "TV màn hình phẳng" });
 
 								hotel.Rooms.Add(room);
 							}
+							int Count = 0;
 							for (int k = 1; k <= 5; k++)
 							{
-								int Counter = 0;
 								hotel.ReviewList.Add(new ReviewHotel
 								{
-									Id = $"{++Counter}",
+									Id = $"{++Count}",
 									Content = $"Excellent hotel experience. Review {k} for Hotel {i}",
 									Rating = 4 + (k % 2),
 									CreatedAt = DateTime.UtcNow,

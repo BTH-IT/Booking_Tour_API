@@ -63,6 +63,12 @@
         public DateTime? DeletedAt { get; set; }
 
     }
+    public class TourSearchResponseDTO
+    {
+        public List<TourResponseDTO> Tours { get; set; }
+        public decimal? MinPrice { get; set; }
+        public decimal? MaxPrice { get; set; }
+    }
     public class TourSearchRequestDTO
     {
         public string? Keyword { get; set; } 
