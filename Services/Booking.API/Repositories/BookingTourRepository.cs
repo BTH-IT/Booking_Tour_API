@@ -1,11 +1,12 @@
 ﻿using Booking.API.Entities;
 using Booking.API.Persistence;
+using Booking.API.Repositories.Interfaces;
 using Contracts.Domains.Interfaces;
 using Infrastructure.Repositories;
 
 namespace Booking.API.Repositories
 {
-    public class BookingTourRepository : RepositoryBase<BookingTour,int , BookingDbContext>
+    public class BookingTourRepository : RepositoryBase<BookingTour,int , BookingDbContext> ,IBookingTourRepository
     {
         private readonly BookingDbContext _context;
         public BookingTourRepository(BookingDbContext dbContext, IUnitOfWork<BookingDbContext> unitOfWork) : base(dbContext, unitOfWork)
