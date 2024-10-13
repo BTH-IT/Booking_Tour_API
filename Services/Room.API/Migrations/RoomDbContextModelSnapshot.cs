@@ -45,11 +45,9 @@ namespace Room.API.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("HotelAmenities")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<string>("HotelRules")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<string>("Location")
@@ -64,7 +62,6 @@ namespace Room.API.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Reviews")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -113,11 +110,9 @@ namespace Room.API.Migrations
                         .HasColumnType("double");
 
                     b.Property<string>("Reviews")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<string>("RoomAmenities")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<DateTime?>("UpdatedAt")
