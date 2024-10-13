@@ -33,8 +33,13 @@ namespace Tour.API.Repositories
                 .SingleOrDefaultAsync();
         }
 
-        // Tìm Schedule theo tên (nếu có trường tên trong Schedule)
-        public Task<Schedule> GetScheduleByNameAsync(string name)
+		public async Task<IEnumerable<Schedule>> GetSchedulesByTourIdAsync(int tourId)
+		{
+			return await FindByCondition(s => s.TourId == tourId, false).ToListAsync();
+		}
+
+		// Tìm Schedule theo tên (nếu có trường tên trong Schedule)
+		public Task<Schedule> GetScheduleByNameAsync(string name)
         {
             return FindByCondition(s => s.Tour.Name.Equals(name), false) // Giả định Tour có tên
                 .SingleOrDefaultAsync();

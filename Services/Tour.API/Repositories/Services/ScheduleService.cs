@@ -45,7 +45,21 @@ namespace Tour.API.Services
             return new ApiResponse<ScheduleResponseDTO>(200, data, "Lấy dữ liệu lịch trình thành công");
         }
 
-        public async Task<ApiResponse<int>> CreateAsync(ScheduleRequestDTO item)
+		public async Task<ApiResponse<List<ScheduleResponseDTO>>> GetByTourIdAsync(int tourId)
+		{
+			_logger.Information($"Begin: ScheduleService - GetByIdAsync, id: {tourId}");
+			var schedules = await _scheduleRepository.GetSchedulesByTourIdAsync(tourId);
+			if (schedules == null)
+			{
+				_logger.Information($"Schedule not found, id: {tourId}");
+				return new ApiResponse<List<ScheduleResponseDTO>>(404, null, "Không tìm thấy lịch trình");
+			}
+			var data = _mapper.Map<List<ScheduleResponseDTO>>(schedules);
+			_logger.Information("End: ScheduleService - GetByIdAsync");
+			return new ApiResponse<List<ScheduleResponseDTO>>(200, data, "Lấy dữ liệu lịch trình thành công");
+		}
+
+		public async Task<ApiResponse<int>> CreateAsync(ScheduleRequestDTO item)
         {
             _logger.Information("Begin: ScheduleService - CreateAsync");
 

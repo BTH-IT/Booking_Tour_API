@@ -32,8 +32,15 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Tạo một lịch trình mới
-        [HttpPost]
+		[HttpGet("tour/{tourId:int}")]
+		public async Task<IActionResult> GetScheduleByTourIdAsync(int tourId)
+		{
+			var response = await _scheduleService.GetByTourIdAsync(tourId);
+			return StatusCode(response.StatusCode, response);
+		}
+
+		// Tạo một lịch trình mới
+		[HttpPost]
         [ApiValidationFilter]
         public async Task<IActionResult> CreateScheduleAsync(ScheduleRequestDTO requestDTO)
         {

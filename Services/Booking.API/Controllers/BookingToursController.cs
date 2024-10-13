@@ -18,6 +18,7 @@ namespace Booking.API.Controllers
         private readonly IdentityGrpcService.IdentityGrpcServiceClient _identityGrpcServiceClient;
         private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
         private readonly TourGrpcService.TourGrpcServiceClient _tourGrpcServiceClient;
+
         public BookingToursController(
             IMapper mapper,
             IPublishEndpoint publishEndpoint,
@@ -31,7 +32,8 @@ namespace Booking.API.Controllers
             this._roomGrpcServiceClient = roomGrpcServiceClient;
             this._tourGrpcServiceClient = tourGrpcServiceClient;
         }
-        [HttpPost("checkout")]
+
+        [HttpPost("booking")]
         public async Task<IActionResult> CheckOutBookingToursAsync([FromBody] BookingTourRequestDTO requestDto)
         {
             await _publishEndpoint.Publish<TestEvent>(new TestEvent
@@ -40,6 +42,7 @@ namespace Booking.API.Controllers
             });
             return Ok();
         }
+
         [HttpGet("test-grpc")]
         public async Task<IActionResult> TestGrpcAsync()
         {

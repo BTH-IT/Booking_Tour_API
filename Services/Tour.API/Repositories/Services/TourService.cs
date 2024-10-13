@@ -15,11 +15,13 @@ namespace Tour.API.Services
         private readonly ITourRepository _tourRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IScheduleService _scheduleService;
 
-        public TourService(ITourRepository tourRepository, IMapper mapper, ILogger logger)
+		public TourService(ITourRepository tourRepository, IScheduleService scheduleService, IMapper mapper, ILogger logger)
         {
             _tourRepository = tourRepository;
-            _mapper = mapper;
+			_scheduleService = scheduleService;
+			_mapper = mapper;
             _logger = logger;
         }
 
@@ -48,21 +50,64 @@ namespace Tour.API.Services
             return new ApiResponse<TourResponseDTO>(200, data, "Lấy dữ liệu tour thành công");
         }
 
-        public async Task<ApiResponse<int>> CreateAsync(TourRequestDTO item)
-        {
-            _logger.Information("Begin: TourService - CreateAsync");
+		public async Task<ApiResponse<int>> CreateAsync(TourRequestDTO item)
+		{
+			_logger.Information("Begin: TourService - CreateAsync");
 
-            var tourEntity = _mapper.Map<TourEntity>(item);
-            await _tourRepository.CreateAsync(tourEntity);
-            var result = await _tourRepository.SaveChangesAsync();
-            _logger.Information("End: TourService - CreateAsync");
-            return result > 0
-                ? new ApiResponse<int>(200, tourEntity.Id, "Tạo tour thành công")
-                : new ApiResponse<int>(400, 0, "Tạo tour thất bại");
-        }
+			try
+			{
+				var tourEntity = _mapper.Map<TourEntity>(item);
 
+				var result = await _tourRepository.CreateAsync(tourEntity);
 
-        public async Task<ApiResponse<TourResponseDTO>> UpdateAsync(TourRequestDTO item)
+				if (result > 0)
+				{
+					_logger.Information("Tour created successfully, now creating schedules");
+
+					var dateFrom = item.DateFrom;
+					var dateTo = item.DateTo;
+
+					while (dateFrom <= dateTo)
+					{
+						var dateStart = dateFrom;
+						dateFrom = dateFrom.AddDays(item.DayList?.Count() ?? 0);
+						var dateEnd = dateFrom;
+
+                        if (dateEnd >= dateTo)
+                        {
+                            break;
+                        }
+
+						await _scheduleService.CreateAsync(new ScheduleRequestDTO
+						{
+							DateStart = dateStart,
+							DateEnd = dateEnd,
+							TourId = result,
+							AvailableSeats = item.MaxGuests
+						});
+
+						dateFrom = dateFrom.AddDays(2);
+					}
+
+					_logger.Information("Schedules created successfully");
+				}
+
+				_logger.Information("End: TourService - CreateAsync");
+
+				// Return a successful response if the tour was created
+				return result > 0
+					? new ApiResponse<int>(200, tourEntity.Id, "Tạo tour thành công")
+					: new ApiResponse<int>(400, 0, "Tạo tour thất bại");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, "An error occurred while creating the tour");
+
+				return new ApiResponse<int>(500, 0, $"Lỗi khi tạo tour: {ex.Message}");
+			}
+		}
+
+		public async Task<ApiResponse<TourResponseDTO>> UpdateAsync(TourRequestDTO item)
         {
             _logger.Information($"Begin: TourService - UpdateAsync, id: {item.Id}");
 
