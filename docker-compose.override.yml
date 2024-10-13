@@ -45,7 +45,7 @@ services:
       - "5005:80"
     volumes:
       - ~/.aws:/root/.aws:ro
-    restart: always 
+    restart: always
   api_gateway:
     container_name: api_gateway
     environment:
