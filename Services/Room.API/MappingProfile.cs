@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Room.API.Entities;
 using Shared.DTOs;
@@ -25,15 +26,11 @@ namespace Room.API
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.HotelAmenities)));
 
 			CreateMap<HotelRequestDTO, Hotel>()
-				.ForMember(dest => dest.Reviews, opt =>
-					opt.MapFrom(src => JsonConvert.SerializeObject(src.Reviews)))
 				.ForMember(dest => dest.HotelRules, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.HotelRules)))
 				.ForMember(dest => dest.HotelAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.HotelAmenities)))
 				.ReverseMap()
-				.ForMember(dest => dest.Reviews, opt =>
-					opt.MapFrom(src => JsonConvert.DeserializeObject<List<ReviewHotelDTO>>(src.Reviews)))
 				.ForMember(dest => dest.HotelRules, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<HotelRulesDTO>>(src.HotelRules)))
 				.ForMember(dest => dest.HotelAmenities, opt =>
@@ -59,23 +56,20 @@ namespace Room.API
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.Video)));
 
 			CreateMap<RoomRequestDTO, RoomEntity>()
-				.ForMember(dest => dest.Reviews, opt =>
-					opt.MapFrom(src => JsonConvert.SerializeObject(src.Reviews)))
 				.ForMember(dest => dest.RoomAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.Images)))
 				.ForMember(dest => dest.Video, opt =>
 					opt.MapFrom(src => JsonConvert.SerializeObject(src.Video)))
-				.ReverseMap()
-				.ForMember(dest => dest.Reviews, opt =>
-					opt.MapFrom(src => JsonConvert.DeserializeObject<List<ReviewRoomDTO>>(src.Reviews)))
+			.ReverseMap()
 				.ForMember(dest => dest.RoomAmenities, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<RoomAmenitiesDTO>>(src.RoomAmenities)))
 				.ForMember(dest => dest.Images, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<Image>>(src.Images)))
 				.ForMember(dest => dest.Video, opt =>
 					opt.MapFrom(src => JsonConvert.DeserializeObject<Video>(src.Video)));
+
 
 			CreateMap<ReviewHotelDTO, ReviewHotel>();
 			CreateMap<ReviewHotel, ReviewHotelDTO>();
