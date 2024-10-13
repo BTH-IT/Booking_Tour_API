@@ -5,7 +5,7 @@
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public List<ImagesDTO> Images { get; set; }
-		public List<VideosDTO>? Videos { get; set; }
+		public VideosDTO? Video { get; set; }
 		public string? Detail { get; set; }
 		public double Price { get; set; }
 		public bool IsAvailable { get; set; }
@@ -21,7 +21,7 @@
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public List<ImagesDTO> Images { get; set; }
-		public List<VideosDTO>? Videos { get; set; }
+		public VideosDTO Video { get; set; }
 		public string? Detail { get; set; }
 		public double Price { get; set; }
 		public bool? IsAvailable { get; set; } = true;
