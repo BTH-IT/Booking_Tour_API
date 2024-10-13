@@ -25,22 +25,22 @@ namespace Room.API.Entities
 		public DateTime? UpdatedAt { get; set; }		
 		public DateTime? DeletedAt { get; set; }
 		[Column(TypeName = "JSON")]
-		public string Reviews
+		public string? Reviews
 		{
-			get => JsonConvert.SerializeObject(ReviewList);
-			set => ReviewList = JsonConvert.DeserializeObject<List<ReviewHotel>>(value).Where(r => r.DeletedAt == null).ToList() ?? new List<ReviewHotel>();
+			get => ReviewList == null ? null : JsonConvert.SerializeObject(ReviewList);
+			set => ReviewList = value == null ? null : JsonConvert.DeserializeObject<List<ReviewHotel>>(value).Where(r => r.DeletedAt == null).ToList();
 		}
 		[Column(TypeName = "JSON")]
-		public string HotelRules
+		public string? HotelRules
 		{
-			get => JsonConvert.SerializeObject(HotelRulesList);
-			set => HotelRulesList = JsonConvert.DeserializeObject<List<HotelRules>>(value) ?? new List<HotelRules>();
+			get => HotelRulesList == null ? null : JsonConvert.SerializeObject(HotelRulesList);
+			set => HotelRulesList = value == null ? null : JsonConvert.DeserializeObject<List<HotelRules>>(value).ToList();
 		}
 		[Column(TypeName = "JSON")]
-		public string HotelAmenities
+		public string? HotelAmenities
 		{
-			get => JsonConvert.SerializeObject(HotelAmenitiesList);
-			set => HotelAmenitiesList = JsonConvert.DeserializeObject<List<HotelAmenities>>(value) ?? new List<HotelAmenities>();
+			get => HotelAmenitiesList == null ? null : JsonConvert.SerializeObject(HotelAmenitiesList);
+			set => HotelAmenitiesList = value == null ? null : JsonConvert.DeserializeObject<List<HotelAmenities>>(value).ToList();
 		}
 	}
 }

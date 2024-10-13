@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
@@ -127,28 +128,38 @@ namespace Room.API.Services
 			return new ApiResponse<HotelResponseDTO>(200, data, "Hotel data retrieved successfully");
 		}
 
-		public async Task<ApiResponse<HotelResponseDTO>> UpdateAsync(HotelRequestDTO item)
+		public async Task<ApiResponse<HotelResponseDTO>> UpdateAsync(int id, HotelRequestDTO item)
 		{
 			_logger.Information("Begin: HotelService - UpdateAsync");
 
-			var hotel = await _hotelRepository.GetHotelByIdAsync(item.Id);
+			var hotel = await _hotelRepository.GetHotelByIdAsync(id);
+
 			if (hotel == null || hotel.DeletedAt != null)
 			{
 				return new ApiResponse<HotelResponseDTO>(404, null, "Hotel not found");
 			}
 
-			if (await _hotelRepository.FindByCondition(h => h.Name.Equals(item.Name) && h.Id != item.Id && h.DeletedAt == null).FirstOrDefaultAsync() != null)
+			if (await _hotelRepository.FindByCondition(h => h.Name.Equals(item.Name) && h.Id != id && h.DeletedAt == null).FirstOrDefaultAsync() != null)
 			{
 				return new ApiResponse<HotelResponseDTO>(400, null, "Hotel name already exists");
 			}
 
+			var existingReviews = hotel.ReviewList;
+
 			hotel = _mapper.Map<Hotel>(item);
+			hotel.Id = id;
+
+			if (existingReviews != null)
+			{
+				hotel.ReviewList = existingReviews;
+			}
+
 			hotel.UpdatedAt = DateTime.UtcNow;
 			var result = await _hotelRepository.UpdateAsync(hotel);
 
 			if (result > 0)
 			{
-				var updatedHotel = await _hotelRepository.GetHotelByIdAsync(item.Id);
+				var updatedHotel = await _hotelRepository.GetHotelByIdAsync(id);
 				var responseData = _mapper.Map<HotelResponseDTO>(updatedHotel);
 				_logger.Information("End: HotelService - UpdateAsync");
 				return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel updated successfully");
