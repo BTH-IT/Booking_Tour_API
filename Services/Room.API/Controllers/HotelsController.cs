@@ -38,13 +38,14 @@ namespace Room.API.Controllers
 			return StatusCode(response.StatusCode, response);
 		}
 
-		[HttpPut]
+		[HttpPut("{id:int}")] 
 		[ApiValidationFilter]
-		public async Task<IActionResult> UpdateHotelAsync([FromBody] HotelRequestDTO requestDTO)
+		public async Task<IActionResult> UpdateHotelAsync(int id, [FromBody] HotelRequestDTO requestDTO)
 		{
-			var response = await _hotelService.UpdateAsync(requestDTO);
+			var response = await _hotelService.UpdateAsync(id, requestDTO);
 			return StatusCode(response.StatusCode, response);
 		}
+
 
 		[HttpDelete("{id:int}")]
 		public async Task<IActionResult> DeleteHotelAsync(int id)

@@ -12,8 +12,8 @@ using Room.API.Persistence;
 namespace Room.API.Migrations
 {
     [DbContext(typeof(RoomDbContext))]
-    [Migration("20241001120404_InitDb")]
-    partial class InitDb
+    [Migration("20241013111101_initDb")]
+    partial class initDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,11 +48,9 @@ namespace Room.API.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("HotelAmenities")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<string>("HotelRules")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<string>("Location")
@@ -67,7 +65,6 @@ namespace Room.API.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Reviews")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -116,18 +113,17 @@ namespace Room.API.Migrations
                         .HasColumnType("double");
 
                     b.Property<string>("Reviews")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<string>("RoomAmenities")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Video")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("JSON");
 
                     b.HasKey("Id");
 

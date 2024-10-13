@@ -38,13 +38,14 @@ namespace Room.API.Controllers
 			return StatusCode(response.StatusCode, response);
 		}
 
-		[HttpPut]
+		[HttpPut("{id:int}")]
 		[ApiValidationFilter]
-		public async Task<IActionResult> UpdateRoomAsync([FromBody] RoomRequestDTO requestDTO)
+		public async Task<IActionResult> UpdateRoomAsync(int id, [FromBody] RoomRequestDTO requestDTO)
 		{
-			var response = await _roomService.UpdateAsync(requestDTO);
+			var response = await _roomService.UpdateAsync(id, requestDTO);
 			return StatusCode(response.StatusCode, response);
 		}
+
 
 		[HttpDelete("{id:int}")]
 		public async Task<IActionResult> DeleteRoomAsync(int id)
