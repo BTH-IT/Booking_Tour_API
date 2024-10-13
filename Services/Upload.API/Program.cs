@@ -1,4 +1,3 @@
-using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -12,7 +11,6 @@ Log.Information($"Start {builder.Environment.ApplicationName} up");
 
 try
 {
-    DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
     builder.AddAppConfigurations();
     // Add services to the container.
     builder.Services.AddControllers();
@@ -43,8 +41,6 @@ try
             )
         }
     );
-    // Configure cloudinary
-    builder.Services.ConfigureCloudinary();
     //Add Swagger Gen
     builder.Services.AddSwaggerGen(
         options =>
@@ -75,6 +71,7 @@ try
             });
         }
     );
+    builder.Services.AddAwsStorageService(builder.Configuration);
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
