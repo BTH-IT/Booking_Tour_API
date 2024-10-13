@@ -108,16 +108,14 @@ namespace Tour.API.Services
         {
             _logger.Information("Begin: TourService - SearchToursAsync");
 
-            var tours = await _tourRepository.SearchToursAsync(searchRequest);
-            var data = _mapper.Map<List<TourResponseDTO>>(tours);
-            var maxPrice = data.Max(e => e.Price);
-            var minPrice = data.Min(e => e.Price);
+            var data = await _tourRepository.SearchToursAsync(searchRequest);
+            var tours = _mapper.Map<List<TourResponseDTO>>(data.Tours);
             var response = new TourSearchResponseDTO
             {
-                Tours = data,
-                MaxPrice = maxPrice,    
-                MinPrice = minPrice
-            };
+                Tours = tours,
+                MaxPrice = data.MaxPrice,    
+                MinPrice = data.MinPrice
+			};
             _logger.Information("End: TourService - SearchToursAsync");
             return new ApiResponse<TourSearchResponseDTO>(200, response, "Tours retrieved successfully");
         }
