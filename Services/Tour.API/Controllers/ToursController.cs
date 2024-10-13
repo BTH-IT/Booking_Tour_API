@@ -27,12 +27,12 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Cập nhật thông tin của một tour
-        [HttpPut]
-        [ApiValidationFilter]
-        public async Task<IActionResult> UpdateTourAsync(TourRequestDTO requestDTO)
+		// Cập nhật thông tin của một tour
+		[HttpPut("{id:int}")]
+		[ApiValidationFilter]
+        public async Task<IActionResult> UpdateTourAsync(int id, TourRequestDTO requestDTO)
         {
-            var response = await _tourService.UpdateAsync(requestDTO);
+            var response = await _tourService.UpdateAsync(id, requestDTO);
             return StatusCode(response.StatusCode, response);
         }
 

@@ -42,12 +42,12 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Cập nhật thông tin của một điểm đến
-        [HttpPut]
-        [ApiValidationFilter]
-        public async Task<IActionResult> UpdateDestinationAsync(DestinationRequestDTO requestDTO)
+		// Cập nhật thông tin của một điểm đến
+		[HttpPut("{id:int}")]
+		[ApiValidationFilter]
+        public async Task<IActionResult> UpdateDestinationAsync(int id, DestinationRequestDTO requestDTO)
         {
-            var response = await _destinationService.UpdateAsync(requestDTO);
+            var response = await _destinationService.UpdateAsync(id, requestDTO);
             return StatusCode(response.StatusCode, response);
         }
 

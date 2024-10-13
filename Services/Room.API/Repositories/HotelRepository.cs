@@ -13,7 +13,18 @@ namespace Room.API.Repositories
 		{
 		}
 
+		public async Task<IEnumerable<Hotel>> GetHotelsAsync() =>
+			await FindByCondition(h => h.DeletedAt == null).ToListAsync();
+
+		public Task<Hotel> GetHotelByNameAsync(string name) =>
+			FindByCondition(h => h.Name.Equals(name) && h.DeletedAt == null, false, h => h.Rooms).SingleOrDefaultAsync();
+
+		public Task<Hotel> GetHotelByIdAsync(int id) =>
+			FindByCondition(h => h.Id.Equals(id) && h.DeletedAt == null, false, h => h.Rooms).SingleOrDefaultAsync();
+
 		public Task CreateHotelAsync(Hotel hotel) => CreateAsync(hotel);
+
+		public Task UpdateHotelAsync(Hotel hotel) => UpdateAsync(hotel);
 
 		public async Task DeleteHotelAsync(int id)
 		{
@@ -25,16 +36,5 @@ namespace Room.API.Repositories
 				await UpdateAsync(hotel);
 			}
 		}
-
-		public Task<Hotel> GetHotelByNameAsync(string name) =>
-			FindByCondition(h => h.Name.Equals(name) && h.DeletedAt == null, false, h => h.Rooms).SingleOrDefaultAsync();
-
-		public Task<Hotel> GetHotelByIdAsync(int id) =>
-			FindByCondition(h => h.Id.Equals(id) && h.DeletedAt == null, false, h => h.Rooms).SingleOrDefaultAsync();
-
-		public async Task<IEnumerable<Hotel>> GetHotelsAsync() =>
-			await FindByCondition(h => h.DeletedAt == null).ToListAsync();
-
-		public Task UpdateHotelAsync(Hotel hotel) => UpdateAsync(hotel);
 	}
 }

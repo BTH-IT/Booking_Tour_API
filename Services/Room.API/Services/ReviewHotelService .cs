@@ -43,7 +43,7 @@ public class ReviewHotelService : IReviewHotelService
 
 		var responseData = _mapper.Map<ReviewHotelDTO>(reviewEntity); 
 		_logger.Information("End: ReviewHotelService  - CreateReviewAsync");
-		return new ApiResponse<ReviewHotelDTO>(201, responseData, "Review created successfully");
+		return new ApiResponse<ReviewHotelDTO>(200, responseData, "Review created successfully");
 	}
 
 	public async Task<ApiResponse<ReviewHotelDTO>> UpdateReviewAsync(ReviewHotelDTO reviewRequest)
