@@ -9,7 +9,7 @@ namespace Room.API.Services.Interfaces
 		Task<ApiResponse<RoomResponseDTO>> GetByIdAsync(int id);
 		Task<ApiResponse<RoomResponseDTO>> GetByNameAsync(string name);
 		Task<ApiResponse<RoomResponseDTO>> CreateAsync(RoomRequestDTO item);
-		Task<ApiResponse<RoomResponseDTO>> UpdateAsync(RoomRequestDTO item);
+		Task<ApiResponse<RoomResponseDTO>> UpdateAsync(int id, RoomRequestDTO item);
 		Task<ApiResponse<int>> DeleteAsync(int id);
 		Task<ApiResponse<PagedRoomResponseDTO>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest);
 	}
