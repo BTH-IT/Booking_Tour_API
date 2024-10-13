@@ -31,6 +31,11 @@ public class ReviewRoomService : IReviewRoomService
 
 		var reviewEntity = _mapper.Map<ReviewRoom>(reviewRequest);
 		reviewEntity.CreatedAt = DateTime.UtcNow;
+
+		if (room.ReviewList == null)
+		{
+			room.ReviewList = new List<ReviewRoom>();
+		}
 		room.ReviewList.Add(reviewEntity);
 
 		await _roomRepository.UpdateAsync(room);
