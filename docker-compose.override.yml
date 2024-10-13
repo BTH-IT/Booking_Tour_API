@@ -43,6 +43,8 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "5005:80"
+    volumes:
+      - ~/.aws:/root/.aws:ro
     restart: always 
   api_gateway:
     container_name: api_gateway
