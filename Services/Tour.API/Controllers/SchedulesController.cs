@@ -53,17 +53,17 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Cập nhật thông tin của một lịch trình
-        [HttpPut]
-        [ApiValidationFilter]
-        public async Task<IActionResult> UpdateScheduleAsync(ScheduleRequestDTO requestDTO)
+		// Cập nhật thông tin của một lịch trình
+		[HttpPut("{id:int}")]
+		[ApiValidationFilter]
+        public async Task<IActionResult> UpdateScheduleAsync(int id, ScheduleRequestDTO requestDTO)
         {
             if (requestDTO == null)
             {
                 return BadRequest("Thông tin lịch trình không hợp lệ.");
             }
 
-            var response = await _scheduleService.UpdateAsync(requestDTO);
+            var response = await _scheduleService.UpdateAsync(id, requestDTO);
             return StatusCode(response.StatusCode, response);
         }
 

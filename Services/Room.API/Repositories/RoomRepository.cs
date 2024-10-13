@@ -14,17 +14,9 @@ namespace Room.API.Repositories
 		public RoomRepository(RoomDbContext dbContext, IUnitOfWork<RoomDbContext> unitOfWork) : base(dbContext, unitOfWork)
 		{
 		}
-		public Task CreateRoomAsync(RoomEntity room) => CreateAsync(room);
 
-		public async Task DeleteRoomAsync(int id)
-		{
-			var room = await GetRoomByIdAsync(id);
-			if (room != null)
-			{
-				room.DeletedAt = DateTime.UtcNow; 
-				await UpdateAsync(room);
-			}
-		}
+		public async Task<IEnumerable<RoomEntity>> GetRoomsAsync() =>
+			await FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel).ToListAsync();
 
 		public Task<RoomEntity> GetRoomByIdAsync(int id) =>
 			 FindByCondition(r => r.Id == id && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
@@ -32,8 +24,19 @@ namespace Room.API.Repositories
 		public Task<RoomEntity> GetRoomByNameAsync(string name) =>
 			 FindByCondition(r => r.Name == name && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
 
-		public async Task<IEnumerable<RoomEntity>> GetRoomsAsync() =>
-		    await FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel).ToListAsync();
+		public Task CreateRoomAsync(RoomEntity room) => CreateAsync(room);
+
+		public Task UpdateRoomAsync(RoomEntity room) => UpdateAsync(room);
+
+		public async Task DeleteRoomAsync(int id)
+		{
+			var room = await GetRoomByIdAsync(id);
+			if (room != null)
+			{
+				room.DeletedAt = DateTime.UtcNow;
+				await UpdateAsync(room);
+			}
+		}
 
 		public async Task<PagedResult<RoomEntity>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
 		{
@@ -94,7 +97,5 @@ namespace Room.API.Repositories
 
 			return new PagedResult<RoomEntity>(rooms, totalItems, searchRequest.PageNumber, searchRequest.PageSize);
 		}
-
-		public Task UpdateRoomAsync(RoomEntity room) => UpdateAsync(room);
 	}
 }

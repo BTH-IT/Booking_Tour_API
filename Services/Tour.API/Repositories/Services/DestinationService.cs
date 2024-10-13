@@ -55,38 +55,36 @@ namespace Tour.API.Services
             var newId = await _destinationRepository.CreateAsync(destinationEntity);
 
             var createdDestination = await _destinationRepository.GetDestinationByIdAsync(newId);
-
             var responseData = _mapper.Map<DestinationResponseDTO>(createdDestination);
 
             _logger.Information("End: DestinationService - CreateAsync");
             return new ApiResponse<DestinationResponseDTO>(200, responseData, "Tạo điểm đến thành công");
         }
 
-
-
-        public async Task<ApiResponse<DestinationResponseDTO>> UpdateAsync(DestinationRequestDTO item)
+        public async Task<ApiResponse<DestinationResponseDTO>> UpdateAsync(int id, DestinationRequestDTO item)
         {
-            _logger.Information($"Begin: DestinationService - UpdateAsync, id: {item.Id}");
-            var destination = await _destinationRepository.FindByCondition(d => d.Id == item.Id).FirstOrDefaultAsync();
+            _logger.Information($"Begin: DestinationService - UpdateAsync, id: {id}");
+            var destination = await _destinationRepository.FindByCondition(d => d.Id == id).FirstOrDefaultAsync();
 
             if (destination == null)
             {
-                _logger.Information($"Destination not found, id: {item.Id}");
+                _logger.Information($"Destination not found, id: {id}");
                 return new ApiResponse<DestinationResponseDTO>(404, null, "Không tìm thấy điểm đến");
             }
 
-            destination = _mapper.Map(item, destination);
-            var result = await _destinationRepository.UpdateAsync(destination);
+			destination = _mapper.Map<DestinationEntity>(item);
+			destination.Id = id;
+			destination.UpdatedAt = DateTime.UtcNow;
 
-            var responseData = _mapper.Map<DestinationResponseDTO>(destination);
-            
-            
-            _logger.Information("End: DestinationService - UpdateAsync");
+			var result = await _destinationRepository.UpdateAsync(destination);
+			var updatedDestination = await _destinationRepository.GetDestinationByIdAsync(id);
+			var responseData = _mapper.Map<DestinationResponseDTO>(updatedDestination);
+
+			_logger.Information("End: DestinationService - UpdateAsync");
             return result > 0
                 ? new ApiResponse<DestinationResponseDTO>(200, responseData, "Cập nhật thành công")
                 : new ApiResponse<DestinationResponseDTO>(400, null, "Cập nhật thất bại");
         }
-
 
         public async Task<ApiResponse<int>> DeleteAsync(int id)
         {

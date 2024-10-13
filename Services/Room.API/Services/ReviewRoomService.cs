@@ -4,6 +4,7 @@ using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
+using System.Security.Cryptography;
 using ILogger = Serilog.ILogger;
 
 public class ReviewRoomService : IReviewRoomService
@@ -42,7 +43,7 @@ public class ReviewRoomService : IReviewRoomService
 
 		var responseData = _mapper.Map<ReviewRoomDTO>(reviewEntity);
 		_logger.Information("End: ReviewRoomService  - CreateReviewAsync");
-		return new ApiResponse<ReviewRoomDTO>(201, responseData, "Review created successfully");
+		return new ApiResponse<ReviewRoomDTO>(200, responseData, "Review created successfully");
 	}
 
 	public async Task<ApiResponse<ReviewRoomDTO>> UpdateReviewAsync(ReviewRoomDTO reviewRequest)
