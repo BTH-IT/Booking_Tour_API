@@ -31,6 +31,12 @@ public class ReviewHotelService : IReviewHotelService
 
 		var reviewEntity = _mapper.Map<ReviewHotel>(reviewRequest);
 		reviewEntity.CreatedAt = DateTime.UtcNow;
+
+		if (hotel.ReviewList == null)
+		{
+			hotel.ReviewList = new List<ReviewHotel>();
+		}
+
 		hotel.ReviewList.Add(reviewEntity); 
 
 		await _hotelRepository.UpdateAsync(hotel); 
