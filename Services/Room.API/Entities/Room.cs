@@ -12,7 +12,7 @@ namespace Room.API.Entities
 		[NotMapped]
 		public List<Image> ImagesList { get; set; }
 		[NotMapped]
-		public List<Video>? VideosList { get; set; }
+		public Video VideoObject { get; set; }
 		public string? Detail { get; set; }
         public double Price { get;set; }
         public bool IsAvailable { get; set; }
@@ -48,10 +48,10 @@ namespace Room.API.Entities
 			set => ImagesList = JsonConvert.DeserializeObject<List<Image>>(value) ?? new List<Image>();
 		}
 		[Column(TypeName = "JSON")]
-		public string Videos
+		public string Video
 		{
-			get => JsonConvert.SerializeObject(VideosList);
-			set => VideosList = JsonConvert.DeserializeObject<List<Video>>(value) ?? new List<Video>();
+			get => JsonConvert.SerializeObject(VideoObject);
+			set => VideoObject  = JsonConvert.DeserializeObject<Video>(value) ?? new Video();
 		}
 	}
 }
