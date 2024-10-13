@@ -7,8 +7,8 @@ namespace Tour.API.Services.Interfaces
     {
         Task<ApiResponse<List<TourResponseDTO>>> GetAllAsync();
         Task<ApiResponse<TourResponseDTO>> GetByIdAsync(int id);
-        Task<ApiResponse<int>> CreateAsync(TourRequestDTO item);
-        Task<ApiResponse<TourResponseDTO>> UpdateAsync(TourRequestDTO item);
+        Task<ApiResponse<TourResponseDTO>> CreateAsync(TourRequestDTO item);
+        Task<ApiResponse<TourResponseDTO>> UpdateAsync(int id, TourRequestDTO item);
         Task<ApiResponse<int>> DeleteAsync(int id);
         Task<ApiResponse<TourSearchResponseDTO>> SearchToursAsync(TourSearchRequestDTO searchRequest);
     }

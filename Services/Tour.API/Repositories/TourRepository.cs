@@ -32,24 +32,16 @@ namespace Tour.API.Repositories
 		}
 
 		// Tìm Tour theo ID
-		public Task<TourEntity?> GetTourByIdAsync(int id)
-		{
-			return FindByCondition(t => t.Id == id, false)
-				.SingleOrDefaultAsync();
-		}
+		public Task<TourEntity?> GetTourByIdAsync(int id)=>
+			 FindByCondition(t => t.Id == id, false, r=> r.Destination).SingleOrDefaultAsync();
 
 		// Tìm Tour theo tên
-		public Task<TourEntity?> GetTourByNameAsync(string name)
-		{
-			return FindByCondition(t => t.Name.Equals(name), false)
-				.SingleOrDefaultAsync();
-		}
+		public Task<TourEntity?> GetTourByNameAsync(string name)=>
+			 FindByCondition(t => t.Name.Equals(name), false, r => r.Destination).SingleOrDefaultAsync();
 
 		// Lấy tất cả các Tour
-		public async Task<IEnumerable<TourEntity>> GetToursAsync()
-		{
-			return await FindAll(false).ToListAsync();
-		}
+		public async Task<IEnumerable<TourEntity>> GetToursAsync()=>
+			await FindByCondition(r => r.DeletedAt == null, false, r => r.Destination).ToListAsync();
 
 		// Cập nhật thông tin của Tour
 		public Task UpdateTourAsync(TourEntity tour) => UpdateAsync(tour);

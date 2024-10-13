@@ -25,49 +25,6 @@ namespace Room.API.Services
 			_logger = logger;
 		}
 
-		public async Task<ApiResponse<RoomResponseDTO>> CreateAsync(RoomRequestDTO item)
-		{
-			_logger.Information("Begin: RoomService - CreateAsync");
-
-			var existingRoom = await _roomRepository.GetRoomByNameAsync(item.Name);
-			if (existingRoom != null)
-			{
-				return new ApiResponse<RoomResponseDTO>(400, null, "Room already exists");
-			}
-
-			var roomEntity = _mapper.Map<RoomEntity>(item);
-			roomEntity.CreatedAt = DateTime.UtcNow;
-			var newId = await _roomRepository.CreateAsync(roomEntity);
-
-			var createdRoom = await _roomRepository.GetRoomByIdAsync(newId);
-			var data = _mapper.Map<RoomResponseDTO>(createdRoom);
-
-			_logger.Information("End: RoomService - CreateAsync");
-			return new ApiResponse<RoomResponseDTO>(200, data, "Room created successfully");
-		}
-
-		public async Task<ApiResponse<int>> DeleteAsync(int id)
-		{
-			_logger.Information($"Begin: RoomService - DeleteAsync: {id}");
-
-			var room = await _roomRepository.GetRoomByIdAsync(id);
-			if (room == null)
-			{
-				return new ApiResponse<int>(404, 0, "Room not found");
-			}
-
-			if (room.IsAvailable)
-			{
-				return new ApiResponse<int>(400, 0, "Room is currently booked and cannot be deleted");
-			}
-
-			room.DeletedAt = DateTime.UtcNow;
-			await _roomRepository.UpdateAsync(room);
-
-			_logger.Information($"End: RoomService - DeleteAsync: {id} - Successfully deleted");
-			return new ApiResponse<int>(200, id, "Room deleted successfully");
-		}
-
 		public async Task<ApiResponse<List<RoomResponseDTO>>> GetAllAsync()
 		{
 			_logger.Information("Begin: RoomService - GetAllAsync");
@@ -114,6 +71,27 @@ namespace Room.API.Services
 			return new ApiResponse<RoomResponseDTO>(200, data, "Room data retrieved successfully");
 		}
 
+		public async Task<ApiResponse<RoomResponseDTO>> CreateAsync(RoomRequestDTO item)
+		{
+			_logger.Information("Begin: RoomService - CreateAsync");
+
+			var existingRoom = await _roomRepository.GetRoomByNameAsync(item.Name);
+			if (existingRoom != null)
+			{
+				return new ApiResponse<RoomResponseDTO>(400, null, "Room already exists");
+			}
+
+			var roomEntity = _mapper.Map<RoomEntity>(item);
+			roomEntity.CreatedAt = DateTime.UtcNow;
+			var newId = await _roomRepository.CreateAsync(roomEntity);
+
+			var createdRoom = await _roomRepository.GetRoomByIdAsync(newId);
+			var data = _mapper.Map<RoomResponseDTO>(createdRoom);
+
+			_logger.Information("End: RoomService - CreateAsync");
+			return new ApiResponse<RoomResponseDTO>(200, data, "Room created successfully");
+		}
+
 		public async Task<ApiResponse<RoomResponseDTO>> UpdateAsync(int id, RoomRequestDTO item)
 		{
 			try
@@ -132,11 +110,16 @@ namespace Room.API.Services
 					return new ApiResponse<RoomResponseDTO>(400, null, "Room name already exists");
 				}
 
-				var existingReviews = room.ReviewList ?? new List<ReviewRoom>();
+				var existingReviews = room.ReviewList;
 
 				room = _mapper.Map<RoomEntity>(item);
 				room.Id = id;
-				room.ReviewList = existingReviews; 
+
+				if (existingReviews != null)
+				{
+					room.ReviewList = existingReviews;
+				}
+
 				room.UpdatedAt = DateTime.UtcNow;
 
 				var result = await _roomRepository.UpdateAsync(room);
@@ -158,6 +141,28 @@ namespace Room.API.Services
 				_logger.Error($"Unexpected error occurred while updating room: {ex.Message}");
 				return new ApiResponse<RoomResponseDTO>(500, null, "An unexpected error occurred while updating room.");
 			}
+		}
+
+		public async Task<ApiResponse<int>> DeleteAsync(int id)
+		{
+			_logger.Information($"Begin: RoomService - DeleteAsync: {id}");
+
+			var room = await _roomRepository.GetRoomByIdAsync(id);
+			if (room == null)
+			{
+				return new ApiResponse<int>(404, 0, "Room not found");
+			}
+
+			if (room.IsAvailable)
+			{
+				return new ApiResponse<int>(400, 0, "Room is currently booked and cannot be deleted");
+			}
+
+			room.DeletedAt = DateTime.UtcNow;
+			await _roomRepository.UpdateAsync(room);
+
+			_logger.Information($"End: RoomService - DeleteAsync: {id} - Successfully deleted");
+			return new ApiResponse<int>(200, id, "Room deleted successfully");
 		}
 
 		public async Task<ApiResponse<PagedRoomResponseDTO>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)

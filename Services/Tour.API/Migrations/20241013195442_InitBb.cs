@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tour.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDb : Migration
+    public partial class InitBb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,11 +42,11 @@ namespace Tour.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    Name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MaxGuests = table.Column<int>(type: "int", nullable: false),
                     IsWifi = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Detail = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    Detail = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Expect = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -54,9 +54,10 @@ namespace Tour.API.Migrations
                     DateFrom = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DateTo = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Rate = table.Column<float>(type: "float", nullable: false),
-                    Video = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     SalePercent = table.Column<float>(type: "float", nullable: false),
+                    DestinationId = table.Column<int>(type: "int", nullable: false),
+                    Video = table.Column<string>(type: "JSON", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Activities = table.Column<string>(type: "JSON", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PriceExcludes = table.Column<string>(type: "JSON", nullable: false)
@@ -67,12 +68,11 @@ namespace Tour.API.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Days = table.Column<string>(type: "JSON", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Reviews = table.Column<string>(type: "JSON", nullable: false)
+                    Reviews = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DestinationId = table.Column<int>(type: "int", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true) 
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {

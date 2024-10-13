@@ -30,8 +30,8 @@ namespace Tour.API.Entities
         public DateTime DateTo { get; set; }
         public float Rate { get; set; }
 
-        [MaxLength(1000)] // Đặt chiều dài tối đa cho video
-        public string? Video { get; set; }
+		[NotMapped]
+		public Video? VideoObject { get; set; }
 
         public float SalePercent { get; set; }
 
@@ -51,16 +51,22 @@ namespace Tour.API.Entities
         public DateTime[] DayList { get; set; }
 
         [NotMapped]
-        public Review[] ReviewList { get; set; }
-
-        public int DestinationId { get; set; } // Khóa ngoại đến Destination
+		public List<Review> ReviewList { get; set; }
+		public int DestinationId { get; set; } // Khóa ngoại đến Destination
         [ForeignKey(nameof(DestinationId))]
         public virtual DestinationEntity Destination { get; set; } // Thêm mối quan hệ với Destination
 
         // Danh sách lịch trình cho tour
         public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>(); // Khởi tạo danh sách
 
-        [Column(TypeName = "JSON")]
+		[Column(TypeName = "JSON")]
+		public string? Video
+		{
+			get => VideoObject == null ? null : JsonConvert.SerializeObject(VideoObject);
+			set => VideoObject = value == null ? null : JsonConvert.DeserializeObject<Video>(value);
+		}
+
+		[Column(TypeName = "JSON")]
         public string Activities
         {
             get => JsonConvert.SerializeObject(ActivityList);
@@ -108,11 +114,11 @@ namespace Tour.API.Entities
 
 
         [Column(TypeName = "JSON")]
-        public string Reviews
+        public string? Reviews
         {
-            get => JsonConvert.SerializeObject(ReviewList);
-            set => ReviewList = JsonConvert.DeserializeObject<Review[]>(value) ?? Array.Empty<Review>();
-        }
+			get => ReviewList == null ? null : JsonConvert.SerializeObject(ReviewList);
+			set => ReviewList = value == null ? null : JsonConvert.DeserializeObject<List<Review>>(value).Where(r => r.DeletedAt == null).ToList();
+		}
 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

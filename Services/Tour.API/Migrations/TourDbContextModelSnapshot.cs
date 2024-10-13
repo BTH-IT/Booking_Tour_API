@@ -154,7 +154,6 @@ namespace Tour.API.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Reviews")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<float>("SalePercent")
@@ -164,8 +163,7 @@ namespace Tour.API.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Video")
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("JSON");
 
                     b.HasKey("Id");
 
