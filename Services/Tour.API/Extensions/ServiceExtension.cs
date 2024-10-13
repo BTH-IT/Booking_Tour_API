@@ -13,6 +13,7 @@ using Tour.API.Services;
 using FluentValidation;
 using Shared.DTOs;
 using Tour.API.Validators;
+using Tour.API.Repositories.Services.Interfaces;
 namespace Tour.API.Extensions
 {
     public static class ServiceExtensions
@@ -43,8 +44,9 @@ namespace Tour.API.Extensions
                 .AddScoped<ITourService, TourService>()
                 .AddScoped<IDestinationRepository, DestinationRepository>()
                 .AddScoped<IDestinationService, DestinationService>()
-                .AddScoped<TourDbContextSeeder>(); 
-        }
+				.AddScoped<IReviewTourService, ReviewTourService>()
+                .AddScoped<TourDbContextSeeder>();
+		}
         public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCors(option =>
