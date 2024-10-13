@@ -1,13 +1,13 @@
-﻿using Amazon.S3.Model;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Helper;
 
 namespace Upload.API.Controllers
 {
-    public class UploadsController : Controller
+    public class UploadsController : ControllerBase
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string? _bucketName;
@@ -21,7 +21,7 @@ namespace Upload.API.Controllers
         {
             if (files == null || files.Count == 0)
             {
-                return Ok(new ApiResponse<bool>(200,false,"Không có file để upload"));
+                return Ok(new ApiResponse<bool>(200, false, "Không có file để upload"));
             }
             var uploadResults = new List<FileDTO>();
             foreach (var file in files)
@@ -69,7 +69,7 @@ namespace Upload.API.Controllers
                 o.Key.Split('.').Last())
             ).ToList();
 
-            return Ok(new ApiResponse<List<FileDTO>>(200,files,"Thành công"));
+            return Ok(new ApiResponse<List<FileDTO>>(200, files, "Thành công"));
 
         }
         private async Task<string> UploadFileAsync(string filePath, string keyName)
@@ -99,5 +99,6 @@ namespace Upload.API.Controllers
                 return false;
             }
         }
+
     }
 }

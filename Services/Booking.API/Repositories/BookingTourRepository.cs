@@ -12,5 +12,13 @@ namespace Booking.API.Repositories
         {
             _context = dbContext;
         }
+        public void AddTourBookingRooms(List<TourBookingRoom> tourBookingRooms)
+        {
+            _context.TourBookingRooms.AddRange(tourBookingRooms);
+        }
+        public void RemoveTourBookingRooms(List<TourBookingRoom> tourBookingRooms)
+        {
+            _context.RemoveRange(tourBookingRooms);
+        }
     }
 }

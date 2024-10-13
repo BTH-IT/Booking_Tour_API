@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
 using Shared.Helper;
+using System.Net.WebSockets;
 using Tour.API.Entities;
 using Tour.API.Repositories.Interfaces;
 using Tour.API.Services.Interfaces;
@@ -103,15 +104,20 @@ namespace Tour.API.Services
 
             return new ApiResponse<int>(200, id, "Xóa tour thành công (xóa giả)");
         }
-        public async Task<ApiResponse<List<TourResponseDTO>>> SearchToursAsync(TourSearchRequestDTO searchRequest)
+        public async Task<ApiResponse<TourSearchResponseDTO>> SearchToursAsync(TourSearchRequestDTO searchRequest)
         {
             _logger.Information("Begin: TourService - SearchToursAsync");
 
-            var tours = await _tourRepository.SearchToursAsync(searchRequest);
-            var data = _mapper.Map<List<TourResponseDTO>>(tours);
-
+            var data = await _tourRepository.SearchToursAsync(searchRequest);
+            var tours = _mapper.Map<List<TourResponseDTO>>(data.Tours);
+            var response = new TourSearchResponseDTO
+            {
+                Tours = tours,
+                MaxPrice = data.MaxPrice,    
+                MinPrice = data.MinPrice
+			};
             _logger.Information("End: TourService - SearchToursAsync");
-            return new ApiResponse<List<TourResponseDTO>>(200, data, "Tours retrieved successfully");
+            return new ApiResponse<TourSearchResponseDTO>(200, response, "Tours retrieved successfully");
         }
     }
 }

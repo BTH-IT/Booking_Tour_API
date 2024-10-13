@@ -1,7 +1,6 @@
-﻿using Amazon.S3;
-using Amazon.Util;
-using Amazon.Extensions.NETCore.Setup;
-using Amazon.Runtime;
+﻿
+using Amazon.S3;
+
 namespace Upload.API.Extensions
 {
     public static class ServiceExtensions
