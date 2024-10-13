@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
@@ -113,30 +114,36 @@ namespace Room.API.Services
 			return new ApiResponse<RoomResponseDTO>(200, data, "Room data retrieved successfully");
 		}
 
-		public async Task<ApiResponse<RoomResponseDTO>> UpdateAsync(RoomRequestDTO item)
+		public async Task<ApiResponse<RoomResponseDTO>> UpdateAsync(int id, RoomRequestDTO item)
 		{
 			try
 			{
 				_logger.Information("Begin: RoomService - UpdateAsync");
 
-				var room = await _roomRepository.GetRoomByIdAsync(item.Id);
+				var room = await _roomRepository.GetRoomByIdAsync(id);
+
 				if (room == null || room.DeletedAt != null)
 				{
 					return new ApiResponse<RoomResponseDTO>(404, null, "Room not found");
 				}
 
-				if (await _roomRepository.FindByCondition(r => r.Name.Equals(item.Name) && r.Id != item.Id && r.DeletedAt == null).FirstOrDefaultAsync() != null)
+				if (await _roomRepository.FindByCondition(r => r.Name.Equals(item.Name) && r.Id != id && r.DeletedAt == null).FirstOrDefaultAsync() != null)
 				{
 					return new ApiResponse<RoomResponseDTO>(400, null, "Room name already exists");
 				}
 
+				var existingReviews = room.ReviewList ?? new List<ReviewRoom>();
+
 				room = _mapper.Map<RoomEntity>(item);
+				room.Id = id;
+				room.ReviewList = existingReviews; 
 				room.UpdatedAt = DateTime.UtcNow;
+
 				var result = await _roomRepository.UpdateAsync(room);
 
 				if (result > 0)
 				{
-					var updatedRoom = await _roomRepository.GetRoomByIdAsync(item.Id);
+					var updatedRoom = await _roomRepository.GetRoomByIdAsync(id);
 					var data = _mapper.Map<RoomResponseDTO>(updatedRoom);
 
 					_logger.Information("End: RoomService - UpdateAsync");

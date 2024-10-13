@@ -9,7 +9,7 @@ namespace Room.API.Services.Interfaces
 		Task<ApiResponse<HotelResponseDTO>> GetByIdAsync(int id);
 		Task<ApiResponse<HotelResponseDTO>> GetByNameAsync(string name);
 		Task<ApiResponse<HotelResponseDTO>> CreateAsync(HotelRequestDTO item);
-		Task<ApiResponse<HotelResponseDTO>> UpdateAsync(HotelRequestDTO item);
+		Task<ApiResponse<HotelResponseDTO>> UpdateAsync(int id, HotelRequestDTO item);
 		Task<ApiResponse<int>> DeleteAsync(int id);
 	}
 }
