@@ -14,6 +14,7 @@ namespace Booking.API.Entities
         public int Children { get; set; }
         public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
-        public BookingTour? BookingTour { get; set; }
+		public DateTime? DeletedAt { get; set; }
+		public BookingTour? BookingTour { get; set; }
     }
 }

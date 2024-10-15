@@ -13,31 +13,13 @@ public class MappingProfile : Profile
 
 		// Ánh xạ giữa TourEntity và TourResponseDTO
 		CreateMap<TourEntity, TourResponseDTO>()
-			.ForMember(dest => dest.Video, opt =>
-				{
-					opt.PreCondition(src => src.Video != null);
-					opt.MapFrom(src => JsonConvert.DeserializeObject<VideoRoom>(src.Video));
-				})
-			.ReverseMap()
-			.ForMember(dest => dest.Video, opt =>
-				{
-					opt.PreCondition(src => src.Video != null);
-					opt.MapFrom(src => JsonConvert.SerializeObject(src.Video));
-				});
+			.ReverseMap();
+
 		// Ánh xạ giữa TourRequestDTO và TourEntity
 		CreateMap<TourRequestDTO, TourEntity>()
 			.ForMember(dest => dest.DayList, opt => opt.MapFrom(src => src.DayList))
-			.ForMember(dest => dest.Video, opt =>
-				{
-					opt.PreCondition(src => src.Video != null);
-					opt.MapFrom(src => JsonConvert.SerializeObject(src.Video));
-				})
-			.ReverseMap()
-			.ForMember(dest => dest.Video, opt =>
-				{
-					opt.PreCondition(src => src.Video != null);
-					opt.MapFrom(src => JsonConvert.DeserializeObject<Video>(src.Video));
-				});
+			.ReverseMap();
+				
 
 		// Ánh xạ giữa Schedule và ScheduleResponseDTO
 		CreateMap<Schedule, ScheduleResponseDTO>().ReverseMap();
@@ -47,7 +29,6 @@ public class MappingProfile : Profile
 		CreateMap<Tour.API.Entities.Review, Shared.DTOs.Review>().ReverseMap();
 
 		// Ánh xạ giữa Video và VideoRoom
-		CreateMap<Video, VideoRoom>().ReverseMap();
 
 		CreateMap<Tour.API.Entities.Review, Shared.DTOs.Review >().ReverseMap();
 		CreateMap<Shared.DTOs.Review,Tour.API.Entities.Review > ().ReverseMap();

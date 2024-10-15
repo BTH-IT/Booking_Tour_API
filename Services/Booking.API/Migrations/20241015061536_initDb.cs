@@ -25,10 +25,11 @@ namespace Booking.API.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CheckIn = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CheckOut = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    NumberOfPeople = table.Column<int>(type: "int", nullable: false),
                     PriceTotal = table.Column<double>(type: "double", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    NumberOfPeople = table.Column<int>(type: "int", nullable: false)
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,6 +56,7 @@ namespace Booking.API.Migrations
                     PaymentMethod = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Travellers = table.Column<string>(type: "JSON", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -74,7 +76,8 @@ namespace Booking.API.Migrations
                     RoomId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "double", nullable: false),
                     Adults = table.Column<int>(type: "int", nullable: false),
-                    Children = table.Column<int>(type: "int", nullable: false)
+                    Children = table.Column<int>(type: "int", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -100,7 +103,8 @@ namespace Booking.API.Migrations
                     Adults = table.Column<int>(type: "int", nullable: false),
                     Children = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
