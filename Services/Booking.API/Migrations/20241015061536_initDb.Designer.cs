@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.API.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20240925085006_initDb")]
+    [Migration("20241015061536_initDb")]
     partial class initDb
     {
         /// <inheritdoc />
@@ -40,6 +40,9 @@ namespace Booking.API.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("NumberOfPeople")
@@ -72,6 +75,9 @@ namespace Booking.API.Migrations
                         .HasColumnType("double");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsCleaningFee")
@@ -133,6 +139,9 @@ namespace Booking.API.Migrations
                     b.Property<int>("Children")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
@@ -164,6 +173,9 @@ namespace Booking.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<double>("Price")

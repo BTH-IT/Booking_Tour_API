@@ -1,7 +1,6 @@
 ﻿using Contracts.Domains;
 using Contracts.Domains.Interfaces;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -30,8 +29,7 @@ namespace Tour.API.Entities
         public DateTime DateTo { get; set; }
         public float Rate { get; set; }
 
-		[NotMapped]
-		public Video? VideoObject { get; set; }
+		public string Video { get; set; }
 
         public float SalePercent { get; set; }
 
@@ -58,13 +56,6 @@ namespace Tour.API.Entities
 
         // Danh sách lịch trình cho tour
         public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>(); // Khởi tạo danh sách
-
-		[Column(TypeName = "JSON")]
-		public string? Video
-		{
-			get => VideoObject == null ? null : JsonConvert.SerializeObject(VideoObject);
-			set => VideoObject = value == null ? null : JsonConvert.DeserializeObject<Video>(value);
-		}
 
 		[Column(TypeName = "JSON")]
         public string Activities

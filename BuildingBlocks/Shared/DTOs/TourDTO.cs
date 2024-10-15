@@ -11,7 +11,7 @@
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public float Rate { get; set; }
-        public VideoRoom Video { get; set; }
+        public string Video { get; set; }
         public float SalePercent { get; set; }
         public string[]? PriceExcludeList { get; set; }
         public string[]? PriceIncludeList { get; set; }
@@ -32,7 +32,7 @@
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public float Rate { get; set; }
-        public VideoRoom? Video { get; set; }
+        public string Video { get; set; }
         public float SalePercent { get; set; }
         public string[]? PriceExcludeList { get; set; }
         public string[]? PriceIncludeList { get; set; }
@@ -75,10 +75,5 @@
 		public DateTime? CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
 		public DateTime? DeletedAt { get; set; }
-	}
-	public class VideoRoom
-	{
-		public string Url { get; set; }
-		public string Type { get; set; }
 	}
 }

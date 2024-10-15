@@ -39,6 +39,9 @@ namespace Booking.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
 
@@ -69,6 +72,9 @@ namespace Booking.API.Migrations
                         .HasColumnType("double");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsCleaningFee")
@@ -130,6 +136,9 @@ namespace Booking.API.Migrations
                     b.Property<int>("Children")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
@@ -161,6 +170,9 @@ namespace Booking.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<double>("Price")
