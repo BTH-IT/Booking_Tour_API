@@ -101,7 +101,7 @@ namespace Room.API.Persistence
                         PriceIncludeList = new[] { "Khách sạn", "Di chuyển trong thành phố" },
                         ActivityList = new[] { "Tham quan", "Chụp ảnh" },
                         ImageList = new[] { "https://example.com/ha-noi1.jpg", "https://example.com/ha-noi2.jpg" },
-                        DayList = new[] { DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(2) },
+                        DayList = new[] {"Day 1", "Day 2" },
                         ReviewList = new List <Review>
 						{
                             new Review { Id = "1",  Content = "Chuyến đi tuyệt vời!", Rating = 5, CreatedAt = DateTime.UtcNow }
@@ -131,7 +131,7 @@ namespace Room.API.Persistence
                         PriceIncludeList = new[] { "Khách sạn", "Du thuyền" },
                         ActivityList = new[] { "Tham quan", "Leo núi" },
                         ImageList = new[] { "https://example.com/ha-long1.jpg", "https://example.com/ha-long2.jpg" },
-                        DayList = new[] { DateTime.UtcNow.AddDays(11), DateTime.UtcNow.AddDays(12) },
+                        DayList = new[] { "Day 1", "Day 2" },
                         ReviewList = new List <Review>
                         {
                             new Review { Id="1", Content = "Một kỳ nghỉ đáng nhớ!", Rating = 4.7f, CreatedAt = DateTime.UtcNow }
@@ -161,7 +161,7 @@ namespace Room.API.Persistence
                         PriceIncludeList = new[] { "Khách sạn", "Xe đưa đón" },
                         ActivityList = new[] { "Tham quan", "Tắm biển" },
                         ImageList = new[] { "https://example.com/da-nang1.jpg", "https://example.com/da-nang2.jpg" },
-                        DayList = new[] { DateTime.UtcNow.AddDays(16), DateTime.UtcNow.AddDays(17) },
+						DayList = new[] { "Day 1", "Day 2" },
                         ReviewList = new List <Review>
 						{
                             new Review { Id="1", Content = "Thành phố đẹp và dịch vụ rất tốt!", Rating = 4.8f, CreatedAt = DateTime.UtcNow }
@@ -191,7 +191,7 @@ namespace Room.API.Persistence
                         PriceIncludeList = new[] { "Khách sạn", "Thuyền đưa đón" },
                         ActivityList = new[] { "Tắm biển", "Lặn ngắm san hô" },
                         ImageList = new[] { "https://example.com/phu-quoc1.jpg", "https://example.com/phu-quoc2.jpg" },
-                        DayList = new[] { DateTime.UtcNow.AddDays(21), DateTime.UtcNow.AddDays(22) },
+						DayList = new[] { "Day 1", "Day 2" },
                         ReviewList = new List <Review>
 						{
                             new Review { Id = "1",  Content = "Đảo ngọc đẹp như tranh vẽ!", Rating = 5, CreatedAt = DateTime.UtcNow }
