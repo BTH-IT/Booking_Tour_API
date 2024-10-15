@@ -91,11 +91,7 @@ namespace Room.API.Persistence
                         DateFrom = DateTime.UtcNow.AddDays(7),
                         DateTo = DateTime.UtcNow.AddDays(10),
                         Rate = 4.9f,
-						VideoObject = new Video
-                        {
-							Url = "https://example.com/saigon-tour-video",
-	                        Type = "mp4"
-						},
+						Video = "https://example.com/saigon-tour-video",
                         SalePercent = 5,
                         PriceExcludeList = new[] { "Bữa ăn", "Vé máy bay" },
                         PriceIncludeList = new[] { "Khách sạn", "Di chuyển trong thành phố" },
@@ -121,11 +117,7 @@ namespace Room.API.Persistence
                         DateFrom = DateTime.UtcNow.AddDays(10),
                         DateTo = DateTime.UtcNow.AddDays(15),
                         Rate = 4.8f,
-						VideoObject = new Video
-						{
-							Url = "https://example.com/saigon-tour-video",
-							Type = "mp4"
-						},
+						Video = "https://example.com/saigon-tour-video",
 						SalePercent = 10,
                         PriceExcludeList = new[] { "Bữa ăn", "Vé máy bay" },
                         PriceIncludeList = new[] { "Khách sạn", "Du thuyền" },
@@ -151,11 +143,7 @@ namespace Room.API.Persistence
                         DateFrom = DateTime.UtcNow.AddDays(15),
                         DateTo = DateTime.UtcNow.AddDays(20),
                         Rate = 4.85f,
-						VideoObject = new Video
-						{
-							Url = "https://example.com/saigon-tour-video",
-							Type = "mp4"
-						},
+						Video = "https://example.com/saigon-tour-video",
 						SalePercent = 12,
                         PriceExcludeList = new[] { "Bữa ăn", "Vé máy bay" },
                         PriceIncludeList = new[] { "Khách sạn", "Xe đưa đón" },
@@ -181,11 +169,7 @@ namespace Room.API.Persistence
                         DateFrom = DateTime.UtcNow.AddDays(20),
                         DateTo = DateTime.UtcNow.AddDays(25),
                         Rate = 4.9f,
-						VideoObject = new Video
-						{
-							Url = "https://example.com/saigon-tour-video",
-							Type = "mp4"
-						},
+						Video = "https://example.com/saigon-tour-video",
 						SalePercent = 8,
                         PriceExcludeList = new[] { "Bữa ăn", "Vé máy bay" },
                         PriceIncludeList = new[] { "Khách sạn", "Thuyền đưa đón" },
