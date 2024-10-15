@@ -48,7 +48,7 @@ namespace Tour.API.Entities
         public string[] ImageList { get; set; }
 
         [NotMapped]
-        public DateTime[] DayList { get; set; }
+        public string[] DayList { get; set; }
 
         [NotMapped]
 		public List<Review> ReviewList { get; set; }
@@ -97,21 +97,9 @@ namespace Tour.API.Entities
         [Column(TypeName = "JSON")]
         public string Days
         {
-            get => JsonConvert.SerializeObject(DayList.Select(d => new { Date = d }));
-            set
-            {
-                try
-                {
-                    var daysList = JsonConvert.DeserializeObject<List<Dictionary<string, DateTime>>>(value);
-                    DayList = daysList?.Select(d => d["Date"]).ToArray() ?? Array.Empty<DateTime>();
-                }
-                catch (JsonException)
-                {
-                    DayList = Array.Empty<DateTime>(); 
-                }
-            }
-        }
-
+			get => JsonConvert.SerializeObject(DayList);
+			set => DayList = JsonConvert.DeserializeObject<string[]>(value) ?? Array.Empty<string>();
+		}
 
         [Column(TypeName = "JSON")]
         public string? Reviews

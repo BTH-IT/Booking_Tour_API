@@ -17,7 +17,7 @@
         public string[]? PriceIncludeList { get; set; }
         public string[]? ActivityList { get; set; }
         public string[]? ImageList { get; set; }
-        public List<DateTime>? DayList { get; set; }
+        public string[]? DayList { get; set; }
         public int DestinationId { get; set; }
     }
     public class TourResponseDTO
@@ -38,7 +38,7 @@
         public string[]? PriceIncludeList { get; set; }
         public string[]? ActivityList { get; set; }
         public string[]? ImageList { get; set; }
-        public List<DateTime>? DayList { get; set; }
+        public string[]? DayList { get; set; }
 		public int DestinationId { get; set; }
 		public DestinationRequestDTO? Destination { get; set; }
         public List<Review>? ReviewList { get; set; }
