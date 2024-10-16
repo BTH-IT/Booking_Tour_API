@@ -22,15 +22,15 @@ namespace Room.API.Repositories
 		public Task<Hotel> GetHotelByIdAsync(int id) =>
 			FindByCondition(h => h.Id.Equals(id) && h.DeletedAt == null, false, h => h.Rooms).SingleOrDefaultAsync();
 
-		public Task CreateHotelAsync(Hotel hotel) => CreateAsync(hotel);
+		public Task<int> CreateHotelAsync(Hotel hotel) => CreateAsync(hotel);
 
-		public Task UpdateHotelAsync(Hotel hotel) => UpdateAsync(hotel);
+		public Task<int> UpdateHotelAsync(Hotel hotel) => UpdateAsync(hotel);
 
 		public async Task DeleteHotelAsync(int id)
-			{
+		{
 			var hotel = await GetHotelByIdAsync(id);
 			if (hotel != null)
-				{
+			{
 				hotel.DeletedAt = DateTime.UtcNow;
 
 				await UpdateAsync(hotel);

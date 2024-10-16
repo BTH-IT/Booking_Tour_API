@@ -21,8 +21,7 @@ namespace Booking.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     CheckIn = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CheckOut = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     NumberOfPeople = table.Column<int>(type: "int", nullable: false),
@@ -77,6 +76,8 @@ namespace Booking.API.Migrations
                     Price = table.Column<double>(type: "double", nullable: false),
                     Adults = table.Column<int>(type: "int", nullable: false),
                     Children = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>

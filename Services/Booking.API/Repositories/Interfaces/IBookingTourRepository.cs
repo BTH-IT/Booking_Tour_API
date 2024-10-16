@@ -8,8 +8,8 @@ namespace Booking.API.Repositories.Interfaces
 	{
 		Task<IEnumerable<BookingTour>> GetBookingToursAsync();
 		Task<BookingTour> GetBookingTourByIdAsync(int id);
-		Task CreateBookingTourAsync(BookingTour bookingTour);
-		Task UpdateBookingTourAsync(BookingTour bookingTour);
+		Task<int> CreateBookingTourAsync(BookingTour bookingTour);
+		Task<int> UpdateBookingTourAsync(BookingTour bookingTour);
 		Task DeleteBookingTourAsync(int id);
 	}
 }

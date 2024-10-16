@@ -21,12 +21,15 @@ namespace Room.API.Repositories
 		public Task<RoomEntity> GetRoomByIdAsync(int id) =>
 			 FindByCondition(r => r.Id == id && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
 
+		public async Task<IEnumerable<RoomEntity>> GetRoomByHotelIdAsync(int id) =>
+			await FindByCondition(r => r.HotelId == id && r.DeletedAt == null, false, r => r.Hotel).ToListAsync();
+
 		public Task<RoomEntity> GetRoomByNameAsync(string name) =>
 			 FindByCondition(r => r.Name == name && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
 
-		public Task CreateRoomAsync(RoomEntity room) => CreateAsync(room);
+		public Task<int> CreateRoomAsync(RoomEntity room) => CreateAsync(room);
 
-		public Task UpdateRoomAsync(RoomEntity room) => UpdateAsync(room);
+		public Task<int> UpdateRoomAsync(RoomEntity room) => UpdateAsync(room);
 
 		public async Task DeleteRoomAsync(int id)
 		{
