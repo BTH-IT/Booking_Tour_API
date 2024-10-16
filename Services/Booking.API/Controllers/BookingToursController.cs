@@ -1,69 +1,56 @@
-﻿using AutoMapper;
-using Booking.API.GrpcClient.Protos;
-using EventBus.IntergrationEvents.Events;
-using MassTransit;
-using Microsoft.AspNetCore.Http;
+﻿using Booking.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Helper;
 
 namespace Booking.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class BookingToursController : ControllerBase
-    {
-        private readonly IMapper _mapper;
-        private readonly IPublishEndpoint _publishEndpoint;
-        private readonly IdentityGrpcService.IdentityGrpcServiceClient _identityGrpcServiceClient;
-        private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
-        private readonly TourGrpcService.TourGrpcServiceClient _tourGrpcServiceClient;
+	[ApiController]
+	[Route("api/[controller]")]
+	public class BookingToursController : ControllerBase
+	{
+		private readonly IBookingTourService _bookingTourService;
 
-        public BookingToursController(
-            IMapper mapper,
-            IPublishEndpoint publishEndpoint,
-            IdentityGrpcService.IdentityGrpcServiceClient identityGrpcServiceClient,
-            RoomGrpcService.RoomGrpcServiceClient roomGrpcServiceClient,
-            TourGrpcService.TourGrpcServiceClient tourGrpcServiceClient) 
-        {
-            this._mapper = mapper;
-            this._publishEndpoint = publishEndpoint;
-            this._identityGrpcServiceClient = identityGrpcServiceClient;
-            this._roomGrpcServiceClient = roomGrpcServiceClient;
-            this._tourGrpcServiceClient = tourGrpcServiceClient;
-        }
+		public BookingToursController(IBookingTourService bookingTourService)
+		{
+			_bookingTourService = bookingTourService;
+		}
 
-        [HttpPost("booking")]
-        public async Task<IActionResult> CheckOutBookingToursAsync([FromBody] BookingTourRequestDTO requestDto)
-        {
-            await _publishEndpoint.Publish<TestEvent>(new TestEvent
-            {
-                Hello = "hello ne"
-            });
-            return Ok();
-        }
+		[HttpGet]
+		public async Task<IActionResult> GetAllAsync()
+		{
+			var response = await _bookingTourService.GetAllAsync();
+			return StatusCode(response.StatusCode, response);
+		}
 
-        [HttpGet("test-grpc")]
-        public async Task<IActionResult> TestGrpcAsync()
-        {
-            var test1 = await _identityGrpcServiceClient.GetUserByIdAsync(new GetUserByIdRequest
-            {
-                Id = 10
-            });
-            var test2 = await _roomGrpcServiceClient.GetRoomByIdAsync(new GetRoomByIdRequest
-            {
-                Id = 11
-            });
-            var test3 = await _tourGrpcServiceClient.GetTourByIdAsync(new GetTourByIdRequest
-            {
-                Id = 12
-            });
-            return Ok(new
-            {
-                test1,
-                test2,
-                test3
-            });
-        }
-    }
+		[HttpGet("{id:int}")]
+		public async Task<IActionResult> GetByIdAsync(int id)
+		{
+			var response = await _bookingTourService.GetByIdAsync(id);
+			return StatusCode(response.StatusCode, response);
+		}
+
+		[HttpPost]
+		[ApiValidationFilter]
+		public async Task<IActionResult> CreateBookingTourAsync([FromBody] BookingTourRequestDTO requestDTO)
+		{
+			var response = await _bookingTourService.CreateAsync(requestDTO);
+			return StatusCode(response.StatusCode, response);
+		}
+
+		[HttpPut("{id:int}")]
+		[ApiValidationFilter]
+		public async Task<IActionResult> UpdateBookingTourAsync(int id, [FromBody] BookingTourRequestDTO requestDTO)
+		{
+			var response = await _bookingTourService.UpdateAsync(id, requestDTO);
+			return StatusCode(response.StatusCode, response);
+		}
+
+		[HttpDelete("{id:int}")]
+		public async Task<IActionResult> DeleteBookingTourAsync(int id)
+		{
+			var response = await _bookingTourService.DeleteAsync(id);
+			return StatusCode(response.StatusCode, response);
+		}
+	}
 }

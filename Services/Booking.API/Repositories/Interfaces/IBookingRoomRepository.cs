@@ -8,8 +8,8 @@ namespace Booking.API.Repositories.Interfaces
 	{
 		Task<IEnumerable<BookingRoom>> GetBookingRoomsAsync();
 		Task<BookingRoom> GetBookingRoomByIdAsync(int id);
-		Task CreateBookingRoomAsync(BookingRoom bookingRoom);
-		Task UpdateBookingRoomAsync(BookingRoom bookingRoom);
+		Task<int> CreateBookingRoomAsync(BookingRoom bookingRoom);
+		Task<int> UpdateBookingRoomAsync(BookingRoom bookingRoom);
 		Task DeleteBookingRoomAsync(int id);
 	}
 }

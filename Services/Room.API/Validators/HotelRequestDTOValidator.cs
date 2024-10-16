@@ -21,8 +21,8 @@ namespace Room.API.Validators
 
 			RuleFor(hotel => hotel.Description)
 				.NotNull()
-				.MaximumLength(500)
-				.WithMessage("Description must not exceed 500 characters and cannot be null");
+				.MaximumLength(1000)
+				.WithMessage("Description must not exceed 1000 characters and cannot be null");
 
 			RuleFor(hotel => hotel.ContactInfo)
 				.NotEmpty()

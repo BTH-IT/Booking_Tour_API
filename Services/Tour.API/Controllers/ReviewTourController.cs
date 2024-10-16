@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
-using Tour.API.Repositories.Services.Interfaces;
+using Tour.API.Services.Interfaces;
 
 [ApiController]
 [Route("api/[controller]")]
