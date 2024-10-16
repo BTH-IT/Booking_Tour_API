@@ -13,7 +13,6 @@ using Tour.API.Services;
 using FluentValidation;
 using Shared.DTOs;
 using Tour.API.Validators;
-using Tour.API.Repositories.Services.Interfaces;
 namespace Tour.API.Extensions
 {
     public static class ServiceExtensions

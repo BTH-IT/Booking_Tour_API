@@ -9,6 +9,10 @@ using EventBus.Masstransit;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Booking.API.GrpcClient.Protos;
 using Infrastructure.Polly.GprcPolly;
+using Booking.API.Repositories.Interfaces;
+using Booking.API.Repositories;
+using Booking.API.Services.Interfaces;
+using Booking.API.Services;
 namespace Booking.API.Extensions
 {
     public static class ServiceExtension
@@ -35,6 +39,13 @@ namespace Booking.API.Extensions
         {
             return services.AddScoped(typeof(IRepositoryBase<,,>), typeof(RepositoryBase<,,>))
                     .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
+					.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
+					.AddScoped<IBookingRoomRepository, BookingRoomRepository>()
+					.AddScoped<IBookingTourRepository, BookingTourRepository>()
+					.AddScoped<IDetailBookingRoomRepository, DetailBookingRoomRepository>()
+					.AddScoped<ITourBookingRoomRepository, TourBookingRoomRepository>()
+					.AddScoped<IBookingRoomService, BookingRoomService>()
+					.AddScoped<IBookingTourService, BookingTourService>()
 					.AddScoped<BookingDbContextSeeder>();
         }
         public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
