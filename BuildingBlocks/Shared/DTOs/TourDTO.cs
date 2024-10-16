@@ -42,7 +42,6 @@
 		public int DestinationId { get; set; }
 		public DestinationRequestDTO? Destination { get; set; }
         public List<Review>? ReviewList { get; set; }
-        public DateTime? DeletedAt { get; set; }
 	}
 	public class TourSearchResponseDTO
     {
@@ -72,8 +71,5 @@
 		public float Rating { get; set; }
 		public int TourId { get; set; }
 		public int UserId { get; set; }
-		public DateTime? CreatedAt { get; set; }
-		public DateTime? UpdatedAt { get; set; }
-		public DateTime? DeletedAt { get; set; }
 	}
 }

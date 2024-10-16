@@ -9,8 +9,8 @@ namespace Room.API.Repositories.Interfaces
 		Task<IEnumerable<Hotel>> GetHotelsAsync();
 		Task<Hotel> GetHotelByIdAsync(int id);
 		Task<Hotel> GetHotelByNameAsync(string name);
-		Task CreateHotelAsync(Hotel hotel);
-		Task UpdateHotelAsync(Hotel hotel);
+		Task<int> CreateHotelAsync(Hotel hotel);
+		Task<int> UpdateHotelAsync(Hotel hotel);
 		Task DeleteHotelAsync(int id);
 	}
 }

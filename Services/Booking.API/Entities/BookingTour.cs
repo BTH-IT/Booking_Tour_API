@@ -21,7 +21,7 @@ namespace Booking.API.Entities
         public double Coupon {  get; set; } 
         public int PaymentMethod { get; set; }
         [NotMapped]
-        public Traveller[] TravellerList { get; set; }
+        public List<Traveller>  TravellerList { get; set; }
         public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
 		public DateTime? DeletedAt { get; set; }
@@ -30,10 +30,11 @@ namespace Booking.API.Entities
         public string Travellers
         {
             get => JsonConvert.SerializeObject(TravellerList);
-            set => TravellerList = JsonConvert.DeserializeObject<Traveller[]>(value) ?? new Traveller[0];
+            set => TravellerList = JsonConvert.DeserializeObject<List<Traveller>>(value) ?? new List<Traveller>();
         }
-        public ICollection<TourBookingRoom>? TourBookingRooms { get; set; }
+        public ICollection<TourBookingRoom> TourBookingRooms { get; set; }
     }
+
 	public class Traveller
 	{
 		public bool Gender { get; set; }

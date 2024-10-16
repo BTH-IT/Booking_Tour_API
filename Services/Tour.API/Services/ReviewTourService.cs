@@ -2,9 +2,9 @@
 using Shared.DTOs;
 using Shared.Helper;
 using Tour.API.Repositories.Interfaces;
-using Tour.API.Repositories.Services.Interfaces;
 using ReviewEntity = Tour.API.Entities.Review;
 using ILogger = Serilog.ILogger;
+using Tour.API.Services.Interfaces;
 
 
 public class ReviewTourService : IReviewTourService
