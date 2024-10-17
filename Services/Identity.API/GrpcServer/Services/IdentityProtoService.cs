@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using Identity.API.GrpcServer.Protos;
+using Identity.API.Repositories.Interfaces;
 using System.Net.WebSockets;
 
 namespace Identity.API.GrpcServer.Services
@@ -7,12 +8,25 @@ namespace Identity.API.GrpcServer.Services
     public record GetUserById(int Result);
     public class IdentityProtoService : IdentityGrpcService.IdentityGrpcServiceBase
     {
-        public override Task<GetUserByIdResponse> GetUserById(GetUserByIdRequest request, ServerCallContext context)
+        private readonly IUserRepository userRepository;
+        public IdentityProtoService(IUserRepository userRepository)
         {
-            return Task.FromResult(new GetUserByIdResponse()
+            this.userRepository = userRepository;
+        }
+
+        public override async Task<GetUserByIdResponse> GetUserById(GetUserByIdRequest request, ServerCallContext context)
+        {
+            var user = await userRepository.GetByIdAsync(request.Id);
+            if (user == null)
+                return null;
+            return new GetUserByIdResponse()
             {
-                Result = 100
-            });
+                Country = user.Country,
+                Fullname = user.Fullname,
+                Gender = user.Gender,
+                Phone = user.Phone,
+                Id = user.Id
+            };
         }
     }
 }

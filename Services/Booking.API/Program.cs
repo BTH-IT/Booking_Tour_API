@@ -92,8 +92,6 @@ try
     );
     //Masstransit and RabbitMq
     builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
-    //Add GrpcClient
-    builder.Services.AddGrpcClients();
     // Configure the HTTP request pipeline.
     var app = builder.Build();
     if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))

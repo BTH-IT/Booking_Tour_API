@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Room.API.GrpcServer.Protos";
+option csharp_namespace = "Saga.Orchestrator.API.GrpcClient.Protos";
 
 service RoomGrpcService{
 	rpc GetRoomsByIds (GetRoomsByIdsRequest) returns (GetRoomsByIdsResponse);
@@ -18,3 +18,5 @@ message RoomResponse{
 message GetRoomsByIdsResponse{
 	repeated RoomResponse Rooms=1;
 }
+
+

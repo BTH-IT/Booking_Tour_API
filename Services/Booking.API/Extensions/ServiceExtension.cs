@@ -5,10 +5,6 @@ using MySqlConnector;
 using Shared.Configurations;
 using Infrastructure.Extensions;
 using Booking.API.Persistence;
-using EventBus.Masstransit;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Booking.API.GrpcClient.Protos;
-using Infrastructure.Polly.GprcPolly;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Repositories;
 namespace Booking.API.Extensions
@@ -49,29 +45,6 @@ namespace Booking.API.Extensions
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                 )
-            );
-            return services;
-        }
-        public static IServiceCollection AddGrpcClients(this IServiceCollection services)
-        {
-            var grpcOptions = services.GetOptions<GrpcSettings>(nameof(GrpcSettings));
-            services.AddGrpcClient<IdentityGrpcService.IdentityGrpcServiceClient>(
-                option =>
-                {
-                    option.Address = new Uri(grpcOptions.IdentityAddress ?? throw new Exception("Configration Not found"));
-                }
-            );
-            services.AddGrpcClient<TourGrpcService.TourGrpcServiceClient>(
-                option =>
-                {
-                    option.Address = new Uri(grpcOptions.TourAddress ?? throw new Exception("Configration Not found"));
-                }
-            );
-            services.AddGrpcClient<RoomGrpcService.RoomGrpcServiceClient>(
-                option =>
-                {
-                    option.Address = new Uri(grpcOptions.RoomAddress ?? throw new Exception("Configration Not found"));
-                }
             );
             return services;
         }

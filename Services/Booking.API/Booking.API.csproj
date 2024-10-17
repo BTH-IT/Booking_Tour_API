@@ -37,7 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,11 +48,5 @@
     <ProjectReference Include="..\..\BuildingBlocks\EventBus\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-		<Protobuf Include="GrpcClient\Protos\tour.proto" GrpcServices="Both" />
-	    <Protobuf Include="GrpcClient\Protos\room.proto" GrpcServices="Both" />
-	    <Protobuf Include="GrpcClient\Protos\identity.proto" GrpcServices="Both" />
   </ItemGroup>
 </Project>
