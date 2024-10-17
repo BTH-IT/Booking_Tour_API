@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Booking.API.GrpcClient.Protos";
+option csharp_namespace = "Saga.Orchestrator.API.GrpcClient.Protos";
 
 service IdentityGrpcService{
 	rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
@@ -11,5 +11,9 @@ message GetUserByIdRequest{
 }
 
 message GetUserByIdResponse{
-	int32 Result = 1;
+    string Fullname = 1;
+    string Country = 2;
+	string Phone = 3;
+    string Gender = 4;
+	int32 Id = 5;
 }

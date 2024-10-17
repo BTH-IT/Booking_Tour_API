@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Booking.API.GrpcServer.protos";
+
+service BookingRoomGrpcService{
+	rpc CreateBookingRoom (CreateBookingRoomRequest) returns (BookingRoomResponse);
+}
+
+message CreateBookingRoomRequest{
+	int32 Id = 1;
+}
+
+message BookingRoomResponse {
+    string Fullname = 1;
+    string Country = 2;
+	string Phone = 3;
+    string Gender = 4;
+	int32 Id = 5;
+}

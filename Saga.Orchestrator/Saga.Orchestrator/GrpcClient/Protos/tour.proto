@@ -1,7 +1,8 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-option csharp_namespace = "Tour.API.GrpcServer.Protos";
+option csharp_namespace = "Saga.Orchestrator.API.GrpcClient.Protos";
+
 
 service TourGrpcService{
 	rpc GetScheduleById (GetScheduleByIdRequest) returns (GetScheduleByIdResponse);
@@ -13,5 +14,4 @@ message GetScheduleByIdResponse{
     google.protobuf.Timestamp DateStart = 1;
     google.protobuf.Timestamp DateEnd = 2;
     int32 AvailableSeats = 3;
-    int32 Id = 4;
 }
