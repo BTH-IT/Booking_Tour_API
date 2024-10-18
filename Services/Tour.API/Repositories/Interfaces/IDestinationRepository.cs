@@ -9,8 +9,8 @@ namespace Tour.API.Repositories.Interfaces
         Task<IEnumerable<DestinationEntity>> GetDestinationsAsync();
         Task<DestinationEntity> GetDestinationByIdAsync(int id);
         Task<DestinationEntity> GetDestinationByNameAsync(string name);
-        Task CreateDestinationAsync(DestinationEntity destination);
-        Task UpdateDestinationAsync(DestinationEntity destination);
+        Task<int> CreateDestinationAsync(DestinationEntity destination);
+		Task<int> UpdateDestinationAsync(DestinationEntity destination);
         Task DeleteDestinationAsync(int id);
     }
 }

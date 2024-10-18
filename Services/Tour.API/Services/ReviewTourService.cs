@@ -6,7 +6,6 @@ using ReviewEntity = Tour.API.Entities.Review;
 using ILogger = Serilog.ILogger;
 using Tour.API.Services.Interfaces;
 
-
 public class ReviewTourService : IReviewTourService
 {
 	private readonly ITourRepository _TourRepository;
@@ -20,80 +19,106 @@ public class ReviewTourService : IReviewTourService
 		_mapper = mapper;
 	}
 
-	public async Task<ApiResponse<Review>> CreateReviewAsync(Review reviewRequest)
+	public async Task<ApiResponse<ReviewTourDTO>> CreateReviewAsync(ReviewTourDTO reviewRequest)
 	{
-		_logger.Information("Begin: ReviewTourService  - CreateReviewAsync");
-
-		var tour = await _TourRepository.GetTourByIdAsync(reviewRequest.TourId);
-		if (tour == null)
+		_logger.Information("Begin: ReviewTourService - CreateReviewAsync");
+		try
 		{
-			return new ApiResponse<Review>(404, null, "Tour not found");
+			var tour = await _TourRepository.GetTourByIdAsync(reviewRequest.TourId);
+			if (tour == null)
+			{
+				_logger.Information("Tour not found.");
+				return new ApiResponse<ReviewTourDTO>(404, null, "Tour not found.");
+			}
+
+			var reviewEntity = _mapper.Map<ReviewEntity>(reviewRequest);
+			reviewEntity.CreatedAt = DateTime.UtcNow;
+
+			if (tour.ReviewList == null)
+			{
+				tour.ReviewList = new List<ReviewEntity>();
+			}
+
+			tour.ReviewList.Add(reviewEntity);
+
+			await _TourRepository.UpdateTourAsync(tour);
+
+			var responseData = _mapper.Map<ReviewTourDTO>(reviewEntity);
+			_logger.Information("End: ReviewTourService - CreateReviewAsync");
+			return new ApiResponse<ReviewTourDTO>(200, responseData, "Review created successfully.");
 		}
-
-		var reviewEntity = _mapper.Map<ReviewEntity>(reviewRequest);
-		reviewEntity.CreatedAt = DateTime.UtcNow;
-
-		if (tour.ReviewList == null)
+		catch (Exception ex)
 		{
-			tour.ReviewList = new List<ReviewEntity>();
+			_logger.Error($"Error in ReviewTourService - CreateReviewAsync: {ex.Message}", ex);
+			return new ApiResponse<ReviewTourDTO>(500, null, $"An error occurred while creating the review: {ex.Message}");
 		}
-
-		tour.ReviewList.Add(reviewEntity);
-
-		await _TourRepository.UpdateAsync(tour);
-
-		var responseData = _mapper.Map<Review>(reviewEntity);
-		_logger.Information("End: ReviewTourService  - CreateReviewAsync");
-		return new ApiResponse<Review>(200, responseData, "Review created successfully");
 	}
 
-	public async Task<ApiResponse<Review>> UpdateReviewAsync(Review reviewRequest)
+	public async Task<ApiResponse<ReviewTourDTO>> UpdateReviewAsync(ReviewTourDTO reviewRequest)
 	{
-		_logger.Information("Begin: ReviewTourService  - UpdateReviewAsync");
-
-		var tour = await _TourRepository.GetTourByIdAsync(reviewRequest.TourId);
-		if (tour == null)
+		_logger.Information("Begin: ReviewTourService - UpdateReviewAsync");
+		try
 		{
-			return new ApiResponse<Review>(404, null, "Tour not found");
-		}
+			var tour = await _TourRepository.GetTourByIdAsync(reviewRequest.TourId);
+			if (tour == null)
+			{
+				_logger.Information("Tour not found.");
+				return new ApiResponse<ReviewTourDTO>(404, null, "Tour not found.");
+			}
 
-		var review = tour.ReviewList.FirstOrDefault(r => r.Id == reviewRequest.Id);
-		if (review == null)
+			var review = tour.ReviewList.FirstOrDefault(r => r.Id == reviewRequest.Id);
+			if (review == null)
+			{
+				_logger.Information("Review not found.");
+				return new ApiResponse<ReviewTourDTO>(404, null, "Review not found.");
+			}
+
+			review.Content = reviewRequest.Content;
+			review.Rating = reviewRequest.Rating;
+			review.UpdatedAt = DateTime.UtcNow;
+
+			await _TourRepository.UpdateTourAsync(tour);
+
+			var responseData = _mapper.Map<ReviewTourDTO>(review);
+			_logger.Information("End: ReviewTourService - UpdateReviewAsync");
+			return new ApiResponse<ReviewTourDTO>(200, responseData, "Review updated successfully.");
+		}
+		catch (Exception ex)
 		{
-			return new ApiResponse<Review>(404, null, "Review not found");
+			_logger.Error($"Error in ReviewTourService - UpdateReviewAsync: {ex.Message}", ex);
+			return new ApiResponse<ReviewTourDTO>(500, null, $"An error occurred while updating the review: {ex.Message}");
 		}
-
-		review.Content = reviewRequest.Content;
-		review.Rating = reviewRequest.Rating;
-		review.UpdatedAt = DateTime.UtcNow;
-
-		await _TourRepository.UpdateAsync(tour);
-
-		var responseData = _mapper.Map<Review>(review);
-		_logger.Information("End: ReviewTourService  - UpdateReviewAsync");
-		return new ApiResponse<Review>(200, responseData, "Review updated successfully");
 	}
 
 	public async Task<ApiResponse<int>> DeleteReviewAsync(int TourId, string reviewId)
 	{
-		_logger.Information($"Begin: ReviewTourService  - DeleteReviewAsync : {reviewId}");
-
-		var tour = await _TourRepository.GetByIdAsync(TourId);
-		if (tour == null)
+		_logger.Information($"Begin: ReviewTourService - DeleteReviewAsync : {reviewId}");
+		try
 		{
-			return new ApiResponse<int>(404, 0, "Tour not found.");
-		}
+			var tour = await _TourRepository.GetByIdAsync(TourId);
+			if (tour == null)
+			{
+				_logger.Information("Tour not found.");
+				return new ApiResponse<int>(404, 0, "Tour not found.");
+			}
 
-		var review = tour.ReviewList.FirstOrDefault(r => r.Id == reviewId);
-		if (review == null)
+			var review = tour.ReviewList.FirstOrDefault(r => r.Id == reviewId);
+			if (review == null)
+			{
+				_logger.Information("Review not found.");
+				return new ApiResponse<int>(404, 0, "Review not found.");
+			}
+
+			review.DeletedAt = DateTime.UtcNow;
+			await _TourRepository.UpdateAsync(tour);
+
+			_logger.Information($"End: ReviewTourService - DeleteReviewAsync : {reviewId} - Successfully deleted the review.");
+			return new ApiResponse<int>(200, 1, "Review deleted successfully.");
+		}
+		catch (Exception ex)
 		{
-			return new ApiResponse<int>(404, 0, "Review not found.");
+			_logger.Error($"Error in ReviewTourService - DeleteReviewAsync: {ex.Message}", ex);
+			return new ApiResponse<int>(500, 0, $"An error occurred while deleting the review: {ex.Message}");
 		}
-
-		review.DeletedAt = DateTime.UtcNow;
-		await _TourRepository.UpdateAsync(tour);
-
-		_logger.Information($"End: ReviewTourService  - DeleteReviewAsync : {reviewId} - Successfully deleted the review.");
-		return new ApiResponse<int>(200, 1, "Review deleted successfully.");
 	}
 }

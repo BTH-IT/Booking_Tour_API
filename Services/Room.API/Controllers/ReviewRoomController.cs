@@ -21,8 +21,8 @@ namespace Room.API.Controllers
 			return StatusCode(response.StatusCode, response);
 		}
 
-	[HttpPut]
-	public async Task<IActionResult> UpdateReviewAsync([FromBody] ReviewRoomDTO reviewRequest)
+		[HttpPut]
+		public async Task<IActionResult> UpdateReviewAsync([FromBody] ReviewRoomDTO reviewRequest)
 		{
 		var response = await _ReviewRoomService.UpdateReviewAsync(reviewRequest);
 			return StatusCode(response.StatusCode, response);

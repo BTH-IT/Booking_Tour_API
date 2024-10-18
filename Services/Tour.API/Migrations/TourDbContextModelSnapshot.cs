@@ -94,7 +94,6 @@ namespace Tour.API.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Activities")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<DateTime>("CreatedAt")
@@ -107,7 +106,6 @@ namespace Tour.API.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Days")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -126,7 +124,6 @@ namespace Tour.API.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<string>("Images")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<bool>("IsWifi")
@@ -143,11 +140,9 @@ namespace Tour.API.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("PriceExcludes")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<string>("PriceIncludes")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<float>("Rate")

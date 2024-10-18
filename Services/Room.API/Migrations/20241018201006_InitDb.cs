@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Room.API.Migrations
 {
     /// <inheritdoc />
-    public partial class initDb : Migration
+    public partial class InitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,15 +30,15 @@ namespace Room.API.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ContactInfo = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Reviews = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     HotelRules = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     HotelAmenities = table.Column<string>(type: "JSON", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -54,23 +54,23 @@ namespace Room.API.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Images = table.Column<string>(type: "JSON", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Video = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Detail = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Price = table.Column<double>(type: "double", nullable: false),
                     IsAvailable = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     MaxGuests = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    HotelId = table.Column<int>(type: "int", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Reviews = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RoomAmenities = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Images = table.Column<string>(type: "JSON", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Video = table.Column<string>(type: "JSON", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    HotelId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
