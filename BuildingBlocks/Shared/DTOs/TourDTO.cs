@@ -41,8 +41,9 @@
         public string[]? DayList { get; set; }
 		public int DestinationId { get; set; }
 		public DestinationRequestDTO? Destination { get; set; }
-        public List<Review>? ReviewList { get; set; }
+        public List<ReviewTourDTO>? ReviewList { get; set; }
 	}
+
 	public class TourSearchResponseDTO
     {
         public List<TourResponseDTO> Tours { get; set; }
@@ -64,12 +65,4 @@
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 2; 
     }
-	public class Review
-	{
-		public string Id { get; set; }
-		public string? Content { get; set; }
-		public float Rating { get; set; }
-		public int TourId { get; set; }
-		public int UserId { get; set; }
-	}
 }

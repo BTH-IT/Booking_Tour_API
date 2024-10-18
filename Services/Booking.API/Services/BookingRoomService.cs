@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Booking.API.Entities;
+using Booking.API.GrpcClient.Protos;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
+using Newtonsoft.Json;
 using Shared.DTOs;
 using Shared.Helper;
 using ILogger = Serilog.ILogger;
@@ -75,46 +77,17 @@ namespace Booking.API.Services
 
 			try
 			{
-				var bookingRoom = new BookingRoom
-				{
-					UserId = item.UserId,
-					CheckIn = item.CheckIn,
-					CheckOut = item.CheckOut,
-					NumberOfPeople = item.NumberOfPeople,
-					PriceTotal = item.PriceTotal,
-					CreatedAt = DateTime.UtcNow,
-					DetailBookingRooms = item.DetailBookingRooms.Select(d => new DetailBookingRoom
-					{
-						RoomId = d.RoomId,
-						Price = d.Price,
-						Adults = d.Adults,
-						Children = d.Children,
-						CreatedAt = DateTime.UtcNow
-
-					}).ToList()
-				};
-
+				var bookingRoom = _mapper.Map<BookingRoom>(item);
+				bookingRoom.CreatedAt = DateTime.UtcNow;
+				
 				var result = await _bookingRoomRepository.CreateBookingRoomAsync(bookingRoom);
 
 				if (result > 0)
 				{
 					_logger.Information("End: BookingRoomService - CreateAsync: Successfully created booking room.");
-					return new ApiResponse<BookingRoomResponseDTO>(200, new BookingRoomResponseDTO
-					{
-						Id = bookingRoom.Id,
-						UserId = bookingRoom.UserId,
-						CheckIn = bookingRoom.CheckIn,
-						CheckOut = bookingRoom.CheckOut,
-						NumberOfPeople = bookingRoom.NumberOfPeople,
-						PriceTotal = bookingRoom.PriceTotal,
-						DetailBookingRooms = bookingRoom.DetailBookingRooms.Select(d => new DetailBookingRoomResponseDTO
-						{
-							RoomId = d.RoomId,
-							Price = d.Price,
-							Adults = d.Adults,
-							Children = d.Children
-						}).ToList()
-					}, "Booking room created successfully.");
+					var updatedBookingRoom = await _bookingRoomRepository.GetBookingRoomByIdAsync(result);
+					var data = _mapper.Map<BookingRoomResponseDTO>(updatedBookingRoom);
+					return new ApiResponse<BookingRoomResponseDTO>(200, data, "Booking room created successfully.");
 				}
 				else
 				{
@@ -141,11 +114,7 @@ namespace Booking.API.Services
 					_logger.Warning($"Booking room with ID {id} not found.");
 					return new ApiResponse<BookingRoomResponseDTO>(404, null, $"Booking room with ID {id} not found.");
 				}
-
-				bookingRoom.CheckIn = item.CheckIn;
-				bookingRoom.CheckOut = item.CheckOut;
-				bookingRoom.NumberOfPeople = item.NumberOfPeople;
-				bookingRoom.PriceTotal = item.PriceTotal;
+				_mapper.Map(item, bookingRoom);
 				bookingRoom.UpdatedAt = DateTime.UtcNow;
 
 				var result = await _bookingRoomRepository.UpdateBookingRoomAsync(bookingRoom);
@@ -153,22 +122,9 @@ namespace Booking.API.Services
 				if (result > 0)
 				{
 					_logger.Information($"End: BookingRoomService - UpdateAsync: {id} - Successfully updated booking room.");
-					return new ApiResponse<BookingRoomResponseDTO>(200, new BookingRoomResponseDTO
-					{
-						Id = bookingRoom.Id,
-						UserId = bookingRoom.UserId,
-						CheckIn = bookingRoom.CheckIn,
-						CheckOut = bookingRoom.CheckOut,
-						NumberOfPeople = bookingRoom.NumberOfPeople,
-						PriceTotal = bookingRoom.PriceTotal,
-						DetailBookingRooms = bookingRoom.DetailBookingRooms.Select(d => new DetailBookingRoomResponseDTO
-						{
-							RoomId = d.RoomId,
-							Price = d.Price,
-							Adults = d.Adults,
-							Children = d.Children
-						}).ToList()
-					}, "Booking room updated successfully.");
+					var updatedBookingRoom = await _bookingRoomRepository.GetBookingRoomByIdAsync(id);
+					var data = _mapper.Map<BookingRoomResponseDTO>(updatedBookingRoom);
+					return new ApiResponse<BookingRoomResponseDTO>(200, data, "Booking room updated successfully.");
 				}
 				else
 				{
@@ -182,6 +138,7 @@ namespace Booking.API.Services
 				return new ApiResponse<BookingRoomResponseDTO>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
+		
 		public async Task<ApiResponse<int>> DeleteAsync(int id)
 		{
 			_logger.Information($"Begin: BookingRoomService - DeleteAsync: {id}");

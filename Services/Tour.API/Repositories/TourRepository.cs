@@ -2,10 +2,6 @@
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
-using Shared.Helper;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Tour.API.Entities;
 using Tour.API.Persistence;
 using Tour.API.Repositories.Interfaces;
@@ -18,10 +14,19 @@ namespace Tour.API.Repositories
 		{
 		}
 
-		// Tạo mới một Tour
-		public Task CreateTourAsync(TourEntity tour) => CreateAsync(tour);
+		public async Task<IEnumerable<TourEntity>> GetToursAsync() =>
+			await FindByCondition(r => r.DeletedAt == null, false, r => r.Destination).ToListAsync();
 
-		// Xóa một Tour dựa trên ID
+		public Task<TourEntity?> GetTourByIdAsync(int id) =>
+			 FindByCondition(t => t.Id == id, false, r => r.Destination).SingleOrDefaultAsync();
+
+		public Task<TourEntity?> GetTourByNameAsync(string name) =>
+			 FindByCondition(t => t.Name.Equals(name), false, r => r.Destination).SingleOrDefaultAsync();
+
+		public Task<int> CreateTourAsync(TourEntity tour) => CreateAsync(tour);
+
+		public Task<int> UpdateTourAsync(TourEntity tour) => UpdateAsync(tour);
+
 		public async Task DeleteTourAsync(int id)
 		{
 			var tour = await GetTourByIdAsync(id);
@@ -30,21 +35,6 @@ namespace Tour.API.Repositories
 				await DeleteAsync(tour);
 			}
 		}
-
-		// Tìm Tour theo ID
-		public Task<TourEntity?> GetTourByIdAsync(int id)=>
-			 FindByCondition(t => t.Id == id, false, r=> r.Destination).SingleOrDefaultAsync();
-
-		// Tìm Tour theo tên
-		public Task<TourEntity?> GetTourByNameAsync(string name)=>
-			 FindByCondition(t => t.Name.Equals(name), false, r => r.Destination).SingleOrDefaultAsync();
-
-		// Lấy tất cả các Tour
-		public async Task<IEnumerable<TourEntity>> GetToursAsync()=>
-			await FindByCondition(r => r.DeletedAt == null, false, r => r.Destination).ToListAsync();
-
-		// Cập nhật thông tin của Tour
-		public Task UpdateTourAsync(TourEntity tour) => UpdateAsync(tour);
 
 		public async Task SoftDeleteTourAsync(int id)
 		{

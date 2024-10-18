@@ -2,6 +2,7 @@
 using Booking.API.Entities;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
+using Newtonsoft.Json;
 using Shared.DTOs;
 using Shared.Helper;
 using ILogger = Serilog.ILogger;
@@ -30,7 +31,19 @@ namespace Booking.API.Services
 			try
 			{
 				var bookingTours = await _bookingTourRepository.GetBookingToursAsync();
+				var settings = new JsonSerializerSettings
+				{
+					ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+					NullValueHandling = NullValueHandling.Ignore
+				};
+
+
+				_logger.Information($"BookingRooms {JsonConvert.SerializeObject(bookingTours, settings)}");
+
 				var data = _mapper.Map<List<BookingTourResponseDTO>>(bookingTours);
+
+				_logger.Information($"BookingRooms_mapper {JsonConvert.SerializeObject(data, settings)}");
+
 
 				_logger.Information("End: BookingTourService - GetAllAsync");
 				return new ApiResponse<List<BookingTourResponseDTO>>(200, data, "Data retrieved successfully");
@@ -68,39 +81,6 @@ namespace Booking.API.Services
 			}
 		}
 
-		public async Task<ApiResponse<int>> DeleteAsync(int id)
-		{
-			_logger.Information($"Begin: BookingTourService - DeleteAsync: {id}");
-
-			try
-			{
-				var bookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(id);
-
-				if (bookingTour == null)
-				{
-					_logger.Warning($"Booking tour with ID {id} not found");
-					return new ApiResponse<int>(404, 0, $"Booking tour with ID {id} not found");
-				}
-
-				bookingTour.DeletedAt = DateTime.UtcNow;
-				var result = await _bookingTourRepository.UpdateBookingTourAsync(bookingTour);
-
-				if (result <= 0)
-				{
-					_logger.Warning("Failed to delete booking tour");
-					return new ApiResponse<int>(400, -1, "Failed to delete booking tour");
-				}
-
-				_logger.Information($"End: BookingTourService - DeleteAsync: {id} - Successfully deleted the booking tour.");
-				return new ApiResponse<int>(200, 1, "Booking tour deleted successfully");
-			}
-			catch (Exception ex)
-			{
-				_logger.Error($"Error in BookingTourService - DeleteAsync: {ex.Message}", ex);
-				return new ApiResponse<int>(500, 0, $"An error occurred: {ex.Message}");
-			}
-		}
-
 		public async Task<ApiResponse<BookingTourResponseDTO>> CreateAsync(BookingTourRequestDTO item)
 		{
 			_logger.Information("Begin: BookingTourService - CreateAsync");
@@ -108,14 +88,15 @@ namespace Booking.API.Services
 			try
 			{
 				var bookingTour = _mapper.Map<BookingTour>(item);
-				bookingTour.CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.Local);
+				bookingTour.CreatedAt = DateTime.UtcNow;
 
 				var result = await _bookingTourRepository.CreateBookingTourAsync(bookingTour);
 
 				if (result > 0)
 				{
 					_logger.Information("End: BookingTourService - CreateAsync: Successfully created booking tour.");
-					var data = _mapper.Map<BookingTourResponseDTO>(bookingTour);
+					var createdBookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(result);
+					var data = _mapper.Map<BookingTourResponseDTO>(createdBookingTour);
 					return new ApiResponse<BookingTourResponseDTO>(200, data, "Booking tour created successfully.");
 				}
 				else
@@ -152,7 +133,8 @@ namespace Booking.API.Services
 				if (result > 0)
 				{
 					_logger.Information($"End: BookingTourService - UpdateAsync: {id} - Successfully updated booking tour.");
-					var data = _mapper.Map<BookingTourResponseDTO>(bookingTour);
+					var updatedBookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(id);
+					var data = _mapper.Map<BookingTourResponseDTO>(updatedBookingTour);
 					return new ApiResponse<BookingTourResponseDTO>(200, data, "Booking tour updated successfully.");
 				}
 				else
@@ -165,6 +147,39 @@ namespace Booking.API.Services
 			{
 				_logger.Error($"Error in BookingTourService - UpdateAsync: {ex.Message}", ex);
 				return new ApiResponse<BookingTourResponseDTO>(500, null, $"An error occurred: {ex.Message}");
+			}
+		}
+		
+		public async Task<ApiResponse<int>> DeleteAsync(int id)
+		{
+			_logger.Information($"Begin: BookingTourService - DeleteAsync: {id}");
+
+			try
+			{
+				var bookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(id);
+
+				if (bookingTour == null)
+				{
+					_logger.Warning($"Booking tour with ID {id} not found");
+					return new ApiResponse<int>(404, 0, $"Booking tour with ID {id} not found");
+				}
+
+				bookingTour.DeletedAt = DateTime.UtcNow;
+				var result = await _bookingTourRepository.UpdateBookingTourAsync(bookingTour);
+
+				if (result <= 0)
+				{
+					_logger.Warning("Failed to delete booking tour");
+					return new ApiResponse<int>(400, -1, "Failed to delete booking tour");
+				}
+
+				_logger.Information($"End: BookingTourService - DeleteAsync: {id} - Successfully deleted the booking tour.");
+				return new ApiResponse<int>(200, 1, "Booking tour deleted successfully");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error($"Error in BookingTourService - DeleteAsync: {ex.Message}", ex);
+				return new ApiResponse<int>(500, 0, $"An error occurred: {ex.Message}");
 			}
 		}
 	}

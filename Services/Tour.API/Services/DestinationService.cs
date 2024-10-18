@@ -9,103 +9,153 @@ using ILogger = Serilog.ILogger;
 
 namespace Tour.API.Services
 {
-    public class DestinationService : IDestinationService
-    {
-        private readonly IDestinationRepository _destinationRepository;
-        private readonly IMapper _mapper;
-        private readonly ILogger _logger;
+	public class DestinationService : IDestinationService
+	{
+		private readonly IDestinationRepository _destinationRepository;
+		private readonly IMapper _mapper;
+		private readonly ILogger _logger;
 
-        public DestinationService(IDestinationRepository destinationRepository,
-            IMapper mapper,
-            ILogger logger)
-        {
-            _destinationRepository = destinationRepository;
-            _mapper = mapper;
-            _logger = logger;
-        }
+		public DestinationService(IDestinationRepository destinationRepository,
+			IMapper mapper,
+			ILogger logger)
+		{
+			_destinationRepository = destinationRepository;
+			_mapper = mapper;
+			_logger = logger;
+		}
 
-        public async Task<ApiResponse<List<DestinationResponseDTO>>> GetAllAsync()
-        {
-            _logger.Information("Begin: DestinationService - GetAllAsync");
-            var destinations = await _destinationRepository.FindAll().ToListAsync();
-            var data = _mapper.Map<List<DestinationResponseDTO>>(destinations);
-            _logger.Information("End: DestinationService - GetAllAsync");
-            return new ApiResponse<List<DestinationResponseDTO>>(200, data, "Lấy dữ liệu thành công");
-        }
+		public async Task<ApiResponse<List<DestinationResponseDTO>>> GetAllAsync()
+		{
+			_logger.Information("Begin: DestinationService - GetAllAsync");
+			try
+			{
+				var destinations = await _destinationRepository.GetDestinationsAsync();
+				var data = _mapper.Map<List<DestinationResponseDTO>>(destinations);
+				_logger.Information("End: DestinationService - GetAllAsync");
+				return new ApiResponse<List<DestinationResponseDTO>>(200, data, "Data retrieved successfully.");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error($"Error in DestinationService - GetAllAsync: {ex.Message}", ex);
+				return new ApiResponse<List<DestinationResponseDTO>>(500, null, $"An error occurred: {ex.Message}");
+			}
+		}
 
-        public async Task<ApiResponse<DestinationResponseDTO>> GetByIdAsync(int id)
-        {
-            _logger.Information($"Begin: DestinationService - GetByIdAsync, id: {id}");
-            var destination = await _destinationRepository.GetDestinationByIdAsync(id);
-            if (destination == null)
-            {
-                _logger.Information($"Destination not found, id: {id}");
-                return new ApiResponse<DestinationResponseDTO>(404, null, "Không tìm thấy điểm đến");
-            }
-            var data = _mapper.Map<DestinationResponseDTO>(destination);
-            _logger.Information("End: DestinationService - GetByIdAsync");
-            return new ApiResponse<DestinationResponseDTO>(200, data, "Lấy dữ liệu điểm đến thành công");
-        }
+		public async Task<ApiResponse<DestinationResponseDTO>> GetByIdAsync(int id)
+		{
+			_logger.Information($"Begin: DestinationService - GetByIdAsync, id: {id}");
+			try
+			{
+				var destination = await _destinationRepository.GetDestinationByIdAsync(id);
+				if (destination == null)
+				{
+					_logger.Information($"Destination not found, id: {id}");
+					return new ApiResponse<DestinationResponseDTO>(404, null, "Destination not found.");
+				}
+				var data = _mapper.Map<DestinationResponseDTO>(destination);
+				_logger.Information("End: DestinationService - GetByIdAsync");
+				return new ApiResponse<DestinationResponseDTO>(200, data, "Destination data retrieved successfully.");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error($"Error in DestinationService - GetByIdAsync: {ex.Message}", ex);
+				return new ApiResponse<DestinationResponseDTO>(500, null, $"An error occurred: {ex.Message}");
+			}
+		}
 
-        public async Task<ApiResponse<DestinationResponseDTO>> CreateAsync(DestinationRequestDTO item)
-        {
-            _logger.Information("Begin: DestinationService - CreateAsync");
+		public async Task<ApiResponse<DestinationResponseDTO>> CreateAsync(DestinationRequestDTO item)
+		{
+			_logger.Information("Begin: DestinationService - CreateAsync");
+			try
+			{
+				var destinationEntity = _mapper.Map<DestinationEntity>(item);
+				var newId = await _destinationRepository.CreateDestinationAsync(destinationEntity);
 
-            var destinationEntity = _mapper.Map<DestinationEntity>(item);
-            var newId = await _destinationRepository.CreateAsync(destinationEntity);
+				if (newId <= 0)
+				{
+					_logger.Warning("Failed to create destination");
+					return new ApiResponse<DestinationResponseDTO>(400, null, "Error occurred while creating the destination.");
+				}
 
-            var createdDestination = await _destinationRepository.GetDestinationByIdAsync(newId);
-            var responseData = _mapper.Map<DestinationResponseDTO>(createdDestination);
+				var createdDestination = await _destinationRepository.GetDestinationByIdAsync(newId);
+				var responseData = _mapper.Map<DestinationResponseDTO>(createdDestination);
 
-            _logger.Information("End: DestinationService - CreateAsync");
-            return new ApiResponse<DestinationResponseDTO>(200, responseData, "Tạo điểm đến thành công");
-        }
+				_logger.Information("End: DestinationService - CreateAsync");
+				return new ApiResponse<DestinationResponseDTO>(200, responseData, "Destination created successfully.");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error($"Error in DestinationService - CreateAsync: {ex.Message}", ex);
+				return new ApiResponse<DestinationResponseDTO>(500, null, $"An error occurred while creating the destination: {ex.Message}");
+			}
+		}
 
-        public async Task<ApiResponse<DestinationResponseDTO>> UpdateAsync(int id, DestinationRequestDTO item)
-        {
-            _logger.Information($"Begin: DestinationService - UpdateAsync, id: {id}");
-            var destination = await _destinationRepository.FindByCondition(d => d.Id == id).FirstOrDefaultAsync();
+		public async Task<ApiResponse<DestinationResponseDTO>> UpdateAsync(int id, DestinationRequestDTO item)
+		{
+			_logger.Information($"Begin: DestinationService - UpdateAsync, id: {id}");
+			try
+			{
+				var destination = await _destinationRepository.FindByCondition(d => d.Id == id).FirstOrDefaultAsync();
+				if (destination == null)
+				{
+					_logger.Information($"Destination not found, id: {id}");
+					return new ApiResponse<DestinationResponseDTO>(404, null, "Destination not found.");
+				}
 
-            if (destination == null)
-            {
-                _logger.Information($"Destination not found, id: {id}");
-                return new ApiResponse<DestinationResponseDTO>(404, null, "Không tìm thấy điểm đến");
-            }
+				_mapper.Map(item, destination);
+				destination.UpdatedAt = DateTime.UtcNow;
 
-			destination = _mapper.Map<DestinationEntity>(item);
-			destination.Id = id;
-			destination.UpdatedAt = DateTime.UtcNow;
+				var result = await _destinationRepository.UpdateDestinationAsync(destination);
 
-			var result = await _destinationRepository.UpdateAsync(destination);
-			var updatedDestination = await _destinationRepository.GetDestinationByIdAsync(id);
-			var responseData = _mapper.Map<DestinationResponseDTO>(updatedDestination);
+				if (result <= 0)
+				{
+					_logger.Warning("Failed to update destination");
+					return new ApiResponse<DestinationResponseDTO>(400, null, "Error occurred while updating the destination.");
+				}
 
-			_logger.Information("End: DestinationService - UpdateAsync");
-            return result > 0
-                ? new ApiResponse<DestinationResponseDTO>(200, responseData, "Cập nhật thành công")
-                : new ApiResponse<DestinationResponseDTO>(400, null, "Cập nhật thất bại");
-        }
+				var updatedDestination = await _destinationRepository.GetDestinationByIdAsync(id);
+				var responseData = _mapper.Map<DestinationResponseDTO>(updatedDestination);
 
-        public async Task<ApiResponse<int>> DeleteAsync(int id)
-        {
-            _logger.Information($"Begin: DestinationService - DeleteAsync, id: {id}");
-            var destination = await _destinationRepository
-                .FindByCondition(d => d.Id == id)
-                .FirstOrDefaultAsync();
+				_logger.Information("End: DestinationService - UpdateAsync");
+				return result > 0
+					? new ApiResponse<DestinationResponseDTO>(200, responseData, "Update successful.")
+					: new ApiResponse<DestinationResponseDTO>(400, null, "Update failed.");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error($"Error in DestinationService - UpdateAsync: {ex.Message}", ex);
+				return new ApiResponse<DestinationResponseDTO>(500, null, $"An error occurred while updating the destination: {ex.Message}");
+			}
+		}
 
-            if (destination == null)
-            {
-                _logger.Information($"Destination not found, id: {id}");
-                return new ApiResponse<int>(404, 0, "Không tìm thấy điểm đến cần xóa");
-            }
+		public async Task<ApiResponse<int>> DeleteAsync(int id)
+		{
+			_logger.Information($"Begin: DestinationService - DeleteAsync, id: {id}");
+			try
+			{
+				var destination = await _destinationRepository
+					.FindByCondition(d => d.Id == id)
+					.FirstOrDefaultAsync();
 
-            _destinationRepository.Delete(destination);
-            var result = await _destinationRepository.SaveChangesAsync();
-            _logger.Information("End: DestinationService - DeleteAsync");
+				if (destination == null)
+				{
+					_logger.Information($"Destination not found, id: {id}");
+					return new ApiResponse<int>(404, 0, "Destination to delete not found.");
+				}
 
-            return result > 0
-                ? new ApiResponse<int>(200, result, "Xóa điểm đến thành công")
-                : new ApiResponse<int>(400, result, "Xóa điểm đến thất bại");
-        }
-    }
+				_destinationRepository.Delete(destination);
+				var result = await _destinationRepository.SaveChangesAsync();
+				_logger.Information("End: DestinationService - DeleteAsync");
+
+				return result > 0
+					? new ApiResponse<int>(200, result, "Destination deleted successfully.")
+					: new ApiResponse<int>(400, result, "Failed to delete destination.");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error($"Error in DestinationService - DeleteAsync: {ex.Message}", ex);
+				return new ApiResponse<int>(500, 0, $"An error occurred while deleting the destination: {ex.Message}");
+			}
+		}
+	}
 }

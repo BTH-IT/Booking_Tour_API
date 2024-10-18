@@ -16,7 +16,6 @@ namespace Tour.API.Controllers
             _scheduleService = scheduleService;
         }
 
-        // Lấy tất cả các lịch trình
         [HttpGet]
         public async Task<IActionResult> GetAllSchedulesAsync()
         {
@@ -24,7 +23,6 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Lấy một lịch trình theo ID
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetScheduleByIdAsync(int id)
         {
@@ -39,7 +37,6 @@ namespace Tour.API.Controllers
 			return StatusCode(response.StatusCode, response);
 		}
 
-		// Tạo một lịch trình mới
 		[HttpPost]
         [ApiValidationFilter]
         public async Task<IActionResult> CreateScheduleAsync(ScheduleRequestDTO requestDTO)
@@ -53,7 +50,6 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-		// Cập nhật thông tin của một lịch trình
 		[HttpPut("{id:int}")]
 		[ApiValidationFilter]
         public async Task<IActionResult> UpdateScheduleAsync(int id, ScheduleRequestDTO requestDTO)
@@ -67,7 +63,6 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Xóa một lịch trình theo ID
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteScheduleAsync(int id)
         {
@@ -75,5 +70,4 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
     }
-
 }
