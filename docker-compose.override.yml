@@ -43,7 +43,9 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "5005:80"
-    restart: always 
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    restart: always
   api_gateway:
     container_name: api_gateway
     environment:
@@ -52,3 +54,10 @@ services:
     ports:
       - "6000:443"
       - "5000:80"
+  saga.api:
+    container_name: saga.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=docker
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5007:80"

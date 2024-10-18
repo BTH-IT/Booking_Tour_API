@@ -16,6 +16,10 @@
         "PUT",
         "DELETE"
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "identity.api"
     },
     {
@@ -34,6 +38,10 @@
         "PUT",
         "DELETE"
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "room.api"
     },
     {
@@ -52,6 +60,10 @@
         "PUT",
         "DELETE"
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "tour.api"
     },
     {
@@ -69,6 +81,10 @@
         "POST",
         "DELETE"
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "upload.api"
 
     },
@@ -87,6 +103,10 @@
         "POST",
         "DELETE"
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "booking.api"
     }
   ],

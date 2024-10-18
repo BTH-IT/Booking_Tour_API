@@ -15,7 +15,7 @@ namespace Tour.API.Entities
         //Foreign Key
         public int TourId { get; set; }
         public TourEntity? Tour { get; set; }
-        public DateTime CreatedAt { get ; set ; }
+        public DateTime CreatedAt { get ; set ; } = DateTime.Now;
         public DateTime? UpdatedAt { get ; set ; }
     }
 }

@@ -11,8 +11,9 @@ namespace Room.API.Repositories.Interfaces
 		Task<IEnumerable<RoomEntity>> GetRoomsAsync();
 		Task<RoomEntity> GetRoomByIdAsync(int id);
 		Task<RoomEntity> GetRoomByNameAsync(string name);
-		Task CreateRoomAsync(RoomEntity room);
-		Task UpdateRoomAsync(RoomEntity room);
+		Task<IEnumerable<RoomEntity>> GetRoomByHotelIdAsync(int id);
+		Task<int> CreateRoomAsync(RoomEntity room);
+		Task<int> UpdateRoomAsync(RoomEntity room);
 		Task DeleteRoomAsync(int id);
 		Task<PagedResult<RoomEntity>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest);
 	}

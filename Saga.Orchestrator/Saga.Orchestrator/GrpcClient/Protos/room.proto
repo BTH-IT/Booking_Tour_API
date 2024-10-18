@@ -14,6 +14,7 @@ message RoomResponse{
 	string Name=2;
 	double Price=3;
 	bool IsAvailable=4;
+	int32 MaxGuests = 5;
 }
 message GetRoomsByIdsResponse{
 	repeated RoomResponse Rooms=1;

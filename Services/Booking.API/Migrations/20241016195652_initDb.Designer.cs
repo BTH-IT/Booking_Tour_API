@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.API.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20240925085006_initDb")]
+    [Migration("20241016195652_initDb")]
     partial class initDb
     {
         /// <inheritdoc />
@@ -42,6 +42,9 @@ namespace Booking.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
 
@@ -51,9 +54,8 @@ namespace Booking.API.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -72,6 +74,9 @@ namespace Booking.API.Migrations
                         .HasColumnType("double");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsCleaningFee")
@@ -133,11 +138,20 @@ namespace Booking.API.Migrations
                     b.Property<int>("Children")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<double>("Price")
                         .HasColumnType("double");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -164,6 +178,9 @@ namespace Booking.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<double>("Price")

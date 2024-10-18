@@ -27,26 +27,21 @@ namespace Tour.API.Repositories
         }
 
         // Tìm Schedule theo ID
-        public Task<Schedule> GetScheduleByIdAsync(int id)
-        {
-            return FindByCondition(s => s.Id == id, false)
-                .SingleOrDefaultAsync();
-        }
+        public Task<Schedule> GetScheduleByIdAsync(int id)=>
+             FindByCondition(s => s.Id == id, false, r => r.Tour, r => r.Tour.Destination).SingleOrDefaultAsync();
 
-        // Tìm Schedule theo tên (nếu có trường tên trong Schedule)
-        public Task<Schedule> GetScheduleByNameAsync(string name)
-        {
-            return FindByCondition(s => s.Tour.Name.Equals(name), false) // Giả định Tour có tên
-                .SingleOrDefaultAsync();
-        }
+        public async Task<IEnumerable<Schedule>> GetSchedulesByTourIdAsync(int tourId)=>
+			 await FindByCondition(s => s.TourId == tourId, false, r => r.Tour, r => r.Tour.Destination).ToListAsync();
 
-        // Lấy tất cả các Schedule
-        public async Task<IEnumerable<Schedule>> GetSchedulesAsync()
-        {
-            return await FindAll(false).ToListAsync();
-        }
+		// Tìm Schedule theo tên (nếu có trường tên trong Schedule)
+		public Task<Schedule> GetScheduleByNameAsync(string name)=>
+             FindByCondition(s => s.Tour.Name.Equals(name), false, r=>r.Tour, r => r.Tour.Destination).SingleOrDefaultAsync();
 
-        // Cập nhật thông tin của Schedule
-        public Task UpdateScheduleAsync(Schedule schedule) => UpdateAsync(schedule);
+		// Lấy tất cả các Schedule
+		public async Task<IEnumerable<Schedule>> GetSchedulesAsync() =>
+			await FindByCondition(r => true,false, r => r.Tour, r => r.Tour.Destination).ToListAsync();
+
+		// Cập nhật thông tin của Schedule
+		public Task UpdateScheduleAsync(Schedule schedule) => UpdateAsync(schedule);
     }
 }

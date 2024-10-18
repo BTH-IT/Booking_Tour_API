@@ -5,13 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Booking.API.Entities
 {
-    public class Traveller
-    {
-        public bool Gender { get; set; }
-        public string Fullname { get; set; }
-        public sbyte Age { get; set; }
-        public string Phone { get; set; }
-    }
+    
     [Table("BookingTours")]
     public class BookingTour : EntityBase<int> , IDateTracking
     {
@@ -23,20 +17,29 @@ namespace Booking.API.Entities
         public bool IsTip {  get; set; }    
         public bool IsEntranceTicket { get; set; }
         public bool Status { get; set; }    
-
         public double PriceTotal { get; set; }  
         public double Coupon {  get; set; } 
         public int PaymentMethod { get; set; }
         [NotMapped]
-        public Traveller[] TravellerList { get; set; }
+        public List<Traveller>  TravellerList { get; set; }
         public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
-        [Column(TypeName = "JSON")]
+		public DateTime? DeletedAt { get; set; }
+
+		[Column(TypeName = "JSON")]
         public string Travellers
         {
             get => JsonConvert.SerializeObject(TravellerList);
-            set => TravellerList = JsonConvert.DeserializeObject<Traveller[]>(value) ?? new Traveller[0];
+            set => TravellerList = JsonConvert.DeserializeObject<List<Traveller>>(value) ?? new List<Traveller>();
         }
-        public ICollection<TourBookingRoom>? TourBookingRooms { get; set; }
+        public ICollection<TourBookingRoom> TourBookingRooms { get; set; }
     }
+
+	public class Traveller
+	{
+		public bool Gender { get; set; }
+		public string Fullname { get; set; }
+		public sbyte Age { get; set; }
+		public string Phone { get; set; }
+	}
 }

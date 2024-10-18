@@ -12,8 +12,8 @@ using Tour.API.Persistence;
 namespace Tour.API.Migrations
 {
     [DbContext(typeof(TourDbContext))]
-    [Migration("20240928150642_AddDeletedAtColumn")]
-    partial class AddDeletedAtColumn
+    [Migration("20241013195442_InitBb")]
+    partial class InitBb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,7 +157,6 @@ namespace Tour.API.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Reviews")
-                        .IsRequired()
                         .HasColumnType("JSON");
 
                     b.Property<float>("SalePercent")
@@ -167,8 +166,7 @@ namespace Tour.API.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Video")
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("JSON");
 
                     b.HasKey("Id");
 

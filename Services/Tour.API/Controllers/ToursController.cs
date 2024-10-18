@@ -4,6 +4,7 @@ using Tour.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tour.API.Controllers
 {
@@ -21,18 +22,20 @@ namespace Tour.API.Controllers
         // Tạo một tour mới
         [HttpPost]
         [ApiValidationFilter]
+        [Authorize]
         public async Task<IActionResult> CreateTourAsync(TourRequestDTO requestDTO)
         {
             var response = await _tourService.CreateAsync(requestDTO);
             return StatusCode(response.StatusCode, response);
         }
 
-        // Cập nhật thông tin của một tour
-        [HttpPut]
-        [ApiValidationFilter]
-        public async Task<IActionResult> UpdateTourAsync(TourRequestDTO requestDTO)
+		// Cập nhật thông tin của một tour
+		[HttpPut("{id:int}")]
+		[ApiValidationFilter]
+        [Authorize]
+        public async Task<IActionResult> UpdateTourAsync(int id, TourRequestDTO requestDTO)
         {
-            var response = await _tourService.UpdateAsync(requestDTO);
+            var response = await _tourService.UpdateAsync(id, requestDTO);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -54,6 +57,7 @@ namespace Tour.API.Controllers
 
         // Xóa tour theo ID
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTourAsync(int id)
         {
             var response = await _tourService.DeleteAsync(id);

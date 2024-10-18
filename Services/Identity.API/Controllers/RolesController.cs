@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Identity.API.Services;
 using Identity.API.Services.Interfaces;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Helper;
-
+using Shared.Constants;
 using ILogger = Serilog.ILogger;
+using Shared.Enums;
 namespace Identity.API.Controllers
 {
     [ApiController]
@@ -36,12 +38,14 @@ namespace Identity.API.Controllers
         }
         [HttpPost]
         [ApiValidationFilter]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> CreateRoleAsync(RoleRequestDTO requestDTO)
         {
             var response = await _roleService.InsertAsync(requestDTO);
             return StatusCode(response.StatusCode, response);
         }
         [HttpDelete("{id:int}")]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> DeleteRoleAsync(int id)
         {
             var response = await _roleService.DeleteAsync(id);
@@ -49,6 +53,8 @@ namespace Identity.API.Controllers
         }
         [HttpPut]
         [ApiValidationFilter]
+        [RoleRequirement(ERole.Admin)]
+
         public async Task<IActionResult> UpdateRoleAsync(RoleRequestDTO requestDTO)
         {
             var response = await _roleService.UpdateAsync(requestDTO);
@@ -56,6 +62,7 @@ namespace Identity.API.Controllers
         }
         [HttpPost("{roleId}/role-details")]
         [ApiValidationFilter]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> UpdateRoleDetailForRole(string roleId,RoleDetailDTO requestDTO)
         {
             var response = await _roleService.UpdateRoleDetailByRoleIdAsync(roleId, requestDTO);

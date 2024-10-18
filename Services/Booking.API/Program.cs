@@ -11,6 +11,7 @@ using Serilog;
 using Shared.DTOs;
 using System.Text;
 using EventBus.Masstransit;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -90,8 +91,27 @@ try
             });
         }
     );
-    //Masstransit and RabbitMq
-    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5006);
+            options.ListenAnyIP(5106, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+        else if(builder.Environment.IsEnvironment("docker"))
+        {
+            options.ListenAnyIP(80);
+            options.ListenAnyIP(81, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+    });
+    //Add GrpcClient
+    //builder.Services.AddGrpcClients();
     // Configure the HTTP request pipeline.
     var app = builder.Build();
     if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))

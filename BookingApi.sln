@@ -52,6 +52,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saga.Orchestrator", "Saga.O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saga.Orchestrator", "Saga.Orchestrator\Saga.Orchestrator\Saga.Orchestrator.csproj", "{A07BA41B-16EA-4295-8BE9-D1F9826CBBF3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundJob", "BackgroundJob", "{AECE0325-C27F-46CD-AE20-F7139B22B497}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,7 @@ Global
 		{AF11A28E-22AB-479C-BC7B-FE0131E8B34E} = {30B9364A-ED32-49D2-B7D8-32E671E8BB77}
 		{49F18646-4045-40A0-98A8-8047A849EDE2} = {3DFBBFB6-C817-44E6-AE5C-78D6962EBDB3}
 		{A07BA41B-16EA-4295-8BE9-D1F9826CBBF3} = {12E0AEAC-6992-4151-A27A-7B62040E2566}
+		{AECE0325-C27F-46CD-AE20-F7139B22B497} = {16004A43-7980-44AA-8F36-AB4086828472}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FE75517F-CC98-40B3-B50A-A6E5053329A1}

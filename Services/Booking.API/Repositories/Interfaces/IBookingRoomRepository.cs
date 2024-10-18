@@ -4,15 +4,12 @@ using Contracts.Domains.Interfaces;
 
 namespace Booking.API.Repositories.Interfaces
 {
-    public interface IBookingRoomRepository : IRepositoryBase<BookingRoom, int, BookingDbContext>
-    {
-        void AddDetailBookingRooms(List<DetailBookingRoom> detailBookingRooms);
-        void RemoveDetailBookingRooms(List<DetailBookingRoom> detailBookingRooms);
-        Task<IEnumerable<BookingRoom>> GetBookingRoomsAsync();
-        Task<BookingRoom> GetBookingRoomByIdAsync(int id);
-        Task<BookingRoom> GetBookingRoomByNameAsync(string name);
-        Task CreateBookingRoomAsync(BookingRoom bookingRoom);
-        Task UpdateBookingRoomAsync(BookingRoom bookingRoom);
-        Task DeleteBookingRoomAsync(int id);
-    }
+	public interface IBookingRoomRepository : IRepositoryBase<BookingRoom, int, BookingDbContext>
+	{
+		Task<IEnumerable<BookingRoom>> GetBookingRoomsAsync();
+		Task<BookingRoom> GetBookingRoomByIdAsync(int id);
+		Task<int> CreateBookingRoomAsync(BookingRoom bookingRoom);
+		Task<int> UpdateBookingRoomAsync(BookingRoom bookingRoom);
+		Task DeleteBookingRoomAsync(int id);
+	}
 }

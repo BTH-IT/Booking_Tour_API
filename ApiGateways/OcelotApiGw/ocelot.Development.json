@@ -87,6 +87,23 @@
         "DELETE"
       ],
       "SwaggerKey": "booking.api"
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5007
+        }
+      ],
+      "UpstreamPathTemplate": "/saga/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "SwaggerKey": "booking.api"
     }
   ],
   "SwaggerEndPoints": [

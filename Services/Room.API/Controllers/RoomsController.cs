@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Infrastructure.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
-
+using Shared.Constants;
+using Shared.Enums;
 namespace Room.API.Controllers
 {
 	[ApiController]
@@ -32,29 +35,37 @@ namespace Room.API.Controllers
 
 		[HttpPost]
 		[ApiValidationFilter]
-		public async Task<IActionResult> CreateRoomAsync([FromBody] RoomRequestDTO requestDTO)
+		[Authorize]
+        [RoleRequirement(ERole.Admin)]
+
+        public async Task<IActionResult> CreateRoomAsync([FromBody] RoomRequestDTO requestDTO)
 		{
 			var response = await _roomService.CreateAsync(requestDTO);
 			return StatusCode(response.StatusCode, response);
 		}
 
-		[HttpPut]
+		[HttpPut("{id:int}")]
 		[ApiValidationFilter]
-		public async Task<IActionResult> UpdateRoomAsync([FromBody] RoomRequestDTO requestDTO)
+		[Authorize]
+        [RoleRequirement(ERole.Admin)]
+        public async Task<IActionResult> UpdateRoomAsync(int id, [FromBody] RoomRequestDTO requestDTO)
 		{
-			var response = await _roomService.UpdateAsync(requestDTO);
+			var response = await _roomService.UpdateAsync(id, requestDTO);
 			return StatusCode(response.StatusCode, response);
 		}
 
+
 		[HttpDelete("{id:int}")]
-		public async Task<IActionResult> DeleteRoomAsync(int id)
+        [Authorize]
+        [RoleRequirement(ERole.Admin)]
+        public async Task<IActionResult> DeleteRoomAsync(int id)
 		{
 			var response = await _roomService.DeleteAsync(id);
 			return StatusCode(response.StatusCode, response);
 		}
 
 		[HttpGet("search")]
-		public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchRequestDTO request)
+        public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchRequestDTO request)
 		{
 			var rooms = await _roomService.SearchRoomsAsync(request);
 			return Ok(rooms);
