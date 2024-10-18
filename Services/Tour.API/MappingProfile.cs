@@ -26,11 +26,10 @@ public class MappingProfile : Profile
 		CreateMap<ScheduleRequestDTO, Schedule>();
 
 		// Ánh xạ giữa Review (Entities.Review) và Review (DTOs.Review)
-		CreateMap<Tour.API.Entities.Review, Shared.DTOs.Review>().ReverseMap();
+		CreateMap<Review, ReviewTourDTO>().ReverseMap();
 
 		// Ánh xạ giữa Video và VideoRoom
-
-		CreateMap<Tour.API.Entities.Review, Shared.DTOs.Review >().ReverseMap();
-		CreateMap<Shared.DTOs.Review,Tour.API.Entities.Review > ().ReverseMap();
+		CreateMap<Review, ReviewTourDTO>().ReverseMap();
+		CreateMap<ReviewTourDTO, Review > ().ReverseMap();
 	}
 }

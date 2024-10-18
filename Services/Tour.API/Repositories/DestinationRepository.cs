@@ -13,33 +13,26 @@ namespace Tour.API.Repositories
         {
         }
 
-        // Tạo mới một Destination
-        public Task CreateDestinationAsync(DestinationEntity destination) => CreateAsync(destination);
+		public async Task<IEnumerable<DestinationEntity>> GetDestinationsAsync() =>
+			 await FindAll(false).ToListAsync(); 
+		
+        public Task<DestinationEntity> GetDestinationByNameAsync(string name) =>
+	         FindByCondition(d => d.Name.Equals(name), false).SingleOrDefaultAsync();
 
-        // Xóa một Destination dựa trên ID
-        public async Task DeleteDestinationAsync(int id)
-        {
-            var destination = await GetDestinationByIdAsync(id);
-            if (destination != null)
-            {
-                await DeleteAsync(destination);
-            }
-        }
+		public Task<DestinationEntity> GetDestinationByIdAsync(int id) =>
+			 FindByCondition(d => d.Id == id, false).SingleOrDefaultAsync();
 
-        // Tìm Destination theo tên
-        public Task<DestinationEntity> GetDestinationByNameAsync(string name)=>
-             FindByCondition(d => d.Name.Equals(name), false).SingleOrDefaultAsync();
-        
+		public Task<int> CreateDestinationAsync(DestinationEntity destination) => CreateAsync(destination);
 
-        // Tìm Destination theo ID
-        public Task<DestinationEntity> GetDestinationByIdAsync(int id)=>
-             FindByCondition(d => d.Id == id, false).SingleOrDefaultAsync();
+		public Task<int> UpdateDestinationAsync(DestinationEntity destination) => UpdateAsync(destination);
 
-        // Lấy tất cả các Destination
-        public async Task<IEnumerable<DestinationEntity>> GetDestinationsAsync()=>
-             await FindAll(false).ToListAsync();
-
-        // Cập nhật thông tin của Destination
-        public Task UpdateDestinationAsync(DestinationEntity destination) => UpdateAsync(destination);
-    }
+		public async Task DeleteDestinationAsync(int id)
+		{
+			var destination = await GetDestinationByIdAsync(id);
+			if (destination != null)
+			{
+				await DeleteAsync(destination);
+			}
+		}
+	}
 }

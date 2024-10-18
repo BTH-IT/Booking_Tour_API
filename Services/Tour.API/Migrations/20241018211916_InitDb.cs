@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tour.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitBb : Migration
+    public partial class InitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,19 +54,19 @@ namespace Tour.API.Migrations
                     DateFrom = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DateTo = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Rate = table.Column<float>(type: "float", nullable: false),
+                    Video = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     SalePercent = table.Column<float>(type: "float", nullable: false),
                     DestinationId = table.Column<int>(type: "int", nullable: false),
-                    Video = table.Column<string>(type: "JSON", nullable: true)
+                    Activities = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Activities = table.Column<string>(type: "JSON", nullable: false)
+                    PriceExcludes = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PriceExcludes = table.Column<string>(type: "JSON", nullable: false)
+                    PriceIncludes = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PriceIncludes = table.Column<string>(type: "JSON", nullable: false)
+                    Images = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Images = table.Column<string>(type: "JSON", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Days = table.Column<string>(type: "JSON", nullable: false)
+                    Days = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Reviews = table.Column<string>(type: "JSON", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),

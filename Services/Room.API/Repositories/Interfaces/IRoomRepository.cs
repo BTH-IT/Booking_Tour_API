@@ -9,8 +9,8 @@ namespace Room.API.Repositories.Interfaces
 	public interface IRoomRepository : IRepositoryBase<RoomEntity, int, RoomDbContext>
 	{
 		Task<IEnumerable<RoomEntity>> GetRoomsAsync();
-		Task<RoomEntity> GetRoomByIdAsync(int id);
-		Task<RoomEntity> GetRoomByNameAsync(string name);
+		Task<RoomEntity?> GetRoomByIdAsync(int id);
+		Task<RoomEntity?> GetRoomByNameAsync(string name);
 		Task<IEnumerable<RoomEntity>> GetRoomByHotelIdAsync(int id);
 		Task<int> CreateRoomAsync(RoomEntity room);
 		Task<int> UpdateRoomAsync(RoomEntity room);
