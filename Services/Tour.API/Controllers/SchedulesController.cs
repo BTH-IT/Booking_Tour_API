@@ -2,6 +2,7 @@
 using Tour.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tour.API.Controllers
 {
@@ -32,9 +33,17 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Tạo một lịch trình mới
-        [HttpPost]
+		[HttpGet("tour/{tourId:int}")]
+		public async Task<IActionResult> GetScheduleByTourIdAsync(int tourId)
+		{
+			var response = await _scheduleService.GetByTourIdAsync(tourId);
+			return StatusCode(response.StatusCode, response);
+		}
+
+		// Tạo một lịch trình mới
+		[HttpPost]
         [ApiValidationFilter]
+        [Authorize]
         public async Task<IActionResult> CreateScheduleAsync(ScheduleRequestDTO requestDTO)
         {
             if (requestDTO == null)
@@ -46,22 +55,24 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Cập nhật thông tin của một lịch trình
-        [HttpPut]
-        [ApiValidationFilter]
-        public async Task<IActionResult> UpdateScheduleAsync(ScheduleRequestDTO requestDTO)
+		// Cập nhật thông tin của một lịch trình
+		[HttpPut("{id:int}")]
+		[ApiValidationFilter]
+        [Authorize]
+        public async Task<IActionResult> UpdateScheduleAsync(int id, ScheduleRequestDTO requestDTO)
         {
             if (requestDTO == null)
             {
                 return BadRequest("Thông tin lịch trình không hợp lệ.");
             }
 
-            var response = await _scheduleService.UpdateAsync(requestDTO);
+            var response = await _scheduleService.UpdateAsync(id, requestDTO);
             return StatusCode(response.StatusCode, response);
         }
 
         // Xóa một lịch trình theo ID
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> DeleteScheduleAsync(int id)
         {
             var response = await _scheduleService.DeleteAsync(id);

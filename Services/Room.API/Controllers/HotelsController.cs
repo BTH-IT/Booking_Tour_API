@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Infrastructure.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
-
+using Shared.Constants;
+using Shared.Enums;
 namespace Room.API.Controllers
 {
 	[ApiController]
@@ -32,22 +35,29 @@ namespace Room.API.Controllers
 
 		[HttpPost]
 		[ApiValidationFilter]
-		public async Task<IActionResult> CreateHotelAsync([FromBody] HotelRequestDTO requestDTO)
+		[Authorize]
+        [RoleRequirement(ERole.Admin)]
+        public async Task<IActionResult> CreateHotelAsync([FromBody] HotelRequestDTO requestDTO)
 		{
 			var response = await _hotelService.CreateAsync(requestDTO);
 			return StatusCode(response.StatusCode, response);
 		}
 
-		[HttpPut]
+		[HttpPut("{id:int}")] 
 		[ApiValidationFilter]
-		public async Task<IActionResult> UpdateHotelAsync([FromBody] HotelRequestDTO requestDTO)
+        [Authorize]
+        [RoleRequirement(ERole.Admin)]
+        public async Task<IActionResult> UpdateHotelAsync(int id, [FromBody] HotelRequestDTO requestDTO)
 		{
-			var response = await _hotelService.UpdateAsync(requestDTO);
+			var response = await _hotelService.UpdateAsync(id, requestDTO);
 			return StatusCode(response.StatusCode, response);
 		}
 
+
 		[HttpDelete("{id:int}")]
-		public async Task<IActionResult> DeleteHotelAsync(int id)
+        [Authorize]
+        [RoleRequirement(ERole.Admin)]
+        public async Task<IActionResult> DeleteHotelAsync(int id)
 		{
 			var response = await _hotelService.DeleteAsync(id);
 			return StatusCode(response.StatusCode, response);

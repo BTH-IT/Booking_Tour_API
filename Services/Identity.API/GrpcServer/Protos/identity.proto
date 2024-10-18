@@ -1,5 +1,5 @@
 syntax = "proto3";
-import "google/protobuf/timestamp.proto";
+
 option csharp_namespace = "Identity.API.GrpcServer.Protos";
 
 service IdentityGrpcService{

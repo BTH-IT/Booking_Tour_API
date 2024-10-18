@@ -86,7 +86,6 @@ namespace Room.API.Persistence
 									ReviewList = new List<ReviewRoom>(),
 									RoomAmenitiesList = new List<RoomAmenities>(),
 									ImagesList = new List<Image>(),
-									VideosList = new List<Video>(),
 								};
 								int Counter = 0;
 								for (int k = 1; k <= 5; k++)
@@ -107,7 +106,12 @@ namespace Room.API.Persistence
 										UserId = j
 									});
 								}
-								room.VideosList.Add(new Video{Id = $"1",Url = $"https://realvideos.com/{province}/khachsan{i}/phong{j}.mp4",Type = $"mp4"});
+								room.VideoObject = new Video
+								{
+									Id = "1",
+									Url = "https://example.com/video1.mp4",
+									Type = "mp4"
+								};
 								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"1", Title = "Wi-Fi miễn phí" });
 								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"2", Title = "Điều hòa nhiệt độ" });
 								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"3", Title = "TV màn hình phẳng" });

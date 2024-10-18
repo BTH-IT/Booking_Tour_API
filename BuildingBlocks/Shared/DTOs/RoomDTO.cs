@@ -5,7 +5,7 @@
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public List<ImagesDTO> Images { get; set; }
-		public List<VideosDTO>? Videos { get; set; }
+		public VideosDTO? Video { get; set; }
 		public string? Detail { get; set; }
 		public double Price { get; set; }
 		public bool IsAvailable { get; set; }
@@ -18,15 +18,13 @@
 
 	public class RoomRequestDTO
 	{
-		public int Id { get; set; }
 		public string Name { get; set; }
 		public List<ImagesDTO> Images { get; set; }
-		public List<VideosDTO>? Videos { get; set; }
+		public VideosDTO Video { get; set; }
 		public string? Detail { get; set; }
 		public double Price { get; set; }
 		public bool? IsAvailable { get; set; } = true;
 		public int MaxGuests { get; set; }
-		public List<ReviewRoomDTO>? Reviews { get; set; }
 		public List<RoomAmenitiesDTO>? RoomAmenities { get; set; }
 		public int HotelId { get; set; }
 	}

@@ -1,16 +1,23 @@
-﻿using Saga.Orchestrator.API.GrpcClient.Protos;
+﻿using Booking.API.GrpcServer.Protos;
+using Saga.Orchestrator.API.GrpcClient.Protos;
 using Shared.DTOs;
 using Stateless;
+using System.Net.WebSockets;
 using System.Reflection.PortableExecutable;
+using System.Security.Claims;
 using ILogger = Serilog.ILogger;
 namespace Saga.Orchestrator.BookingRoomOrderManager
 {
     public class BookingRoomManager 
     {
-        private readonly ILogger _logger;
+        #region grpc
         private readonly IdentityGrpcService.IdentityGrpcServiceClient _identityGrpcServiceClient;
         private readonly TourGrpcService.TourGrpcServiceClient _tourGrpcServiceClient;
         private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
+        private readonly ILogger _logger;
+        private readonly BookingGrpcService.BookingGrpcServiceClient _bookingGrpcServiceClient;
+        #endregion
+
         private readonly IHttpContextAccessor _contextAccessor;
         private CreateBookingRoomOrderDto request;
         private GetRoomsByIdsResponse roomsInfo;
@@ -21,7 +28,8 @@ namespace Saga.Orchestrator.BookingRoomOrderManager
             IdentityGrpcService.IdentityGrpcServiceClient identityGrpcServiceClient,
             TourGrpcService.TourGrpcServiceClient tourGrpcServiceClient,
             RoomGrpcService.RoomGrpcServiceClient roomGrpcServiceClient,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            BookingGrpcService.BookingGrpcServiceClient bookingGrpcServiceClient
             )
         {
            this._logger = logger;
@@ -29,7 +37,7 @@ namespace Saga.Orchestrator.BookingRoomOrderManager
            this._identityGrpcServiceClient = identityGrpcServiceClient;
            this._tourGrpcServiceClient = tourGrpcServiceClient;
            this._roomGrpcServiceClient = roomGrpcServiceClient;
-
+           this._bookingGrpcServiceClient = bookingGrpcServiceClient;
             _stateMachine = new StateMachine<EBookingRoomState, EBookingRoomAction>(EBookingRoomState.Initial);
 
             // Lấy thông tin các phòng
@@ -46,7 +54,7 @@ namespace Saga.Orchestrator.BookingRoomOrderManager
             _stateMachine.Configure(EBookingRoomState.RoomsChecked)
                 .Permit(EBookingRoomAction.CreateBookingRoom, EBookingRoomState.InvoiceCreated)
                 .Permit(EBookingRoomAction.Rollback, EBookingRoomState.Failed)
-                .OnEntryAsync(async () => { });
+                .OnEntryAsync(CreateBookingOrderAsync);
             // Cập nhật phòng 
             _stateMachine.Configure(EBookingRoomState.InvoiceCreated)
                 .Permit(EBookingRoomAction.UpdateRoom, EBookingRoomState.Completed)
@@ -104,7 +112,17 @@ namespace Saga.Orchestrator.BookingRoomOrderManager
         } 
         private async Task CreateBookingOrderAsync()
         {
-
+            var userId = _contextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Name)!;
+            try
+            {
+                
+                await _stateMachine.FireAsync(EBookingRoomAction.UpdateRoom);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                await _stateMachine.FireAsync(EBookingRoomAction.Rollback);
+            }
         }
         private async Task UpdateRoomAsync()
         {

@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
 using Shared.Helper;
-using System.Net.WebSockets;
 using Tour.API.Entities;
 using Tour.API.Repositories.Interfaces;
 using Tour.API.Services.Interfaces;
@@ -15,19 +13,20 @@ namespace Tour.API.Services
         private readonly ITourRepository _tourRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IScheduleService _scheduleService;
 
-        public TourService(ITourRepository tourRepository, IMapper mapper, ILogger logger)
+		public TourService(ITourRepository tourRepository, IScheduleService scheduleService, IMapper mapper, ILogger logger)
         {
             _tourRepository = tourRepository;
-            _mapper = mapper;
+			_scheduleService = scheduleService;
+			_mapper = mapper;
             _logger = logger;
         }
 
         public async Task<ApiResponse<List<TourResponseDTO>>> GetAllAsync()
         {
             _logger.Information("Begin: TourService - GetAllAsync");
-            var tours = await _tourRepository.FindAll().Where(h => h.DeletedAt == null)
-                                                .ToListAsync();
+            var tours = await _tourRepository.GetToursAsync();
             var data = _mapper.Map<List<TourResponseDTO>>(tours);
             _logger.Information("End: TourService - GetAllAsync");
             return new ApiResponse<List<TourResponseDTO>>(200, data, "Lấy danh sách tour thành công");
@@ -48,37 +47,94 @@ namespace Tour.API.Services
             return new ApiResponse<TourResponseDTO>(200, data, "Lấy dữ liệu tour thành công");
         }
 
-        public async Task<ApiResponse<int>> CreateAsync(TourRequestDTO item)
+		public async Task<ApiResponse<TourResponseDTO>> CreateAsync(TourRequestDTO item)
+		{
+			_logger.Information("Begin: TourService - CreateAsync");
+
+			try
+			{
+				var tourEntity = _mapper.Map<TourEntity>(item);
+
+				var result = await _tourRepository.CreateAsync(tourEntity);
+
+				if (result > 0)
+				{
+					_logger.Information("Tour created successfully, now creating schedules");
+
+					var dateFrom = item.DateFrom;
+					var dateTo = item.DateTo;
+
+					while (dateFrom <= dateTo)
+					{
+						var dateStart = dateFrom;
+						dateFrom = dateFrom.AddDays(item.DayList?.Count() ?? 0);
+						var dateEnd = dateFrom;
+
+                        if (dateEnd >= dateTo)
+                        {
+                            break;
+                        }
+
+						await _scheduleService.CreateAsync(new ScheduleRequestDTO
+						{
+							DateStart = dateStart,
+							DateEnd = dateEnd,
+							TourId = result,
+							AvailableSeats = item.MaxGuests
+						});
+
+						dateFrom = dateFrom.AddDays(2);
+					}
+
+					_logger.Information("Schedules created successfully");
+				}
+
+				var createdSchedule = await _tourRepository.GetTourByIdAsync(result);
+				var responseData = _mapper.Map<TourResponseDTO>(createdSchedule);
+
+				_logger.Information("End: TourService - CreateAsync");
+
+				return result > 0
+					? new ApiResponse<TourResponseDTO>(200, responseData, "Tạo tour thành công")
+					: new ApiResponse<TourResponseDTO>(400, null, "Tạo tour thất bại");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error(ex, "An error occurred while creating the tour");
+
+				return new ApiResponse<TourResponseDTO>(500, null, $"Lỗi khi tạo tour: {ex.Message}");
+			}
+		}
+
+		public async Task<ApiResponse<TourResponseDTO>> UpdateAsync(int id, TourRequestDTO item)
         {
-            _logger.Information("Begin: TourService - CreateAsync");
+            _logger.Information($"Begin: TourService - UpdateAsync, id: {id}");
 
-            var tourEntity = _mapper.Map<TourEntity>(item);
-            await _tourRepository.CreateAsync(tourEntity);
-            var result = await _tourRepository.SaveChangesAsync();
-            _logger.Information("End: TourService - CreateAsync");
-            return result > 0
-                ? new ApiResponse<int>(200, tourEntity.Id, "Tạo tour thành công")
-                : new ApiResponse<int>(400, 0, "Tạo tour thất bại");
-        }
-
-
-        public async Task<ApiResponse<TourResponseDTO>> UpdateAsync(TourRequestDTO item)
-        {
-            _logger.Information($"Begin: TourService - UpdateAsync, id: {item.Id}");
-
-            var tour = await _tourRepository.GetTourByIdAsync(item.Id.Value);
+            var tour = await _tourRepository.GetTourByIdAsync(id);
 
             if (tour == null)
             {
-                _logger.Information($"Tour not found, id: {item.Id}");
+                _logger.Information($"Tour not found, id: {id}");
                 return new ApiResponse<TourResponseDTO>(404, null, "Không tìm thấy tour");
             }
 
-            tour = _mapper.Map(item, tour);
+			var existingReviews = tour.ReviewList;
 
-            var result = await _tourRepository.SaveChangesAsync();
+			tour = _mapper.Map<TourEntity>(item);
+			tour.Id = id;
 
-            var responseData = _mapper.Map<TourResponseDTO>(tour);
+			if (existingReviews != null)
+			{
+				tour.ReviewList = existingReviews;
+			}
+
+			tour.UpdatedAt = DateTime.UtcNow;
+
+			var result = await _tourRepository.UpdateAsync(tour);
+			_logger.Information($"result {result}");
+
+			var updatedTour = await _tourRepository.GetTourByIdAsync(id);
+			var responseData = _mapper.Map<TourResponseDTO>(updatedTour);
 
             _logger.Information("End: TourService - UpdateAsync");
 
@@ -86,7 +142,6 @@ namespace Tour.API.Services
                 ? new ApiResponse<TourResponseDTO>(200, responseData, "Cập nhật tour thành công")
                 : new ApiResponse<TourResponseDTO>(400, null, "Cập nhật tour thất bại");
         }
-
 
         public async Task<ApiResponse<int>> DeleteAsync(int id)
         {
@@ -104,20 +159,19 @@ namespace Tour.API.Services
 
             return new ApiResponse<int>(200, id, "Xóa tour thành công (xóa giả)");
         }
+
         public async Task<ApiResponse<TourSearchResponseDTO>> SearchToursAsync(TourSearchRequestDTO searchRequest)
         {
             _logger.Information("Begin: TourService - SearchToursAsync");
 
-            var tours = await _tourRepository.SearchToursAsync(searchRequest);
-            var data = _mapper.Map<List<TourResponseDTO>>(tours);
-            var maxPrice = data.Max(e => e.Price);
-            var minPrice = data.Min(e => e.Price);
+            var data = await _tourRepository.SearchToursAsync(searchRequest);
+            var tours = _mapper.Map<List<TourResponseDTO>>(data.Tours);
             var response = new TourSearchResponseDTO
             {
-                Tours = data,
-                MaxPrice = maxPrice,    
-                MinPrice = minPrice
-            };
+                Tours = tours,
+                MaxPrice = data.MaxPrice,    
+                MinPrice = data.MinPrice
+			};
             _logger.Information("End: TourService - SearchToursAsync");
             return new ApiResponse<TourSearchResponseDTO>(200, response, "Tours retrieved successfully");
         }

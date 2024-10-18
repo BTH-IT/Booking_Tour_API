@@ -43,8 +43,9 @@ namespace Tour.API.Extensions
                 .AddScoped<ITourService, TourService>()
                 .AddScoped<IDestinationRepository, DestinationRepository>()
                 .AddScoped<IDestinationService, DestinationService>()
-                .AddScoped<TourDbContextSeeder>(); 
-        }
+				.AddScoped<IReviewTourService, ReviewTourService>()
+                .AddScoped<TourDbContextSeeder>();
+		}
         public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCors(option =>

@@ -1,6 +1,7 @@
 ﻿using Shared.Configurations;
 using Infrastructure.Extensions;
 using Saga.Orchestrator.API.GrpcClient.Protos;
+using Booking.API.GrpcServer.Protos;
 namespace Saga.Orchestrator.API.Extensions
 {
     public static class ServiceExtension
@@ -43,6 +44,10 @@ namespace Saga.Orchestrator.API.Extensions
                     option.Address = new Uri(grpcOptions.RoomAddress ?? throw new Exception("Configration Not found"));
                 }
             );
+            services.AddGrpcClient<BookingGrpcService.BookingGrpcServiceClient>(options =>
+            {
+                options.Address = new Uri(grpcOptions.BookingAddress ?? throw new Exception("Configration Not found"));
+            });
             return services;
         }
     }

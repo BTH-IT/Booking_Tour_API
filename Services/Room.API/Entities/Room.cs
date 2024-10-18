@@ -12,7 +12,7 @@ namespace Room.API.Entities
 		[NotMapped]
 		public List<Image> ImagesList { get; set; }
 		[NotMapped]
-		public List<Video>? VideosList { get; set; }
+		public Video VideoObject { get; set; }
 		public string? Detail { get; set; }
         public double Price { get;set; }
         public bool IsAvailable { get; set; }
@@ -27,20 +27,22 @@ namespace Room.API.Entities
         public int HotelId {  get; set; }
 		public DateTime? DeletedAt { get; set; }
 		public Hotel? Hotel { get; set; }
-		[Column(TypeName = "JSON")]
-		public string Reviews
-		{
-			get => JsonConvert.SerializeObject(ReviewList);
-			set => ReviewList = JsonConvert.DeserializeObject<List<ReviewRoom>>(value).Where(r => r.DeletedAt == null).ToList() ?? new List<ReviewRoom>();
 
-		}
 		[Column(TypeName = "JSON")]
-		public string RoomAmenities
+		public string? Reviews
 		{
-			get => JsonConvert.SerializeObject(RoomAmenitiesList);
-			set => RoomAmenitiesList = JsonConvert.DeserializeObject<List<RoomAmenities>>(value) ?? new List<RoomAmenities>();
-
+			get => ReviewList == null ? null : JsonConvert.SerializeObject(ReviewList);
+			set => ReviewList = value == null ? null : JsonConvert.DeserializeObject<List<ReviewRoom>>(value).Where(r => r.DeletedAt == null).ToList();
 		}
+
+		[Column(TypeName = "JSON")]
+		public string? RoomAmenities
+		{
+			get => RoomAmenitiesList == null ? null : JsonConvert.SerializeObject(RoomAmenitiesList);
+			set => RoomAmenitiesList = value == null ? null : JsonConvert.DeserializeObject<List<RoomAmenities>>(value).ToList();
+		}
+
+
 		[Column(TypeName = "JSON")]
 		public string Images
 		{
@@ -48,10 +50,10 @@ namespace Room.API.Entities
 			set => ImagesList = JsonConvert.DeserializeObject<List<Image>>(value) ?? new List<Image>();
 		}
 		[Column(TypeName = "JSON")]
-		public string Videos
+		public string Video
 		{
-			get => JsonConvert.SerializeObject(VideosList);
-			set => VideosList = JsonConvert.DeserializeObject<List<Video>>(value) ?? new List<Video>();
+			get => JsonConvert.SerializeObject(VideoObject);
+			set => VideoObject  = JsonConvert.DeserializeObject<Video>(value) ?? new Video();
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Contracts.Domains.Interfaces;
+using System.Collections;
 using Tour.API.Entities;
 using Tour.API.Persistence;
 
@@ -8,7 +9,8 @@ namespace Tour.API.Repositories.Interfaces
     {
         Task<IEnumerable<Schedule>> GetSchedulesAsync();
         Task<Schedule> GetScheduleByIdAsync(int id);
-        Task<Schedule> GetScheduleByNameAsync(string name); 
+        Task<IEnumerable<Schedule>> GetSchedulesByTourIdAsync(int tourId);
+		Task<Schedule> GetScheduleByNameAsync(string name); 
         Task CreateScheduleAsync(Schedule schedule);
         Task UpdateScheduleAsync(Schedule schedule);
         Task DeleteScheduleAsync(int id);
