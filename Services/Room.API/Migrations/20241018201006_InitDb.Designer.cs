@@ -12,8 +12,8 @@ using Room.API.Persistence;
 namespace Room.API.Migrations
 {
     [DbContext(typeof(RoomDbContext))]
-    [Migration("20241013111101_initDb")]
-    partial class initDb
+    [Migration("20241018201006_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,7 +123,7 @@ namespace Room.API.Migrations
 
                     b.Property<string>("Video")
                         .IsRequired()
-                        .HasColumnType("JSON");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 

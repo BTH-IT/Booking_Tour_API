@@ -16,7 +16,7 @@ namespace Booking.API
 
 			CreateMap<BookingTour, BookingTourResponseDTO>()
 				.ForMember(dest => dest.Travellers, opt =>
-				 {
+				{
 					 opt.PreCondition(src => src.Travellers != null);
 					 opt.MapFrom(src => JsonConvert.DeserializeObject<List<TravellerDTO>>(src.Travellers));
 				 })

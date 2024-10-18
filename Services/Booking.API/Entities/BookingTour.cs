@@ -25,14 +25,30 @@ namespace Booking.API.Entities
         public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
 		public DateTime? DeletedAt { get; set; }
-
 		[Column(TypeName = "JSON")]
-        public string Travellers
-        {
-            get => JsonConvert.SerializeObject(TravellerList);
-            set => TravellerList = JsonConvert.DeserializeObject<List<Traveller>>(value) ?? new List<Traveller>();
-        }
-        public ICollection<TourBookingRoom> TourBookingRooms { get; set; }
+		public string Travellers
+		{
+			get => TravellerList == null ? null : JsonConvert.SerializeObject(TravellerList);
+			set
+			{
+				if (!string.IsNullOrEmpty(value))
+				{
+					try
+					{
+						TravellerList = JsonConvert.DeserializeObject<List<Traveller>>(value) ?? new List<Traveller>();
+					}
+					catch (JsonException)
+					{
+						TravellerList = new List<Traveller>();
+					}
+				}
+				else
+				{
+					TravellerList = new List<Traveller>(); 
+				}
+			}
+		}
+		public ICollection<TourBookingRoom> TourBookingRooms { get; set; }
     }
 
 	public class Traveller

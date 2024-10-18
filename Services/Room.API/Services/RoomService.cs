@@ -32,6 +32,12 @@ namespace Room.API.Services
 			{
 				var rooms = await _roomRepository.GetRoomsAsync();
 
+				if (!rooms?.Any() ?? true)
+				{
+					_logger.Warning("No rooms");
+					return new ApiResponse<List<RoomResponseDTO>>(204, null, "No rooms");
+				}
+
 				var data = _mapper.Map<List<RoomResponseDTO>>(rooms);
 
 				_logger.Information("End: RoomService - GetAllAsync");
@@ -53,7 +59,8 @@ namespace Room.API.Services
 				var room = await _roomRepository.GetRoomByIdAsync(id);
 				if (room == null || room.DeletedAt != null)
 				{
-					return new ApiResponse<RoomResponseDTO>(404, null, "Room not found");
+					_logger.Warning($"Room with id {id} not found or deleted");
+					return new ApiResponse<RoomResponseDTO>(404, null, $"Room with id {id} not found or deleted");
 				}
 
 				var data = _mapper.Map<RoomResponseDTO>(room);
@@ -77,7 +84,8 @@ namespace Room.API.Services
 				var room = await _roomRepository.GetRoomByNameAsync(name);
 				if (room == null || room.DeletedAt != null)
 				{
-					return new ApiResponse<RoomResponseDTO>(404, null, "Room not found");
+					_logger.Warning($"Room with name {name} not found or deleted");
+					return new ApiResponse<RoomResponseDTO>(404, null, $"Room with name {name} not found or deleted");
 				}
 
 				var data = _mapper.Map<RoomResponseDTO>(room);
@@ -101,6 +109,7 @@ namespace Room.API.Services
 				var existingRoom = await _roomRepository.GetRoomByNameAsync(item.Name);
 				if (existingRoom != null)
 				{
+					_logger.Warning($"Room with name {item.Name} already exists");
 					return new ApiResponse<RoomResponseDTO>(400, null, $"Room with name {item.Name} already exists");
 				}
 
@@ -146,8 +155,7 @@ namespace Room.API.Services
 					return new ApiResponse<RoomResponseDTO>(400, null, $"Room name {item.Name} already exists");
 				}
 
-				room = _mapper.Map<RoomEntity>(item);
-				room.Id = id;
+				_mapper.Map(item, room);
 				room.UpdatedAt = DateTime.UtcNow;
 
 				var result = await _roomRepository.UpdateRoomAsync(room);

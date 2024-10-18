@@ -29,6 +29,7 @@
             Description = description;
             Url = url;
         }
+
         public DestinationResponseDTO()
         {
         }

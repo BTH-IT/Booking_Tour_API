@@ -3,29 +3,29 @@
 	public class RoomResponseDTO
 	{
 		public int Id { get; set; }
-		public string Name { get; set; }
-		public List<ImagesDTO> Images { get; set; }
-		public VideosDTO? Video { get; set; }
+		public required string Name { get; set; }
+		public required string[] Images { get; set; }
+		public required string Video { get; set; }
 		public string? Detail { get; set; }
-		public double Price { get; set; }
-		public bool IsAvailable { get; set; }
-		public int MaxGuests { get; set; }
+		public required double Price { get; set; }
+		public required bool IsAvailable { get; set; }
+		public required int MaxGuests { get; set; }
 		public List<ReviewRoomDTO>? Reviews { get; set; }
-		public List<RoomAmenitiesDTO>? RoomAmenities { get; set; }
+		public string[]? RoomAmenities { get; set; }
 		public int HotelId { get; set; }
-		public HotelResponseDTO Hotel { get; set; }
+		public required HotelResponseDTO Hotel { get; set; }
 	}
 
 	public class RoomRequestDTO
 	{
-		public string Name { get; set; }
-		public List<ImagesDTO> Images { get; set; }
-		public VideosDTO Video { get; set; }
+		public required string Name { get; set; }
+		public required string[] Images { get; set; }
+		public required string Video { get; set; }
 		public string? Detail { get; set; }
 		public double Price { get; set; }
-		public bool? IsAvailable { get; set; } = true;
+		public bool IsAvailable { get; set; } = true;
 		public int MaxGuests { get; set; }
-		public List<RoomAmenitiesDTO>? RoomAmenities { get; set; }
+		public string[]? RoomAmenities { get; set; }
 		public int HotelId { get; set; }
 	}
 
@@ -46,9 +46,9 @@
 
 	public class PagedRoomResponseDTO
 	{
-		public List<RoomResponseDTO> Rooms { get; set; }
-		public int TotalItems { get; set; }
-		public int PageNumber { get; set; }
-		public int PageSize { get; set; }
+		public required List<RoomResponseDTO> Rooms { get; set; }
+		public required int TotalItems { get; set; }
+		public required int PageNumber { get; set; }
+		public required int PageSize { get; set; }
 	}
 }

@@ -14,14 +14,14 @@ public class ReviewTourController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> CreateReviewAsync([FromBody] Review reviewRequest)
+	public async Task<IActionResult> CreateReviewAsync([FromBody] ReviewTourDTO reviewRequest)
 	{
 		var response = await _reviewTourService.CreateReviewAsync(reviewRequest);
 		return StatusCode(response.StatusCode, response);
 	}
 
 	[HttpPut]
-	public async Task<IActionResult> UpdateReviewAsync([FromBody] Review reviewRequest)
+	public async Task<IActionResult> UpdateReviewAsync([FromBody] ReviewTourDTO reviewRequest)
 	{
 		var response = await _reviewTourService.UpdateReviewAsync(reviewRequest);
 		return StatusCode(response.StatusCode, response);
