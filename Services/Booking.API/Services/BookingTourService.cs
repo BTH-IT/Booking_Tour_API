@@ -31,19 +31,7 @@ namespace Booking.API.Services
 			try
 			{
 				var bookingTours = await _bookingTourRepository.GetBookingToursAsync();
-				var settings = new JsonSerializerSettings
-				{
-					ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-					NullValueHandling = NullValueHandling.Ignore
-				};
-
-
-				_logger.Information($"BookingRooms {JsonConvert.SerializeObject(bookingTours, settings)}");
-
 				var data = _mapper.Map<List<BookingTourResponseDTO>>(bookingTours);
-
-				_logger.Information($"BookingRooms_mapper {JsonConvert.SerializeObject(data, settings)}");
-
 
 				_logger.Information("End: BookingTourService - GetAllAsync");
 				return new ApiResponse<List<BookingTourResponseDTO>>(200, data, "Data retrieved successfully");
