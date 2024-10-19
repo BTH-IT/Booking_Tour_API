@@ -16,7 +16,7 @@
         public sbyte PaymentMethod { get; set; }
 		public UserResponseDTO User { get; set; }
 		public ScheduleResponseDTO Schedule { get; set; }
-		public List<TourBookingRoomResponseDTO> TourBookingRoom { get; set; }
+		public List<TourBookingRoomResponseDTO> TourBookingRooms { get; set; }
 		public List<TravellerDTO> Travellers { get; set; }
     }
 
@@ -33,7 +33,7 @@
         public decimal PriceTotal { get; set; }
         public float Coupon { get; set; }
         public sbyte PaymentMethod { get; set; }
-		public List<TourBookingRoomRequestDTO> TourBookingRoom { get; set; }
+		public List<TourBookingRoomRequestDTO> TourBookingRooms { get; set; }
 		public List<TravellerDTO> Travellers { get; set; }
     }
 	public class TravellerDTO
