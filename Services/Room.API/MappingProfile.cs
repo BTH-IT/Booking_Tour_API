@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Room.API.Entities;
+using Room.API.GrpcServer.Protos;
 using Shared.DTOs;
 
 public class MappingProfile : Profile
@@ -30,5 +31,10 @@ public class MappingProfile : Profile
 		CreateMap<ReviewHotel, ReviewHotelDTO>();
 		CreateMap<ReviewRoomDTO, ReviewRoom>();
 		CreateMap<ReviewRoom, ReviewRoomDTO>();
+		CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
+		CreateMap<RoomResponse,RoomResponseDTO>().ReverseMap();
+		CreateMap<RoomEntity, RoomResponse>()
+            .ReverseMap();
+		CreateMap<Hotel, HotelResponse>().ReverseMap();
 	}
 }

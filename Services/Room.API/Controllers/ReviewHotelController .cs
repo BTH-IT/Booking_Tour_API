@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 
@@ -6,6 +7,7 @@ namespace Room.API.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
+	[Authorize]
 	public class ReviewHotelController : ControllerBase
 	{
 		private readonly IReviewHotelService _reviewHotelService;

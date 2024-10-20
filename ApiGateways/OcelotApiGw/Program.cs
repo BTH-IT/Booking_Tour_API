@@ -31,7 +31,7 @@ try
 		}
 	);
 
-	var app = builder.Build();
+    var app = builder.Build();
 
 	// Configure the HTTP request pipeline.
 	if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
@@ -43,11 +43,7 @@ try
 
 	app.UseRouting();
 
-	app.UseAuthentication();
-
 	app.UseOcelot().Wait();
-
-	app.UseAuthorization();
 
 	app.MapControllers();
 

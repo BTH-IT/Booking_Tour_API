@@ -5,6 +5,7 @@ using Contracts.Domains.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Booking.API.Repositories
 {
     public class BookingRoomRepository :RepositoryBase<BookingRoom, int, BookingDbContext>, IBookingRoomRepository

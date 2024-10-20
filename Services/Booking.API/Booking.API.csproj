@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GrpcClient\Protos\room.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation" Version="11.10.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
@@ -37,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
@@ -47,10 +52,12 @@
     <ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
   </ItemGroup>
+ <ItemGroup>
+	<Protobuf Include="GrpcClient\Protos\room.proto">
+	  <GrpcServices>Both</GrpcServices>
+	</Protobuf>
+	<Protobuf Include="GrpcServer\Protos\booking.proto" GrpcServices="Both" />
+	<Protobuf Include="GrpcClient\Protos\identity.proto" GrpcServices="Both" />
 
-  <ItemGroup>
-		<Protobuf Include="GrpcClient\Protos\tour.proto" GrpcServices="Both" />
-	    <Protobuf Include="GrpcClient\Protos\room.proto" GrpcServices="Both" />
-	    <Protobuf Include="GrpcClient\Protos\identity.proto" GrpcServices="Both" />
-  </ItemGroup>
+ </ItemGroup>
 </Project>

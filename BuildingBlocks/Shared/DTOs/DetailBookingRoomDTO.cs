@@ -8,6 +8,7 @@
 		public double Price { get; set; }
 		public int Adults { get; set; }
 		public int Children { get; set; }
+		public RoomResponseDTO? Room { get; set; }
 	}
 	public class DetailBookingRoomRequestDTO
 	{

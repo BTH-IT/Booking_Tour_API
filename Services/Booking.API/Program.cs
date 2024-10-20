@@ -11,6 +11,10 @@ using Serilog;
 using Shared.DTOs;
 using System.Text;
 using EventBus.Masstransit;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Booking.API.GrpcServer.Protos;
+using Booking.API.GrpcServer.Services;
+using Contracts.Exceptions;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -90,8 +94,30 @@ try
             });
         }
     );
-    //Masstransit and RabbitMq
-    //builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5002);
+            options.ListenAnyIP(5102, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+        else if(builder.Environment.IsEnvironment("docker"))
+        {
+            options.ListenAnyIP(80);
+            options.ListenAnyIP(81, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+    });
+    //Add Grpc
+    builder.Services.AddGrpc(options =>
+    {
+        options.Interceptors.Add<GrpcExceptionInterceptor>();
+    });
     //Add GrpcClient
     builder.Services.AddGrpcClients();
     // Configure the HTTP request pipeline.
@@ -107,6 +133,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
 
+    app.MapGrpcService<BookingProtoService>();
     app.MapControllers();
     // Seeding database async
     using (var scope = app.Services.CreateScope())

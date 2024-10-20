@@ -2,6 +2,9 @@
 using Tour.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
+using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Authorization;
+using Shared.Enums;
 
 namespace Tour.API.Controllers
 {
@@ -39,6 +42,8 @@ namespace Tour.API.Controllers
 
 		[HttpPost]
         [ApiValidationFilter]
+        [Authorize]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> CreateTourAsync(TourRequestDTO requestDTO)
         {
             var response = await _tourService.CreateAsync(requestDTO);
@@ -47,6 +52,8 @@ namespace Tour.API.Controllers
 
 		[HttpPut("{id:int}")]
 		[ApiValidationFilter]
+        [Authorize]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> UpdateTourAsync(int id, TourRequestDTO requestDTO)
         {
             var response = await _tourService.UpdateAsync(id, requestDTO);
@@ -54,6 +61,8 @@ namespace Tour.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> DeleteTourAsync(int id)
         {
             var response = await _tourService.DeleteAsync(id);
