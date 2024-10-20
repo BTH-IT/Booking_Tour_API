@@ -1,4 +1,4 @@
-﻿namespace Saga.Orchestrator.BookingRoomOrderManager
+﻿namespace Saga.Orchestrator.BookingRoomOrderManagers
 {
     public enum EBookingRoomAction
     {
@@ -6,6 +6,7 @@
         CheckRoomIsAvailable,
         CreateBookingRoom,
         UpdateRoom,
-        Rollback
+        Rollback,
+        Finish
     }
 }

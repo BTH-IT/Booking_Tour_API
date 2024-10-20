@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Identity.API.GrpcServer.Protos;
 using Identity.API.Repositories.Interfaces;
 using System.Net.WebSockets;
@@ -25,7 +26,8 @@ namespace Identity.API.GrpcServer.Services
                 Fullname = user.Fullname,
                 Gender = user.Gender,
                 Phone = user.Phone,
-                Id = user.Id
+                Id = user.Id,
+                BirthDate = Timestamp.FromDateTime(user.BirthDate.ToUniversalTime())
             };
         }
     }

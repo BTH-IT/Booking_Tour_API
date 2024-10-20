@@ -18,7 +18,7 @@ message BookingRoomDetailRequest{
 	int32 RoomId = 1;
 	int32 Adult = 2;
 	int32 Children = 3;
-	double Price= 4;
+	double Price = 4;
 }	
 
 message BookingRoomResponse {

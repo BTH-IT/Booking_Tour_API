@@ -9,6 +9,8 @@ using Booking.API.Repositories.Interfaces;
 using Booking.API.Repositories;
 using Booking.API.Services.Interfaces;
 using Booking.API.Services;
+using Booking.API.GrpcClient.Protos;
+using Infrastructure.Polly.GprcPolly;
 namespace Booking.API.Extensions
 {
     public static class ServiceExtension
@@ -53,6 +55,15 @@ namespace Booking.API.Extensions
                         .AllowAnyMethod()
                 )
             );
+            return services;
+        }
+        public static IServiceCollection AddGrpcClients(this IServiceCollection services)
+        {
+            var grpcOptions = services.GetOptions<GrpcSettings>(nameof(GrpcSettings));
+            services.AddGrpcClient<IdentityGrpcService.IdentityGrpcServiceClient>(options =>
+            {
+                options.Address = new Uri(grpcOptions.IdentityAddress ?? throw new Exception("Configration Not found"));
+            }).AddGrpcCircuitBreakerPolicyHandler();
             return services;
         }
     }

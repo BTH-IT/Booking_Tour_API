@@ -2,6 +2,7 @@
 using Infrastructure.Extensions;
 using Saga.Orchestrator.API.GrpcClient.Protos;
 using Booking.API.GrpcServer.Protos;
+using Saga.Orchestrator.BookingRoomOrderManagers;
 namespace Saga.Orchestrator.API.Extensions
 {
     public static class ServiceExtension
@@ -48,6 +49,11 @@ namespace Saga.Orchestrator.API.Extensions
             {
                 options.Address = new Uri(grpcOptions.BookingAddress ?? throw new Exception("Configration Not found"));
             });
+            return services;
+        }
+        public static IServiceCollection AddInfrastructures(this IServiceCollection services)
+        {
+            services.AddTransient<BookingRoomManager>();
             return services;
         }
     }
