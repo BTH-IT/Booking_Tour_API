@@ -1,7 +1,10 @@
 ﻿using Identity.API.Services.Interfaces;
+using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Constants;
 using Shared.DTOs;
+using Shared.Enums;
 using Shared.Helper;
 
 namespace Identity.API.Controllers
@@ -30,12 +33,14 @@ namespace Identity.API.Controllers
         }
         [HttpPost]
         [ApiValidationFilter]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> CreateAccountAsync(AccountRequestDTO requestDTO)
         {
             var response = await _accountService.CreateAsync(requestDTO);
             return StatusCode(response.StatusCode,response);    
         }
         [HttpDelete("{id:int}")]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> DeleteAccountAsync(int id)
         {
             var response = await _accountService.DeleteAsync(id);
@@ -43,6 +48,7 @@ namespace Identity.API.Controllers
         }
         [HttpPut]
         [ApiValidationFilter]
+        [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> UpdateAccountAsync(AccountRequestDTO requestDTO)
         {
             var response = await _accountService.UpdateAsync(requestDTO);

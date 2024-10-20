@@ -7,8 +7,5 @@ using System.Threading.Tasks;
 
 namespace EventBus.IntergrationEvents.Events
 {
-    public record TestEvent : IntergrationEvent, ITestEvent
-    {
-        public string? Hello { get ; set ; }
-    }
+
 }

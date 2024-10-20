@@ -2,6 +2,7 @@
 using Tour.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tour.API.Controllers
 {
@@ -39,6 +40,7 @@ namespace Tour.API.Controllers
 
 		[HttpPost]
         [ApiValidationFilter]
+        [Authorize]
         public async Task<IActionResult> CreateScheduleAsync(ScheduleRequestDTO requestDTO)
         {
             if (requestDTO == null)
@@ -52,6 +54,7 @@ namespace Tour.API.Controllers
 
 		[HttpPut("{id:int}")]
 		[ApiValidationFilter]
+        [Authorize]
         public async Task<IActionResult> UpdateScheduleAsync(int id, ScheduleRequestDTO requestDTO)
         {
             if (requestDTO == null)
@@ -64,6 +67,7 @@ namespace Tour.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> DeleteScheduleAsync(int id)
         {
             var response = await _scheduleService.DeleteAsync(id);

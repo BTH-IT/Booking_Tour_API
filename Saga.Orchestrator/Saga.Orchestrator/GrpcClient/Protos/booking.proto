@@ -1,0 +1,43 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Booking.API.GrpcServer.Protos";
+
+service BookingGrpcService{
+	rpc CreateBookingRoom (CreateBookingRoomRequest) returns (BookingRoomResponse);
+	rpc DeleteBookingRoom (DeleteBookingRoomRequest) returns (DeleteBookingRoomResponse);
+	rpc CheckRoomsIsBooked (CheckRoomsIsBookedRequest) returns (CheckRoomsIsBookedResponse);
+}
+
+message CreateBookingRoomRequest{
+	int32 UserId = 1;
+	repeated BookingRoomDetailRequest BookingRoomDetails = 2;
+    google.protobuf.Timestamp CheckIn = 3;
+    google.protobuf.Timestamp CheckOut = 4;
+}
+message BookingRoomDetailRequest{
+	int32 RoomId = 1;
+	int32 Adult = 2;
+	int32 Children = 3;
+	double Price = 4;
+}	
+
+message BookingRoomResponse {
+	int32 BookingRoomId = 1;
+}
+
+message DeleteBookingRoomRequest{
+	int32 BookingRoomId = 1 ;
+}
+message DeleteBookingRoomResponse{
+    bool Result = 1;
+}
+message CheckRoomsIsBookedRequest{
+	repeated int32 RoomIds = 1;
+    google.protobuf.Timestamp CheckIn = 2;
+    google.protobuf.Timestamp CheckOut = 3;
+}
+message CheckRoomsIsBookedResponse{
+	bool Result = 1;
+	string Message = 2;
+}

@@ -116,7 +116,6 @@ try
     }
     app.UseCors("CorsPolicy");
     //app.UseHttpsRedirection(); // Uncomment if you want to enable HTTPS redirection
-    app.UseAuthentication(); 
     app.UseAuthorization();
     app.MapControllers();
     app.MapGrpcService<TourProtoService>();

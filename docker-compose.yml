@@ -84,6 +84,14 @@ services:
       - room.api
       - tour.api
       - booking.api
+      - saga.api
+    networks:
+      - apis-network
+  saga.api:
+    image: saga-api
+    build:
+      context: .
+      dockerfile: Saga.Orchestrator/Saga.Orchestrator/Dockerfile
     networks:
       - apis-network
 networks:

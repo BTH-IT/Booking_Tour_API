@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Tour.API.Services.Interfaces;
 
@@ -14,6 +15,7 @@ public class ReviewTourController : ControllerBase
 	}
 
 	[HttpPost]
+	[Authorize]
 	public async Task<IActionResult> CreateReviewAsync([FromBody] ReviewTourDTO reviewRequest)
 	{
 		var response = await _reviewTourService.CreateReviewAsync(reviewRequest);
@@ -21,6 +23,7 @@ public class ReviewTourController : ControllerBase
 	}
 
 	[HttpPut]
+	[Authorize]
 	public async Task<IActionResult> UpdateReviewAsync([FromBody] ReviewTourDTO reviewRequest)
 	{
 		var response = await _reviewTourService.UpdateReviewAsync(reviewRequest);
@@ -28,6 +31,7 @@ public class ReviewTourController : ControllerBase
 	}
 
 	[HttpDelete("{tourId}/{reviewId}")]
+	[Authorize]
 	public async Task<IActionResult> DeleteReviewAsync(int tourId, string reviewId)
 	{
 		var response = await _reviewTourService.DeleteReviewAsync(tourId, reviewId);

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventBus.IntergrationEvents.Interfaces
+namespace Shared.Enums
 {
-    public interface ITestEvent
+    public enum ERole
     {
-        public string Hello {  get; set; }
+        Admin = 1, 
+        User = 2,
+
     }
 }
