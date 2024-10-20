@@ -6,7 +6,6 @@
         GetRoomsInfoInProcessing,
         RoomsCheckInProcessing,
         InvoiceCreateInProcessing,
-        RoomUpdating,
         Completed,
         Failed
     }

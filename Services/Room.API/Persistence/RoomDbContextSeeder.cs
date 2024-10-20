@@ -68,8 +68,6 @@ namespace Room.API.Persistence
 								CreatedAt = DateTime.UtcNow,
 								UpdatedAt = DateTime.UtcNow,
 								ReviewList = new List<ReviewHotel>(),
-								HotelRulesList = new List<HotelRules>(),
-								HotelAmenitiesList = new List<HotelAmenities>(),
 								Rooms = new List<RoomEntity>()
 							};
 
@@ -78,24 +76,19 @@ namespace Room.API.Persistence
 								var room = new RoomEntity
 								{
 									Name = $"Phòng {j} tại {hotel.Name}",
+									ImagesList = new string[5],
+									Video = "https://example.com/video1.mp4",
 									Detail = $"Chi tiết về phòng {j} tại {hotel.Name}",
 									Price = 100 + (j * 20), 
 									IsAvailable = true,
 									MaxGuests = 2,
 									CreatedAt = DateTime.UtcNow,
-									ReviewList = new List<ReviewRoom>(),
-									RoomAmenitiesList = new List<RoomAmenities>(),
-									ImagesList = new List<Image>(),
+									ReviewList = new List<ReviewRoom>()
 								};
 								int Counter = 0;
 								for (int k = 1; k <= 5; k++)
 								{
-									room.ImagesList.Add(new Image
-									{
-										Id = $"{++Counter}",
-										Url = $"https://realimages.com/{province}/hotel{i}/room{j}/image{k}.jpg"
-									});
-									
+									room.ImagesList[k - 1] = $"https://realimages.com/{province}/hotel{i}/room{j}/image{k}.jpg";
 									room.ReviewList.Add(new ReviewRoom
 									{
 										Id = $"{Counter}",
@@ -106,15 +99,7 @@ namespace Room.API.Persistence
 										UserId = j
 									});
 								}
-								room.VideoObject = new Video
-								{
-									Id = "1",
-									Url = "https://example.com/video1.mp4",
-									Type = "mp4"
-								};
-								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"1", Title = "Wi-Fi miễn phí" });
-								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"2", Title = "Điều hòa nhiệt độ" });
-								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"3", Title = "TV màn hình phẳng" });
+								room.RoomAmenitiesList = new[] { "Wi-Fi miễn phí", "Điều hòa nhiệt độ", "TV màn hình phẳng" };
 
 								hotel.Rooms.Add(room);
 							}
@@ -132,11 +117,8 @@ namespace Room.API.Persistence
 								});
 							}
 
-							hotel.HotelRulesList.Add(new HotelRules { Id = $"1", Title = "Không hút thuốc trong phòng." });
-							hotel.HotelRulesList.Add(new HotelRules { Id = $"2", Title = "Giữ yên lặng từ 22h đến 6h sáng." });
-							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"1", Title = "Bể bơi ngoài trời" });
-							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"2", Title = "Phòng Gym" });
-							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"3", Title = "Spa" });
+							hotel.HotelRulesList = new[]  { "Không hút thuốc trong phòng.", "Giữ yên lặng từ 22h đến 6h sáng."};
+							hotel.HotelAmenitiesList = new[]  { "Bể bơi ngoài trời", "Phòng Gym" , "Spa"};
 
 							hotels.Add(hotel);
 						}

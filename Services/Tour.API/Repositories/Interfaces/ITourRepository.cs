@@ -17,8 +17,8 @@ namespace Tour.API.Repositories.Interfaces
         Task<IEnumerable<TourEntity>> GetToursAsync(); 
         Task<TourEntity> GetTourByIdAsync(int id); 
         Task<TourEntity> GetTourByNameAsync(string name);
-        Task CreateTourAsync(TourEntity tour); 
-        Task UpdateTourAsync(TourEntity tour); 
+		Task<int> CreateTourAsync(TourEntity tour);
+		Task<int> UpdateTourAsync(TourEntity tour); 
         Task SoftDeleteTourAsync(int id);
 		Task<TourSearchResult> SearchToursAsync(TourSearchRequestDTO searchRequest);
 	}

@@ -5,7 +5,6 @@
         GetRoomInfo,
         CheckRoomIsAvailable,
         CreateBookingRoom,
-        UpdateRoom,
         Rollback,
         Finish
     }

@@ -3,20 +3,61 @@ using Booking.API.GrpcServer.Protos;
 using Booking.API.Repositories.Interfaces;
 using Grpc.Core;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
+using System.Net.WebSockets;
 
 namespace Booking.API.GrpcServer.Services
 {
     public class BookingProtoService : BookingGrpcService.BookingGrpcServiceBase
     {
-        private IBookingRoomRepository bookingRoomRepository;
-        private IDetailBookingRoomRepository detailBookingRoomRepository;
+        private readonly IBookingRoomRepository bookingRoomRepository;
+        private readonly IDetailBookingRoomRepository detailBookingRoomRepository;
+        private readonly IBookingTourRepository tourRepository;
+        private readonly ITourBookingRoomRepository tourBookingRoomRepository;
         
         public BookingProtoService(IBookingRoomRepository bookingRoomRepository,
-            IDetailBookingRoomRepository detailBookingRoomRepository)
+            IDetailBookingRoomRepository detailBookingRoomRepository,
+            IBookingTourRepository tourRepository,
+            ITourBookingRoomRepository tourBookingRoomRepository)
         {
             this.bookingRoomRepository = bookingRoomRepository;
-            this.detailBookingRoomRepository = detailBookingRoomRepository; 
+            this.detailBookingRoomRepository = detailBookingRoomRepository;
+            this.tourRepository = tourRepository;
+            this.tourBookingRoomRepository = tourBookingRoomRepository;
         }
+
+        public override async Task<CheckRoomsIsBookedResponse> CheckRoomsIsBooked(CheckRoomsIsBookedRequest request, ServerCallContext context)
+        {
+            var resposne = new CheckRoomsIsBookedResponse()
+            {
+                Result = true,
+                Message = "Các phòng đều trống"
+            };
+            var dateStart = request.CheckIn.ToDateTime();
+            var dateEnd = request.CheckOut.ToDateTime();    
+
+            var bookingRoomsByDate = await bookingRoomRepository.FindByCondition(c=>
+             c.CheckIn <= dateEnd && c.CheckOut >= dateStart,false,c=>c.DetailBookingRooms).ToListAsync();
+
+            var bookingToursByDate = await tourRepository.FindByCondition(c =>
+             c.DateStart <= dateEnd && c.DateEnd >= dateStart, false, c => c.TourBookingRooms).ToListAsync();
+
+            foreach(var item in request.RoomIds)
+            {
+                if(bookingRoomsByDate.Any(c=>c.DetailBookingRooms.Any(e=>e.RoomId.Equals(item))))
+                {
+                    resposne.Message = $"Phòng với id :{item} đã được đặt trong khoảng thời gian trên ";
+                    resposne.Result = false ;
+                }    
+                if(bookingToursByDate.Any(c=>c.TourBookingRooms.Any(e=>e.RoomId.Equals(item))))
+                {
+                    resposne.Message = $"Phòng với id :{item} đã được đặt trong khoảng thời gian trên ";
+                    resposne.Result = false;
+                }
+            }
+            return resposne;
+        }
+
         public override async Task<BookingRoomResponse> CreateBookingRoom(CreateBookingRoomRequest request, ServerCallContext context)
         {
             double totalPrice = 0;

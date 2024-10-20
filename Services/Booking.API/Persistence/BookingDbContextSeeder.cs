@@ -75,7 +75,7 @@ namespace Booking.API.Persistence
 					UserId = 2,
 					CheckIn = DateTime.Now.AddDays(1),
 					CheckOut = DateTime.Now.AddDays(4),
-					NumberOfPeople = 3,
+                    NumberOfPeople = 3,
 					PriceTotal = 200.00,
 					CreatedAt = DateTime.Now,
 					DetailBookingRooms = new List<DetailBookingRoom>
@@ -108,6 +108,8 @@ namespace Booking.API.Persistence
 					Status = true,
 					PriceTotal = 500.00,
 					Coupon = 50.00,
+					DateStart = DateTime.Now,	
+					DateEnd = DateTime.Now.AddDays(2),
 					PaymentMethod = 1,
 					CreatedAt = DateTime.Now,
 					Travellers = JsonConvert.SerializeObject(new[]
@@ -127,7 +129,9 @@ namespace Booking.API.Persistence
 					IsTip = false,
 					IsEntranceTicket = false,
 					Status = true,
-					PriceTotal = 300.00,
+                    DateStart = DateTime.Now,
+                    DateEnd = DateTime.Now.AddDays(2),
+                    PriceTotal = 300.00,
 					Coupon = 20.00,
 					PaymentMethod = 2,
 					CreatedAt = DateTime.Now,

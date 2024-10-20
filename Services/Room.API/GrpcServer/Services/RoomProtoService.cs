@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using AutoMapper;
+using Grpc.Core;
 using Room.API.GrpcServer.Protos;
 using Room.API.Repositories.Interfaces;
 using ILogger = Serilog.ILogger;
@@ -8,11 +9,14 @@ namespace Room.API.GrpcServer.Services
     {
         private readonly IRoomRepository roomRepository;
         private readonly ILogger logger;
-
-        public RoomProtoService(IRoomRepository roomRepository, ILogger logger)
+        private readonly IMapper mapper;
+        public RoomProtoService(IRoomRepository roomRepository, 
+            ILogger logger,
+            IMapper mapper)
         {
             this.roomRepository = roomRepository;
             this.logger = logger;
+            this.mapper = mapper;
         }
         public override async Task<GetRoomsByIdsResponse> GetRoomsByIds(GetRoomsByIdsRequest request, ServerCallContext context)
         {
@@ -23,14 +27,7 @@ namespace Room.API.GrpcServer.Services
                 var room = await roomRepository.GetByIdAsync(item);
                 if(room != null)
                 {
-                    var roomResponse = new RoomResponse()
-                    {
-                        Id = room.Id,
-                        Price = room.Price, 
-                        IsAvailable = room.IsAvailable, 
-                        Name = room.Name,
-                    }; 
-                    response.Rooms.Add(roomResponse);
+                    response.Rooms.Add(mapper.Map<RoomResponse>(room));
                 }    
             }
             logger.Information("End : GetRoomsByIds - RoomGrpcServer");

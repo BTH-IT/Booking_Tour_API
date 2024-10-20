@@ -6,6 +6,7 @@ option csharp_namespace = "Booking.API.GrpcServer.Protos";
 service BookingGrpcService{
 	rpc CreateBookingRoom (CreateBookingRoomRequest) returns (BookingRoomResponse);
 	rpc DeleteBookingRoom (DeleteBookingRoomRequest) returns (DeleteBookingRoomResponse);
+	rpc CheckRoomsIsBooked (CheckRoomsIsBookedRequest) returns (CheckRoomsIsBookedResponse);
 }
 
 message CreateBookingRoomRequest{
@@ -30,4 +31,13 @@ message DeleteBookingRoomRequest{
 }
 message DeleteBookingRoomResponse{
     bool Result = 1;
+}
+message CheckRoomsIsBookedRequest{
+	repeated int32 RoomIds = 1;
+    google.protobuf.Timestamp CheckIn = 2;
+    google.protobuf.Timestamp CheckOut = 3;
+}
+message CheckRoomsIsBookedResponse{
+	bool Result = 1;
+	string Message = 2;
 }

@@ -10,7 +10,6 @@ namespace Tour.API.Entities
         public string Name { get; set; }
         public string? Description { get; set; }
         public string Url { get; set; }
-
         public ICollection<TourEntity>? Tours { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

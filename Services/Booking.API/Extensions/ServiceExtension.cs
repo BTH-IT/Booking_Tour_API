@@ -64,6 +64,10 @@ namespace Booking.API.Extensions
             {
                 options.Address = new Uri(grpcOptions.IdentityAddress ?? throw new Exception("Configration Not found"));
             }).AddGrpcCircuitBreakerPolicyHandler();
+
+            services.AddGrpcClient<RoomGrpcService.RoomGrpcServiceClient>(options => {
+                options.Address = new Uri(grpcOptions.RoomAddress ?? throw new Exception("Configration Not found"));
+            });
             return services;
         }
     }

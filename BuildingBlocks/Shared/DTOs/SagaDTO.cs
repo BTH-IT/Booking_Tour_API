@@ -10,7 +10,6 @@ namespace Shared.DTOs
     {
         public DateTime? CheckIn { get; set; }
         public DateTime? CheckOut { get; set; }
-        public double PriceTotal { get; set; }
         public List<BookingRoomOrderDetailDto> BookingRoomDetails   { get; set; }
     }
     public class BookingRoomOrderDetailDto

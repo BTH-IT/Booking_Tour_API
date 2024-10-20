@@ -1,6 +1,6 @@
-syntax = "proto3";
-
-option csharp_namespace = "Room.API.GrpcServer.Protos";
+﻿syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+option csharp_namespace = "Booking.API.GrpcClient.Protos";
 
 service RoomGrpcService{
 	rpc GetRoomsByIds (GetRoomsByIdsRequest) returns (GetRoomsByIdsResponse);
