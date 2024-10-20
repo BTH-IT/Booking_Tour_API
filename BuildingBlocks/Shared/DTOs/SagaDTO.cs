@@ -11,16 +11,12 @@ namespace Shared.DTOs
         public DateTime? CheckIn { get; set; }
         public DateTime? CheckOut { get; set; }
         public double PriceTotal { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public DateTime? DeletedAt { get; set; }
-        public int NumberOfPeople { get; set; }
         public List<BookingRoomOrderDetailDto> BookingRoomDetails   { get; set; }
     }
     public class BookingRoomOrderDetailDto
     {
         public int RoomId { get; set; }  
-        public decimal PriceTotal { get; set; }
+        public double Price { get; set; }
         public int Adults {  get; set; }
         public int Children { get; set; }
     }

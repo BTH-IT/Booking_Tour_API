@@ -10,5 +10,6 @@ namespace Booking.API.Services.Interfaces
 		Task<ApiResponse<BookingRoomResponseDTO>> CreateAsync(BookingRoomRequestDTO item);
 		Task<ApiResponse<BookingRoomResponseDTO>> UpdateAsync(int id, BookingRoomRequestDTO item);
 		Task<ApiResponse<int>> DeleteAsync(int id);
+		Task<ApiResponse<List<BookingRoomResponseDTO>>> GetCurrentUserAsync(int userId);
 	}
 }

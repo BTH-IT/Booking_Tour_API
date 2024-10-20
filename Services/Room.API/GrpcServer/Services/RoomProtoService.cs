@@ -37,5 +37,30 @@ namespace Room.API.GrpcServer.Services
             return response;
        
         }
+
+        public override async Task<UpdateRoomsAvailabilityResponse> UpdateRoomsAvailability(UpdateRoomsAvailabilityRequest request, ServerCallContext context)
+        {
+            logger.Information("Begin : UpdateRoomsAvailability - RoomGrpcServer");
+            var response = new UpdateRoomsAvailabilityResponse();
+            response.Result = true;
+            foreach (var item in request.Ids)
+            {
+               var room = await roomRepository.GetRoomByIdAsync(item);
+                if(room == null)
+                {
+                    response.Result = false;
+                    break;
+                }
+                room.IsAvailable = request.IsAvailable;
+                var updateResult = await roomRepository.UpdateRoomAsync(room);
+                if(updateResult < 0 )
+                {
+                    response.Result = false;
+                    break;
+                }    
+            }
+            logger.Information("End : UpdateRoomsAvailability - RoomGrpcServer");
+            return response;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Booking.API.Entities;
+using Booking.API.GrpcClient.Protos;
 using Newtonsoft.Json;
 using Shared.DTOs;
 
@@ -43,6 +44,12 @@ namespace Booking.API
 			CreateMap<TourBookingRoomRequestDTO, TourBookingRoom>();
 
 			CreateMap<Traveller, TravellerDTO>().ReverseMap();
+			CreateMap<GetUserByIdResponse, UserResponseDTO>()
+				.ForMember(dest => dest.BirthDate, opt =>
+				{
+					opt.PreCondition(src => src.BirthDate != null);
+					opt.MapFrom(src => src.BirthDate.ToDateTime());
+				});
 		}
 	}
 }

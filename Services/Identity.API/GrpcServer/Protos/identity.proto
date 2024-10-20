@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Identity.API.GrpcServer.Protos";
 
 service IdentityGrpcService{
@@ -16,4 +16,5 @@ message GetUserByIdResponse{
 	string Phone = 3;
     string Gender = 4;
 	int32 Id = 5;
+    google.protobuf.Timestamp BirthDate = 6;
 }

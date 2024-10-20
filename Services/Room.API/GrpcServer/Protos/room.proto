@@ -4,6 +4,7 @@ option csharp_namespace = "Room.API.GrpcServer.Protos";
 
 service RoomGrpcService{
 	rpc GetRoomsByIds (GetRoomsByIdsRequest) returns (GetRoomsByIdsResponse);
+	rpc UpdateRoomsAvailability (UpdateRoomsAvailabilityRequest) returns (UpdateRoomsAvailabilityResponse);
 }
 
 message GetRoomsByIdsRequest{
@@ -18,4 +19,11 @@ message RoomResponse{
 }
 message GetRoomsByIdsResponse{
 	repeated RoomResponse Rooms=1;
+}
+message UpdateRoomsAvailabilityRequest{
+	repeated int32 Ids = 1;
+	bool isAvailable = 2;
+}
+message UpdateRoomsAvailabilityResponse{
+	bool Result = 1;
 }

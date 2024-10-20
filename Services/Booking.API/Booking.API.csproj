@@ -50,5 +50,7 @@
   </ItemGroup>
  <ItemGroup>
 	<Protobuf Include="GrpcServer\Protos\booking.proto" GrpcServices="Both" />
+	<Protobuf Include="GrpcClient\Protos\identity.proto" GrpcServices="Both" />
+
  </ItemGroup>
 </Project>

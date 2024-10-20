@@ -1,6 +1,6 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 import "google/protobuf/timestamp.proto";
-option csharp_namespace = "Saga.Orchestrator.API.GrpcClient.Protos";
+option csharp_namespace = "Booking.API.GrpcClient.Protos";
 
 service IdentityGrpcService{
 	rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
