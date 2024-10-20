@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Tour.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
@@ -21,7 +20,6 @@ namespace Tour.API.Controllers
             _destinationService = destinationService;
         }
 
-        // Lấy tất cả các điểm đến
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -29,7 +27,6 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Lấy một điểm đến theo ID
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
@@ -37,7 +34,6 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Tạo một điểm đến mới
         [HttpPost]
         [ApiValidationFilter]
         [Authorize]
@@ -48,7 +44,6 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-		// Cập nhật thông tin của một điểm đến
 		[HttpPut("{id:int}")]
 		[ApiValidationFilter]
         [Authorize]
@@ -59,7 +54,6 @@ namespace Tour.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        // Xóa một điểm đến theo ID
         [HttpDelete("{id:int}")]
         [Authorize]
         [RoleRequirement(ERole.Admin)]

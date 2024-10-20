@@ -19,20 +19,39 @@ namespace Booking.API.Entities
         public bool Status { get; set; }    
         public double PriceTotal { get; set; }  
         public double Coupon {  get; set; } 
+		public DateTime? DateStart { get; set; }
+        public DateTime? DateEnd { get; set; }
+
         public int PaymentMethod { get; set; }
         [NotMapped]
         public List<Traveller>  TravellerList { get; set; }
         public DateTime CreatedAt { get ; set ; }
         public DateTime? UpdatedAt { get ; set ; }
 		public DateTime? DeletedAt { get; set; }
-
 		[Column(TypeName = "JSON")]
-        public string Travellers
-        {
-            get => JsonConvert.SerializeObject(TravellerList);
-            set => TravellerList = JsonConvert.DeserializeObject<List<Traveller>>(value) ?? new List<Traveller>();
-        }
-        public ICollection<TourBookingRoom> TourBookingRooms { get; set; }
+		public string Travellers
+		{
+			get => TravellerList == null ? null : JsonConvert.SerializeObject(TravellerList);
+			set
+			{
+				if (!string.IsNullOrEmpty(value))
+				{
+					try
+					{
+						TravellerList = JsonConvert.DeserializeObject<List<Traveller>>(value) ?? new List<Traveller>();
+					}
+					catch (JsonException)
+					{
+						TravellerList = new List<Traveller>();
+					}
+				}
+				else
+				{
+					TravellerList = new List<Traveller>(); 
+				}
+			}
+		}
+		public ICollection<TourBookingRoom> TourBookingRooms { get; set; }
     }
 
 	public class Traveller

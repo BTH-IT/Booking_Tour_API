@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.API.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20241016195652_initDb")]
-    partial class initDb
+    [Migration("20241020140101_addColToBookingTour")]
+    partial class addColToBookingTour
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,12 @@ namespace Booking.API.Migrations
                         .HasColumnType("double");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DateEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DateStart")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")

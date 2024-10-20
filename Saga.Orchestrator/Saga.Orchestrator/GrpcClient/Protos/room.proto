@@ -2,6 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "Saga.Orchestrator.API.GrpcClient.Protos";
 
+
 service RoomGrpcService{
 	rpc GetRoomsByIds (GetRoomsByIdsRequest) returns (GetRoomsByIdsResponse);
 	rpc UpdateRoomsAvailability (UpdateRoomsAvailabilityRequest) returns (UpdateRoomsAvailabilityResponse);
@@ -16,6 +17,13 @@ message RoomResponse{
 	double Price=3;
 	bool IsAvailable=4;
 	int32 MaxGuests = 5;
+	HotelResponse Hotel = 6;
+}
+message HotelResponse{
+	int32 Id = 1;
+	string Name = 2;
+	string Location = 3;
+	string Description = 4;
 }
 message GetRoomsByIdsResponse{
 	repeated RoomResponse Rooms=1;

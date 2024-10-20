@@ -25,7 +25,6 @@ namespace Room.API.Controllers
 		}
 
 		[HttpPut]
-
 		public async Task<IActionResult> UpdateReviewAsync([FromBody] ReviewHotelDTO reviewRequest)
 		{
 		var response = await _reviewHotelService.UpdateReviewAsync(reviewRequest);

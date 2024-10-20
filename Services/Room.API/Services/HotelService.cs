@@ -34,10 +34,10 @@ namespace Room.API.Services
 
 				if (!hotels?.Any() ?? true)
 				{
-					_logger.Warning("No hotels found");
-					return new ApiResponse<List<HotelResponseDTO>>(404, null, "No hotels found");
+					_logger.Warning("No hotels");
+					return new ApiResponse<List<HotelResponseDTO>>(204, null, "No hotels");
 				}
-
+				
 				var data = _mapper.Map<List<HotelResponseDTO>>(hotels);
 
 				_logger.Information("End: HotelService - GetAllAsync");
@@ -57,11 +57,10 @@ namespace Room.API.Services
 			try
 			{
 				var hotel = await _hotelRepository.GetHotelByIdAsync(id);
-
 				if (hotel == null)
 				{
-					_logger.Warning($"Hotel with ID {id} not found");
-					return new ApiResponse<HotelResponseDTO>(404, null, "Hotel not found");
+					_logger.Warning($"Hotel with id {id} not found or deleted");
+					return new ApiResponse<HotelResponseDTO>(404, null, $"Hotel with id {id} not found or deleted");
 				}
 
 				var data = _mapper.Map<HotelResponseDTO>(hotel);
@@ -87,7 +86,7 @@ namespace Room.API.Services
 				if (hotel == null || hotel.DeletedAt != null)
 				{
 					_logger.Warning($"Hotel with name {name} not found or deleted");
-					return new ApiResponse<HotelResponseDTO>(404, null, "Hotel not found or has been deleted");
+					return new ApiResponse<HotelResponseDTO>(404, null, $"Hotel with name {name} not found or deleted");
 				}
 
 				var data = _mapper.Map<HotelResponseDTO>(hotel);
@@ -159,17 +158,9 @@ namespace Room.API.Services
 					return new ApiResponse<HotelResponseDTO>(400, null, $"Hotel name '{item.Name}' already exists");
 				}
 
-				var existingReviews = hotel.ReviewList;
-
-				hotel = _mapper.Map<Hotel>(item);
-				hotel.Id = id;
-
-				if (existingReviews != null)
-				{
-					hotel.ReviewList = existingReviews;
-				}
-
+				_mapper.Map(item, hotel);
 				hotel.UpdatedAt = DateTime.UtcNow;
+
 				var result = await _hotelRepository.UpdateAsync(hotel);
 
 				if (result <= 0)

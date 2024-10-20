@@ -28,10 +28,10 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    // Add Auto Mapper
-    builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-	// Add Fluent Validator 
-	builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<HotelRequestDTOValidator>());
+	// Add Auto Mapper
+	builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+    // Add Fluent Validator 
+    builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<HotelRequestDTOValidator>());
 	builder.Services.Configure<ApiBehaviorOptions>(options =>
 	{
 	    options.SuppressModelStateInvalidFilter = true;

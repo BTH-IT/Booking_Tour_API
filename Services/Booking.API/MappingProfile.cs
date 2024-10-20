@@ -17,7 +17,7 @@ namespace Booking.API
 
 			CreateMap<BookingTour, BookingTourResponseDTO>()
 				.ForMember(dest => dest.Travellers, opt =>
-				 {
+				{
 					 opt.PreCondition(src => src.Travellers != null);
 					 opt.MapFrom(src => JsonConvert.DeserializeObject<List<TravellerDTO>>(src.Travellers));
 				 })
@@ -50,6 +50,8 @@ namespace Booking.API
 					opt.PreCondition(src => src.BirthDate != null);
 					opt.MapFrom(src => src.BirthDate.ToDateTime());
 				});
-		}
+            CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
+            CreateMap<RoomResponse, RoomResponseDTO>().ReverseMap();
+        }
 	}
 }

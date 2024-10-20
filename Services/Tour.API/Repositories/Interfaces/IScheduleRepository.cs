@@ -10,9 +10,9 @@ namespace Tour.API.Repositories.Interfaces
         Task<IEnumerable<Schedule>> GetSchedulesAsync();
         Task<Schedule> GetScheduleByIdAsync(int id);
         Task<IEnumerable<Schedule>> GetSchedulesByTourIdAsync(int tourId);
-		Task<Schedule> GetScheduleByNameAsync(string name); 
-        Task CreateScheduleAsync(Schedule schedule);
-        Task UpdateScheduleAsync(Schedule schedule);
+		Task<Schedule> GetScheduleByNameAsync(string name);
+		Task<int> CreateScheduleAsync(Schedule schedule);
+		Task<int> UpdateScheduleAsync(Schedule schedule);
         Task DeleteScheduleAsync(int id);
     }
 }

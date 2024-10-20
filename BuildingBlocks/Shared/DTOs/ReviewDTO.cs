@@ -17,4 +17,13 @@
 		public int HotelId { get; set; }
 		public int UserId { get; set; }
 	}
+
+	public class ReviewTourDTO
+	{
+		public string Id { get; set; }
+		public string? Content { get; set; }
+		public float Rating { get; set; }
+		public int TourId { get; set; }
+		public int UserId { get; set; }
+	}
 }

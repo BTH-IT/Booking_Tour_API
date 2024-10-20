@@ -61,14 +61,9 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
                 .OnEntryAsync(CheckRoomIsAvailableAsync);
             // Tạo hóa đơn
             _stateMachine.Configure(EBookingRoomState.InvoiceCreateInProcessing)
-                .Permit(EBookingRoomAction.UpdateRoom, EBookingRoomState.RoomUpdating)
-                .Permit(EBookingRoomAction.Rollback, EBookingRoomState.Failed)
-                .OnEntryAsync(CreateBookingOrderAsync);
-            // Cập nhật phòng 
-            _stateMachine.Configure(EBookingRoomState.RoomUpdating)
                 .Permit(EBookingRoomAction.Finish, EBookingRoomState.Completed)
                 .Permit(EBookingRoomAction.Rollback, EBookingRoomState.Failed)
-                .OnEntryAsync(UpdateRoomAsync);
+                .OnEntryAsync(CreateBookingOrderAsync);
             //Rollback khi thất bại
             _stateMachine.Configure(EBookingRoomState.Failed)
                 .OnEntryAsync(RollbackAsync);
@@ -111,13 +106,16 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
             {
                 _logger.Information("Begin : CheckRoomIsAvailableAsync - BookingRoomManager");
                 _logger.Information($"State Machine : {_stateMachine.State} ");
-                foreach (var roomInfo in roomsInfo.Rooms)
+                var roomIds = roomsInfo.Rooms.Select(c => c.Id);
+                var request = new CheckRoomsIsBookedRequest();
+                request.RoomIds.AddRange(roomIds);
+                request.CheckIn = Timestamp.FromDateTime(requestDto.CheckIn.Value.ToUniversalTime()) ;
+                request.CheckOut = Timestamp.FromDateTime(requestDto.CheckOut.Value.ToUniversalTime());
+                var response = await _bookingGrpcServiceClient.CheckRoomsIsBookedAsync(request);
+                if(response.Result == false)
                 {
-                    if(!roomInfo.IsAvailable)
-                    {
-                        throw new Exception($"{roomInfo.Name} hiện không khả dụng");
-                    }    
-                }
+                    throw new Exception(response.Message);
+                }    
                 await _stateMachine.FireAsync(EBookingRoomAction.CreateBookingRoom);
             }
             catch (Exception ex) 
@@ -139,7 +137,7 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
                 {
                     UserId = userId,
                     CheckIn = Timestamp.FromDateTime(requestDto.CheckIn!.Value.ToUniversalTime()),
-                    CheckOut = Timestamp.FromDateTime(requestDto.CheckIn!.Value.ToUniversalTime())
+                    CheckOut = Timestamp.FromDateTime(requestDto.CheckOut!.Value.ToUniversalTime())
                 };
                 foreach(var item in requestDto.BookingRoomDetails)
                 {
@@ -153,30 +151,7 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
                 }
                 var response = await _bookingGrpcServiceClient.CreateBookingRoomAsync(request);
                 this.BookingRoomId = response.BookingRoomId;    
-                await _stateMachine.FireAsync(EBookingRoomAction.UpdateRoom);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.ToString());
-                _logger.Error("End : CreateBookingOrderAsync - BookingRoomManager");
-                ErrorMessage = ex.Message;
-                await _stateMachine.FireAsync(EBookingRoomAction.Rollback);
-            }
-        }
-        private async Task UpdateRoomAsync()
-        {
-            try
-            {
-                _logger.Information("Begin : UpdateRoomAsync - BookingRoomManager");
-                _logger.Information($"State Machine : {_stateMachine.State} ");
-                // implement here
-                var roomIds = requestDto.BookingRoomDetails.Select(c => c.RoomId);
-                var request = new UpdateRoomsAvailabilityRequest();
-                request.Ids.AddRange(roomIds);
-                request.IsAvailable = false;
-                this.IsUpdateRooms = true;
-                await _roomGrpcServiceClient.UpdateRoomsAvailabilityAsync(request);
-                _stateMachine.Fire(EBookingRoomAction.Finish);
+                await _stateMachine.FireAsync(EBookingRoomAction.Finish);
             }
             catch (Exception ex)
             {

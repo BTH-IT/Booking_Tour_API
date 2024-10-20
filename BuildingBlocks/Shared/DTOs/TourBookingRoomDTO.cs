@@ -2,6 +2,7 @@
 {
 	public class TourBookingRoomResponseDTO
 	{
+		public int Id { get; set; }
 		public int BookingTourId { get; set; }
 		public int RoomId { get; set; }
 		public double Price { get; set; }
