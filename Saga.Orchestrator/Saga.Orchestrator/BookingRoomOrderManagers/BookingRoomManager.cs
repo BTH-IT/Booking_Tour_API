@@ -14,7 +14,6 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
     public class BookingRoomManager 
     {
         #region grpc
-        private readonly IdentityGrpcService.IdentityGrpcServiceClient _identityGrpcServiceClient;
         private readonly TourGrpcService.TourGrpcServiceClient _tourGrpcServiceClient;
         private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
         private readonly ILogger _logger;
@@ -24,12 +23,10 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
         private readonly IHttpContextAccessor _contextAccessor;
         private CreateBookingRoomOrderDto requestDto;
         private GetRoomsByIdsResponse roomsInfo;
-        private bool IsUpdateRooms  = false;
         private string? ErrorMessage;
         private int BookingRoomId = -1;
         private readonly StateMachine<EBookingRoomState,EBookingRoomAction> _stateMachine;
         public BookingRoomManager(ILogger logger,
-            IdentityGrpcService.IdentityGrpcServiceClient identityGrpcServiceClient,
             TourGrpcService.TourGrpcServiceClient tourGrpcServiceClient,
             RoomGrpcService.RoomGrpcServiceClient roomGrpcServiceClient,
             IHttpContextAccessor httpContextAccessor,
@@ -38,7 +35,6 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
         {
            this._logger = logger;
            this._contextAccessor = httpContextAccessor;
-           this._identityGrpcServiceClient = identityGrpcServiceClient;
            this._tourGrpcServiceClient = tourGrpcServiceClient;
            this._roomGrpcServiceClient = roomGrpcServiceClient;
            this._bookingGrpcServiceClient = bookingGrpcServiceClient;
@@ -174,14 +170,6 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
                         BookingRoomId = this.BookingRoomId  
                     });
                 }
-                if (IsUpdateRooms)
-                {
-                    var roomIds = requestDto.BookingRoomDetails.Select(c => c.RoomId);
-                    var request = new UpdateRoomsAvailabilityRequest();
-                    request.Ids.AddRange(roomIds);
-                    request.IsAvailable = true;
-                }
-
             }
             catch (Exception ex) 
             {
