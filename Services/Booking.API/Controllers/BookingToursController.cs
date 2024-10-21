@@ -1,13 +1,20 @@
-﻿using Booking.API.Services.Interfaces;
+﻿using Booking.API.Services;
+using Booking.API.Services.Interfaces;
+using Infrastructure.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
+using Shared.Enums;
 using Shared.Helper;
+using System.Security.Claims;
 
 namespace Booking.API.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class BookingToursController : ControllerBase
+    [Authorize]
+
+    public class BookingToursController : ControllerBase
 	{
 		private readonly IBookingTourService _bookingTourService;
 
@@ -17,7 +24,8 @@ namespace Booking.API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetAllAsync()
+        [RoleRequirement(ERole.Admin)]
+        public async Task<IActionResult> GetAllAsync()
 		{
 			var response = await _bookingTourService.GetAllAsync();
 			return StatusCode(response.StatusCode, response);
@@ -29,28 +37,11 @@ namespace Booking.API.Controllers
 			var response = await _bookingTourService.GetByIdAsync(id);
 			return StatusCode(response.StatusCode, response);
 		}
-
-		[HttpPost]
-		[ApiValidationFilter]
-		public async Task<IActionResult> CreateBookingTourAsync([FromBody] BookingTourRequestDTO requestDTO)
-		{
-			var response = await _bookingTourService.CreateAsync(requestDTO);
-			return StatusCode(response.StatusCode, response);
-		}
-
-		[HttpPut("{id:int}")]
-		[ApiValidationFilter]
-		public async Task<IActionResult> UpdateBookingTourAsync(int id, [FromBody] BookingTourRequestDTO requestDTO)
-		{
-			var response = await _bookingTourService.UpdateAsync(id, requestDTO);
-			return StatusCode(response.StatusCode, response);
-		}
-
-		[HttpDelete("{id:int}")]
-		public async Task<IActionResult> DeleteBookingTourAsync(int id)
-		{
-			var response = await _bookingTourService.DeleteAsync(id);
-			return StatusCode(response.StatusCode, response);
-		}
-	}
+        [HttpGet("current-user")]
+        public async Task<IActionResult> GetByCurrentUserAsync()
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+			return Ok();
+        }
+    }
 }
