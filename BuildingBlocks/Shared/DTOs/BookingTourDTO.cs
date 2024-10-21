@@ -6,7 +6,7 @@
 		public int UserId { get; set; }
 		public int ScheduleId { get; set; }
 		public int Seats { get; set; }
-        public int Umbrella { get; set; }
+        public bool Umbrella { get; set; }
         public bool IsCleaningFee { get; set; }
         public bool IsTip { get; set; }
         public bool IsEntranceTicket { get; set; }
@@ -25,7 +25,7 @@
         public int UserId { get; set; }
         public int ScheduleId { get; set; }
         public int Seats { get; set; }
-        public int Umbrella { get; set; }
+        public bool Umbrella { get; set; }
         public bool IsCleaningFee { get; set; }
         public bool IsTip { get; set; }
         public bool IsEntranceTicket { get; set; }

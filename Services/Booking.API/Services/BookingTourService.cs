@@ -69,106 +69,25 @@ namespace Booking.API.Services
 			}
 		}
 
-		public async Task<ApiResponse<BookingTourResponseDTO>> CreateAsync(BookingTourRequestDTO item)
-		{
-			_logger.Information("Begin: BookingTourService - CreateAsync");
+        private async Task GetUserFromGrpcAsync(BookingTourResponseDTO dto)
+        {
+            //_logger.Information($"START - BookingRoomService - GetUserFromGrpcAsync");
+            //try
+            //{
+            //    var user = await _identityGrpcServiceClient.GetUserByIdAsync(new GetUserByIdRequest
+            //    {
+            //        Id = dto.UserId
+            //    });
+            //    dto.User = _mapper.Map<UserResponseDTO>(user);
+            //    _logger.Information($"END - BookingRoomService - GetUserFromGrpcAsync");
 
-			try
-			{
-				var bookingTour = _mapper.Map<BookingTour>(item);
-				bookingTour.CreatedAt = DateTime.UtcNow;
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.Error($"{ex.Message}");
 
-				var result = await _bookingTourRepository.CreateBookingTourAsync(bookingTour);
-
-				if (result > 0)
-				{
-					_logger.Information("End: BookingTourService - CreateAsync: Successfully created booking tour.");
-					var createdBookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(result);
-					var data = _mapper.Map<BookingTourResponseDTO>(createdBookingTour);
-					return new ApiResponse<BookingTourResponseDTO>(200, data, "Booking tour created successfully.");
-				}
-				else
-				{
-					_logger.Warning("End: BookingTourService - CreateAsync: Failed to create booking tour.");
-					return new ApiResponse<BookingTourResponseDTO>(400, null, "Failed to create booking tour.");
-				}
-			}
-			catch (Exception ex)
-			{
-				_logger.Error($"Error in BookingTourService - CreateAsync: {ex.Message}", ex);
-				return new ApiResponse<BookingTourResponseDTO>(500, null, $"An error occurred: {ex.Message}");
-			}
-		}
-
-		public async Task<ApiResponse<BookingTourResponseDTO>> UpdateAsync(int id, BookingTourRequestDTO item)
-		{
-			_logger.Information($"Begin: BookingTourService - UpdateAsync: {id}");
-
-			try
-			{
-				var bookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(id);
-				if (bookingTour == null)
-				{
-					_logger.Warning($"Booking tour with ID {id} not found.");
-					return new ApiResponse<BookingTourResponseDTO>(404, null, $"Booking tour with ID {id} not found.");
-				}
-
-				_mapper.Map(item, bookingTour);
-				bookingTour.UpdatedAt = DateTime.UtcNow;
-
-				var result = await _bookingTourRepository.UpdateBookingTourAsync(bookingTour);
-
-				if (result > 0)
-				{
-					_logger.Information($"End: BookingTourService - UpdateAsync: {id} - Successfully updated booking tour.");
-					var updatedBookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(id);
-					var data = _mapper.Map<BookingTourResponseDTO>(updatedBookingTour);
-					return new ApiResponse<BookingTourResponseDTO>(200, data, "Booking tour updated successfully.");
-				}
-				else
-				{
-					_logger.Warning($"End: BookingTourService - UpdateAsync: {id} - Failed to update booking tour.");
-					return new ApiResponse<BookingTourResponseDTO>(400, null, "Failed to update booking tour.");
-				}
-			}
-			catch (Exception ex)
-			{
-				_logger.Error($"Error in BookingTourService - UpdateAsync: {ex.Message}", ex);
-				return new ApiResponse<BookingTourResponseDTO>(500, null, $"An error occurred: {ex.Message}");
-			}
-		}
-		
-		public async Task<ApiResponse<int>> DeleteAsync(int id)
-		{
-			_logger.Information($"Begin: BookingTourService - DeleteAsync: {id}");
-
-			try
-			{
-				var bookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(id);
-
-				if (bookingTour == null)
-				{
-					_logger.Warning($"Booking tour with ID {id} not found");
-					return new ApiResponse<int>(404, 0, $"Booking tour with ID {id} not found");
-				}
-
-				bookingTour.DeletedAt = DateTime.UtcNow;
-				var result = await _bookingTourRepository.UpdateBookingTourAsync(bookingTour);
-
-				if (result <= 0)
-				{
-					_logger.Warning("Failed to delete booking tour");
-					return new ApiResponse<int>(400, -1, "Failed to delete booking tour");
-				}
-
-				_logger.Information($"End: BookingTourService - DeleteAsync: {id} - Successfully deleted the booking tour.");
-				return new ApiResponse<int>(200, 1, "Booking tour deleted successfully");
-			}
-			catch (Exception ex)
-			{
-				_logger.Error($"Error in BookingTourService - DeleteAsync: {ex.Message}", ex);
-				return new ApiResponse<int>(500, 0, $"An error occurred: {ex.Message}");
-			}
-		}
-	}
+            //    _logger.Error("ERROR - BookingRoomService - GetUserFromGrpcAsync");
+            //}
+        }
+    }
 }

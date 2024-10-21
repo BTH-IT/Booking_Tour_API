@@ -1,7 +1,6 @@
-syntax = "proto3";
-
+﻿syntax = "proto3";
 import "google/protobuf/timestamp.proto";
-option csharp_namespace = "Tour.API.GrpcServer.Protos";
+option csharp_namespace = "Booking.API.GrpcClient.Protos";
 
 service TourGrpcService{
 	rpc GetScheduleById (GetScheduleByIdRequest) returns (GetScheduleByIdResponse);

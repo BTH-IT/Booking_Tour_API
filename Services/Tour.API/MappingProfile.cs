@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Shared.DTOs;
 using Tour.API.Entities;
+using Tour.API.GrpcServer.Protos;
 
 public class MappingProfile : Profile
 {
@@ -31,5 +33,19 @@ public class MappingProfile : Profile
 		// Ánh xạ giữa Video và VideoRoom
 		CreateMap<Review, ReviewTourDTO>().ReverseMap();
 		CreateMap<ReviewTourDTO, Review > ().ReverseMap();
-	}
+
+		// Ánh xạ giữa Grpc và Entities
+		CreateMap<DestinationEntity, DestinationResponse>();
+
+		CreateMap<TourEntity, TourResponse>()
+			.ForMember(dest => dest.Destination, opt => opt.MapFrom(src => src.Destination))
+			.ForMember(dest => dest.DateFrom, opt => opt.MapFrom(src => Timestamp.FromDateTime(src.DateFrom.ToUniversalTime()) ))
+			.ForMember(dest => dest.DateTo, opt => opt.MapFrom(src => Timestamp.FromDateTime(src.DateTo.ToUniversalTime())));
+
+		CreateMap<Schedule, ScheduleResponse>()
+			.ForMember(dest =>dest.Tour,opt => opt.MapFrom(src=>src.Tour))
+			.ForMember(dest => dest.DateStart,opt=>opt.MapFrom(src=> Timestamp.FromDateTime(src.DateStart.Value.ToUniversalTime())))
+			.ForMember(dest => dest.DateEnd,opt=>opt.MapFrom(src=> Timestamp.FromDateTime(src.DateEnd.Value.ToUniversalTime())));
+        ;
+    }
 }

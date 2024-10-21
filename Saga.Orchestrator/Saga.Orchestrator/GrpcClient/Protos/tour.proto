@@ -6,12 +6,51 @@ option csharp_namespace = "Saga.Orchestrator.API.GrpcClient.Protos";
 
 service TourGrpcService{
 	rpc GetScheduleById (GetScheduleByIdRequest) returns (GetScheduleByIdResponse);
+    rpc UpdateScheduleAvailableSeat (UpdateScheduleAvailableSeatRequest) returns (UpdateScheduleAvailableSeatResponse);
 }
 message GetScheduleByIdRequest{
 	int32 id = 1;
 }
 message GetScheduleByIdResponse{
+    ScheduleResponse Schedule = 1;
+}
+
+message ScheduleResponse{
     google.protobuf.Timestamp DateStart = 1;
     google.protobuf.Timestamp DateEnd = 2;
     int32 AvailableSeats = 3;
+    int32 Id = 4;
+    TourResponse Tour = 5;
+}
+
+message TourResponse{
+    int32 Id = 1;
+    string Name = 2;
+    bool IsWifi = 3;
+    string Detail = 4;
+    string Expect = 5;
+    double Price = 6;
+    google.protobuf.Timestamp DateFrom = 7;
+    google.protobuf.Timestamp DateTo = 8;
+    string Video = 9;
+    float Rate = 10;
+    float SalePercent = 11;
+    DestinationResponse Destination = 12;
+}
+
+message DestinationResponse{
+    int32 Id = 1;
+    string Name= 2;
+    string Description = 3;
+    string Url = 4;
+}
+
+message UpdateScheduleAvailableSeatRequest{
+    int32 ScheduleId = 1;
+    int32 Count = 2;
+}
+
+message UpdateScheduleAvailableSeatResponse{
+    bool Result = 1;
+    string Message = 2;
 }
