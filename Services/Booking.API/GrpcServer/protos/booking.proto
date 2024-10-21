@@ -41,3 +41,33 @@ message CheckRoomsIsBookedResponse{
 	bool Result = 1;
 	string Message = 2;
 }
+
+message CreateBookingTourRequest{
+	int32 UserId = 1;
+	int32 ScheduleId = 2;
+	int32 Seats = 3;
+	bool Umbrella = 4;
+	bool IsCleaningFee = 5;
+	bool IsTip = 6 ;
+	bool IsEntranceTicket = 7;
+	bool Status = 8;
+	double PriceTotal = 9;
+	float Coupon = 10;
+	int32 PaymentMethod = 11;
+	repeated TourBookingRoomDetail TourBookingRooms = 12;
+	repeated TravellerDetail TravellerDetail = 13;
+}
+
+message TourBookingRoomDetail{
+	int32 RoomId = 1;
+	int32 Adult = 2;
+	int32 Children = 3;
+	double Price = 4;
+}
+
+message TravellerDetail {
+	bool Gender = 1;
+	string FullName = 2;
+	int32 Age = 3;
+	string Phone = 4;
+}

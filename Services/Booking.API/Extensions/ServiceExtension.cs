@@ -68,6 +68,9 @@ namespace Booking.API.Extensions
             services.AddGrpcClient<RoomGrpcService.RoomGrpcServiceClient>(options => {
                 options.Address = new Uri(grpcOptions.RoomAddress ?? throw new Exception("Configration Not found"));
             });
+            services.AddGrpcClient<TourGrpcService.TourGrpcServiceClient>(options => {
+                options.Address = new Uri(grpcOptions.TourAddress ?? throw new Exception("Configuration Not Found"));
+            });
             return services;
         }
     }

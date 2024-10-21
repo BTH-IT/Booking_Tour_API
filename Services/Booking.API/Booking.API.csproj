@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <None Remove="GrpcClient\Protos\room.proto" />
+    <None Remove="GrpcClient\Protos\tour.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +54,9 @@
     <ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
   </ItemGroup>
  <ItemGroup>
+	<Protobuf Include="GrpcClient\Protos\tour.proto">
+	  <GrpcServices>Both</GrpcServices>
+	</Protobuf>
 	<Protobuf Include="GrpcClient\Protos\room.proto">
 	  <GrpcServices>Both</GrpcServices>
 	</Protobuf>

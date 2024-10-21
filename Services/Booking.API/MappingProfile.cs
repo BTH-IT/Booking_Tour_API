@@ -20,7 +20,7 @@ namespace Booking.API
 				{
 					 opt.PreCondition(src => src.Travellers != null);
 					 opt.MapFrom(src => JsonConvert.DeserializeObject<List<TravellerDTO>>(src.Travellers));
-				 })
+				})
 				.ReverseMap()
 				.ForMember(dest => dest.Travellers, opt =>
 				{
