@@ -34,6 +34,7 @@ public class MappingProfile : Profile
 		CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
 		CreateMap<RoomResponse,RoomResponseDTO>().ReverseMap();
 		CreateMap<RoomEntity, RoomResponse>()
+			.ForMember(dest=>dest.Hotel, opt => opt.MapFrom(src=>src.Hotel))
             .ReverseMap();
 		CreateMap<Hotel, HotelResponse>().ReverseMap();
 	}
