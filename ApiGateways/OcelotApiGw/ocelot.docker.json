@@ -16,10 +16,6 @@
         "PUT",
         "DELETE"
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "SwaggerKey": "identity.api"
     },
     {
@@ -38,10 +34,6 @@
         "PUT",
         "DELETE"
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "SwaggerKey": "room.api"
     },
     {
@@ -60,10 +52,6 @@
         "PUT",
         "DELETE"
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "SwaggerKey": "tour.api"
     },
     {
@@ -81,10 +69,6 @@
         "POST",
         "DELETE"
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "SwaggerKey": "upload.api"
 
     },
@@ -103,11 +87,24 @@
         "POST",
         "DELETE"
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "SwaggerKey": "booking.api"
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "saga.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/saga/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "SwaggerKey": "saga.api"
     }
   ],
   "SwaggerEndPoints": [
@@ -158,6 +155,16 @@
           "Name": "Upload API",
           "Version": "v1",
           "Url": "http://upload.api:80/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "saga.api",
+      "Config": [
+        {
+          "Name": "Saga API",
+          "Version": "v1",
+          "Url": "http://saga.api:80/swagger/v1/swagger.json"
         }
       ]
     }

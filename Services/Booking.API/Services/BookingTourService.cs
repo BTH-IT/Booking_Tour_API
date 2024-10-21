@@ -71,23 +71,23 @@ namespace Booking.API.Services
 
         private async Task GetUserFromGrpcAsync(BookingTourResponseDTO dto)
         {
-            _logger.Information($"START - BookingRoomService - GetUserFromGrpcAsync");
-            try
-            {
-                var user = await _identityGrpcServiceClient.GetUserByIdAsync(new GetUserByIdRequest
-                {
-                    Id = dto.UserId
-                });
-                dto.User = _mapper.Map<UserResponseDTO>(user);
-                _logger.Information($"END - BookingRoomService - GetUserFromGrpcAsync");
+            //_logger.Information($"START - BookingRoomService - GetUserFromGrpcAsync");
+            //try
+            //{
+            //    var user = await _identityGrpcServiceClient.GetUserByIdAsync(new GetUserByIdRequest
+            //    {
+            //        Id = dto.UserId
+            //    });
+            //    dto.User = _mapper.Map<UserResponseDTO>(user);
+            //    _logger.Information($"END - BookingRoomService - GetUserFromGrpcAsync");
 
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.Error($"{ex.Message}");
 
-                _logger.Error("ERROR - BookingRoomService - GetUserFromGrpcAsync");
-            }
+            //    _logger.Error("ERROR - BookingRoomService - GetUserFromGrpcAsync");
+            //}
         }
     }
 }

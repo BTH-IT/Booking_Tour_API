@@ -24,7 +24,7 @@ namespace Room.API.GrpcServer.Services
             var response = new GetRoomsByIdsResponse();
             foreach(var item in request.Ids)
             {
-                var room = await roomRepository.GetByIdAsync(item);
+                var room = await roomRepository.GetRoomByIdAsync(item);
                 if(room != null)
                 {
                     response.Rooms.Add(mapper.Map<RoomResponse>(room));
