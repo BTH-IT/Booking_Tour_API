@@ -15,7 +15,9 @@ namespace Booking.API.Repositories
 		}
 
 		public async Task<IEnumerable<BookingRoom>> GetBookingRoomsAsync() =>
-			await FindByCondition(h => h.DeletedAt == null, false, h => h.DetailBookingRooms).ToListAsync();
+			await FindByCondition(h => h.DeletedAt == null, false, h => h.DetailBookingRooms)
+				.OrderByDescending(r => r.CreatedAt)
+				.ToListAsync();
 
 		public Task<BookingRoom> GetBookingRoomByIdAsync(int id) =>
 			FindByCondition(h => h.Id.Equals(id) && h.DeletedAt == null, false, h => h.DetailBookingRooms).SingleOrDefaultAsync();
