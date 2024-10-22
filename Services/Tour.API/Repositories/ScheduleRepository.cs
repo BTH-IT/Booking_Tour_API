@@ -14,16 +14,19 @@ namespace Tour.API.Repositories
         }
 
 		public async Task<IEnumerable<Schedule>> GetSchedulesAsync() =>
-			await FindByCondition(r => true, false, r => r.Tour, r => r.Tour.Destination).ToListAsync();
-
-		public Task<Schedule> GetScheduleByNameAsync(string name) =>
+			await FindByCondition(r => true, false, r => r.Tour, r => r.Tour.Destination)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+        public Task<Schedule> GetScheduleByNameAsync(string name) =>
 			 FindByCondition(s => s.Tour.Name.Equals(name), false, r => r.Tour, r => r.Tour.Destination).SingleOrDefaultAsync();
 
 		public Task<Schedule> GetScheduleByIdAsync(int id) =>
 			FindByCondition(s => s.Id == id, false, r => r.Tour, r => r.Tour.Destination).SingleOrDefaultAsync();
 
 		public async Task<IEnumerable<Schedule>> GetSchedulesByTourIdAsync(int tourId) =>
-			 await FindByCondition(s => s.TourId == tourId, false, r => r.Tour, r => r.Tour.Destination).ToListAsync();
+			 await FindByCondition(s => s.TourId == tourId, false, r => r.Tour, r => r.Tour.Destination)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
 		
         public Task<int> CreateScheduleAsync(Schedule schedule) => CreateAsync(schedule);
 
