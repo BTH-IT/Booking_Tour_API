@@ -14,9 +14,11 @@ namespace Room.API.Repositories
 		}
 
 		public async Task<IEnumerable<Hotel>> GetHotelsAsync() =>
-			await FindByCondition(h => h.DeletedAt == null, false, h => h.Rooms).ToListAsync();
+			await FindByCondition(h => h.DeletedAt == null, false, h => h.Rooms)
+				.OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
 
-		public Task<Hotel?> GetHotelByNameAsync(string name) =>
+        public Task<Hotel?> GetHotelByNameAsync(string name) =>
 			FindByCondition(h => h.Name.Equals(name) && h.DeletedAt == null, false, h => h.Rooms).SingleOrDefaultAsync();
 
 		public Task<Hotel?> GetHotelByIdAsync(int id) =>

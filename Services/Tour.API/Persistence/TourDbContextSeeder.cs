@@ -91,12 +91,12 @@ namespace Room.API.Persistence
                         DateFrom = DateTime.UtcNow.AddDays(7),
                         DateTo = DateTime.UtcNow.AddDays(10),
                         Rate = 4.9f,
-						Video = "https://example.com/saigon-tour-video",
+						Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
                         SalePercent = 5,
                         PriceExcludeList = new[] { "Bữa ăn", "Vé máy bay" },
                         PriceIncludeList = new[] { "Khách sạn", "Di chuyển trong thành phố" },
                         ActivityList = new[] { "Tham quan", "Chụp ảnh" },
-                        ImageList = new[] { "https://example.com/ha-noi1.jpg", "https://example.com/ha-noi2.jpg" },
+                        ImageList = new[] { "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg", "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg" },
                         DayList = new[] {"Day 1", "Day 2" },
                         ReviewList = new List <Review>
 						{
@@ -117,12 +117,12 @@ namespace Room.API.Persistence
                         DateFrom = DateTime.UtcNow.AddDays(10),
                         DateTo = DateTime.UtcNow.AddDays(15),
                         Rate = 4.8f,
-						Video = "https://example.com/saigon-tour-video",
+						Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 						SalePercent = 10,
                         PriceExcludeList = new[] { "Bữa ăn", "Vé máy bay" },
                         PriceIncludeList = new[] { "Khách sạn", "Du thuyền" },
                         ActivityList = new[] { "Tham quan", "Leo núi" },
-                        ImageList = new[] { "https://example.com/ha-long1.jpg", "https://example.com/ha-long2.jpg" },
+                        ImageList = new[] { "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg", "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg" },
                         DayList = new[] { "Day 1", "Day 2" },
                         ReviewList = new List <Review>
                         {
@@ -143,12 +143,12 @@ namespace Room.API.Persistence
                         DateFrom = DateTime.UtcNow.AddDays(15),
                         DateTo = DateTime.UtcNow.AddDays(20),
                         Rate = 4.85f,
-						Video = "https://example.com/saigon-tour-video",
+						Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 						SalePercent = 12,
                         PriceExcludeList = new[] { "Bữa ăn", "Vé máy bay" },
                         PriceIncludeList = new[] { "Khách sạn", "Xe đưa đón" },
                         ActivityList = new[] { "Tham quan", "Tắm biển" },
-                        ImageList = new[] { "https://example.com/da-nang1.jpg", "https://example.com/da-nang2.jpg" },
+                        ImageList = new[] { "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg", "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg" },
 						DayList = new[] { "Day 1", "Day 2" },
                         ReviewList = new List <Review>
 						{
@@ -169,12 +169,12 @@ namespace Room.API.Persistence
                         DateFrom = DateTime.UtcNow.AddDays(20),
                         DateTo = DateTime.UtcNow.AddDays(25),
                         Rate = 4.9f,
-						Video = "https://example.com/saigon-tour-video",
+						Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 						SalePercent = 8,
                         PriceExcludeList = new[] { "Bữa ăn", "Vé máy bay" },
                         PriceIncludeList = new[] { "Khách sạn", "Thuyền đưa đón" },
                         ActivityList = new[] { "Tắm biển", "Lặn ngắm san hô" },
-                        ImageList = new[] { "https://example.com/phu-quoc1.jpg", "https://example.com/phu-quoc2.jpg" },
+                        ImageList = new[] { "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg", "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg" },
 						DayList = new[] { "Day 1", "Day 2" },
                         ReviewList = new List <Review>
 						{

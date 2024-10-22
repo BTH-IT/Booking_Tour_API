@@ -77,7 +77,7 @@ namespace Room.API.Persistence
 								{
 									Name = $"Phòng {j} tại {hotel.Name}",
 									ImagesList = new string[5],
-									Video = "https://example.com/video1.mp4",
+									Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 									Detail = $"Chi tiết về phòng {j} tại {hotel.Name}",
 									Price = 100 + (j * 20), 
 									IsAvailable = true,
@@ -88,7 +88,7 @@ namespace Room.API.Persistence
 								int Counter = 0;
 								for (int k = 1; k <= 5; k++)
 								{
-									room.ImagesList[k - 1] = $"https://realimages.com/{province}/hotel{i}/room{j}/image{k}.jpg";
+									room.ImagesList[k - 1] = $"https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg";
 									room.ReviewList.Add(new ReviewRoom
 									{
 										Id = $"{Counter}",
