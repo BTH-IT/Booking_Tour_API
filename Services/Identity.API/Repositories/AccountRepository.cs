@@ -30,7 +30,7 @@ namespace Identity.API.Repositories
 
 		public Task<Account> GetAccountByIdAsync(int id) => FindByCondition(c => c.Id.Equals(id) && c.DeletedAt == null, false,c=>c.Role,c=>c.Role.RoleDetails).SingleOrDefaultAsync();
 
-        public async Task<IEnumerable<Account>> GetAccountsAsync() => await FindByCondition(c => c.DeletedAt == null, false, c => c.Role, c => c.Role.RoleDetails).ToListAsync();
+        public async Task<IEnumerable<Account>> GetAccountsAsync() => await FindByCondition(c => c.DeletedAt == null, false, c => c.Role, c => c.Role.RoleDetails).OrderByDescending(r => r.CreatedAt).ToListAsync();
 
         public Task UpdateAccountAsync(Account account) => UpdateAsync(account);
     }
