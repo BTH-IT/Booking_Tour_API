@@ -29,7 +29,7 @@ namespace Identity.API.Repositories
 
         public Task<Permission> GetPermissionByNameAsync(string name) => FindByCondition(c => c.Name.Equals(name) && c.DeletedAt == null).FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<Permission>> GetPermissionsAsync() => await FindByCondition(c => c.DeletedAt == null).ToListAsync();
+        public async Task<IEnumerable<Permission>> GetPermissionsAsync() => await FindByCondition(c => c.DeletedAt == null).OrderByDescending(r => r.Id).ToListAsync();
 
         public Task UpdatePermissionAsync(Permission permission) => UpdateAsync(permission);
     }
