@@ -14,8 +14,10 @@ namespace Tour.API.Repositories
         }
 
 		public async Task<IEnumerable<DestinationEntity>> GetDestinationsAsync() =>
-			 await FindAll(false).ToListAsync(); 
-		
+			 await FindAll(false)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
         public Task<DestinationEntity> GetDestinationByNameAsync(string name) =>
 	         FindByCondition(d => d.Name.Equals(name), false).SingleOrDefaultAsync();
 

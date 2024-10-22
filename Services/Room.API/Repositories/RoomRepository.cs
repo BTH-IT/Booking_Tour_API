@@ -15,16 +15,20 @@ namespace Room.API.Repositories
 		{
 		}
 
-		public async Task<IEnumerable<RoomEntity>> GetRoomsAsync() =>
-			await FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel).ToListAsync();
+        public async Task<IEnumerable<RoomEntity>> GetRoomsAsync() =>
+			await FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel)
+				.OrderByDescending(r => r.CreatedAt)
+				.ToListAsync();
 
-		public Task<RoomEntity?> GetRoomByIdAsync(int id) =>
+        public Task<RoomEntity?> GetRoomByIdAsync(int id) =>
 			 FindByCondition(r => r.Id == id && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
 
-		public async Task<IEnumerable<RoomEntity>> GetRoomByHotelIdAsync(int id) =>
-			await FindByCondition(r => r.HotelId == id && r.DeletedAt == null, false, r => r.Hotel).ToListAsync();
+        public async Task<IEnumerable<RoomEntity>> GetRoomByHotelIdAsync(int id) =>
+            await FindByCondition(r => r.HotelId == id && r.DeletedAt == null, false, r => r.Hotel)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
 
-		public Task<RoomEntity?> GetRoomByNameAsync(string name) =>
+        public Task<RoomEntity?> GetRoomByNameAsync(string name) =>
 			 FindByCondition(r => r.Name == name && r.DeletedAt == null, false, r => r.Hotel).SingleOrDefaultAsync();
 
 		public Task<int> CreateRoomAsync(RoomEntity room) => CreateAsync(room);

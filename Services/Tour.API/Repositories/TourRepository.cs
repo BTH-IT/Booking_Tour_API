@@ -15,7 +15,9 @@ namespace Tour.API.Repositories
 		}
 
 		public async Task<IEnumerable<TourEntity>> GetToursAsync() =>
-			await FindByCondition(r => r.DeletedAt == null, false, r => r.Destination).ToListAsync();
+			await FindByCondition(r => r.DeletedAt == null, false, r => r.Destination)
+				.OrderByDescending(r => r.CreatedAt)
+				.ToListAsync();
 
 		public Task<TourEntity?> GetTourByIdAsync(int id) =>
 			 FindByCondition(t => t.Id == id, false, r => r.Destination).SingleOrDefaultAsync();
