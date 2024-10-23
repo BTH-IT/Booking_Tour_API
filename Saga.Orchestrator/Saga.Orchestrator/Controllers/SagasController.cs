@@ -38,10 +38,8 @@ namespace Saga.Orchestrator.Controllers
         [HttpPost("booking-tour")]
         public async Task<IActionResult> CreateBookingTourAsync(CreateBookingTourOrderDto request)
         {
-            return Ok();
-
-            //var response = await  _bookingTourManager. (request);
-            //return StatusCode(response.StatusCode, response);
+            var response = await  _bookingTourManager.CreateBookingTourOrder(request);
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
