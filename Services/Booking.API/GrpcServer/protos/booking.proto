@@ -7,8 +7,10 @@ service BookingGrpcService{
 	rpc CreateBookingRoom (CreateBookingRoomRequest) returns (BookingRoomResponse);
 	rpc DeleteBookingRoom (DeleteBookingRoomRequest) returns (DeleteBookingRoomResponse);
 	rpc CheckRoomsIsBooked (CheckRoomsIsBookedRequest) returns (CheckRoomsIsBookedResponse);
+	rpc CreateBookingTour (CreateBookingTourRequest) returns (BookingTourResponse);
+	rpc DeleteBookingTour (DeleteBookingTourRequest) returns (DeleteBookingTourResponse);
 }
-
+// Booking room
 message CreateBookingRoomRequest{
 	int32 UserId = 1;
 	repeated BookingRoomDetailRequest BookingRoomDetails = 2;
@@ -41,7 +43,7 @@ message CheckRoomsIsBookedResponse{
 	bool Result = 1;
 	string Message = 2;
 }
-
+// Booking tour
 message CreateBookingTourRequest{
 	int32 UserId = 1;
 	int32 ScheduleId = 2;
@@ -54,8 +56,10 @@ message CreateBookingTourRequest{
 	double PriceTotal = 9;
 	float Coupon = 10;
 	int32 PaymentMethod = 11;
-	repeated TourBookingRoomDetail TourBookingRooms = 12;
-	repeated TravellerDetail TravellerDetail = 13;
+	google.protobuf.Timestamp DateStart = 12;
+    google.protobuf.Timestamp DateEnd = 13;
+	repeated TourBookingRoomDetail TourBookingRooms = 14;
+	repeated TravellerDetail TravellerDetail = 15;
 }
 
 message TourBookingRoomDetail{
@@ -70,4 +74,13 @@ message TravellerDetail {
 	string FullName = 2;
 	int32 Age = 3;
 	string Phone = 4;
+}
+message BookingTourResponse{
+	int32 BookingTourId = 1; 
+}
+message DeleteBookingTourRequest{
+	int32 BookingTourId = 1 ;
+}
+message DeleteBookingTourResponse{
+    bool Result = 1;
 }

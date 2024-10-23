@@ -5,8 +5,6 @@ using Saga.Orchestrator.API.GrpcClient.Protos;
 using Shared.DTOs;
 using Shared.Helper;
 using Stateless;
-using System.Net.WebSockets;
-using System.Reflection.PortableExecutable;
 using System.Security.Claims;
 using ILogger = Serilog.ILogger;
 namespace Saga.Orchestrator.BookingRoomOrderManagers
@@ -105,8 +103,8 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
                 var roomIds = roomsInfo.Rooms.Select(c => c.Id);
                 var request = new CheckRoomsIsBookedRequest();
                 request.RoomIds.AddRange(roomIds);
-                request.CheckIn = Timestamp.FromDateTime(requestDto.CheckIn.Value.ToUniversalTime()) ;
-                request.CheckOut = Timestamp.FromDateTime(requestDto.CheckOut.Value.ToUniversalTime());
+                request.CheckIn = Timestamp.FromDateTime(requestDto.CheckIn!.Value.ToUniversalTime()) ;
+                request.CheckOut = Timestamp.FromDateTime(requestDto.CheckOut!.Value.ToUniversalTime());
                 var response = await _bookingGrpcServiceClient.CheckRoomsIsBookedAsync(request);
                 if(response.Result == false)
                 {
