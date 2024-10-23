@@ -142,7 +142,8 @@ namespace Booking.API.GrpcServer.Services
                 DateStart = request.DateStart.ToDateTime(),
                 DateEnd = request.DateEnd.ToDateTime(), 
                 PaymentMethod = request.PaymentMethod,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                TravellerList = new List<Traveller>()
             };
             foreach (var item in request.TravellerDetail)
             {
