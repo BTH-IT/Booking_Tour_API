@@ -29,6 +29,8 @@ namespace Shared.DTOs
         public bool IsEntranceTicket { get; set; }
         public sbyte PaymentMethod { get; set; }
         public decimal PriceTotal { get; set; }
+        public bool Status { get; set; }
+        public float Coupon { get; set; }
         public List<TourBookingRoomRequestDTO> TourBookingRooms { get; set; }
         public List<TravellerDTO> Travellers { get; set; }
     }

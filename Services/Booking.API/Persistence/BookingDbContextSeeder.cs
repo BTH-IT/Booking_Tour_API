@@ -96,7 +96,7 @@ namespace Booking.API.Persistence
 
 			if (!_context.BookingTours.Any())
 			{
-				var bookingTour1 = new BookingTour
+                var bookingTour1 = new BookingTour
 				{
 					UserId = 1,
 					ScheduleId = 1,
@@ -108,8 +108,8 @@ namespace Booking.API.Persistence
 					Status = true,
 					PriceTotal = 500.00,
 					Coupon = 50.00,
-					DateStart = DateTime.Now,	
-					DateEnd = DateTime.Now.AddDays(2),
+					DateStart = DateTime.ParseExact("2024-10-27 04:22:09.812176", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),	
+					DateEnd = DateTime.ParseExact("2024-10-30 04:22:09.812238", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
 					PaymentMethod = 1,
 					CreatedAt = DateTime.Now,
 					Travellers = JsonConvert.SerializeObject(new[]
@@ -129,8 +129,8 @@ namespace Booking.API.Persistence
 					IsTip = false,
 					IsEntranceTicket = false,
 					Status = true,
-                    DateStart = DateTime.Now,
-                    DateEnd = DateTime.Now.AddDays(2),
+                    DateStart = DateTime.ParseExact("2024-10-30 04:22:09.812598", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
+                    DateEnd = DateTime.ParseExact("2024-11-04 04:22:09.812599", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
                     PriceTotal = 300.00,
 					Coupon = 20.00,
 					PaymentMethod = 2,
