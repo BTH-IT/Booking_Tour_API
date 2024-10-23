@@ -14,7 +14,9 @@
         public decimal PriceTotal { get; set; }
         public float Coupon { get; set; }
         public sbyte PaymentMethod { get; set; }
-		public UserResponseDTO User { get; set; }
+        public DateTime? DateStart { get; set; }
+        public DateTime? DateEnd { get; set; }
+        public UserResponseDTO User { get; set; }
 		public ScheduleResponseDTO Schedule { get; set; }
 		public List<TourBookingRoomResponseDTO> TourBookingRooms { get; set; }
 		public List<TravellerDTO> Travellers { get; set; }
