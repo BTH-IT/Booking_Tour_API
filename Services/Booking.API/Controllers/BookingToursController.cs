@@ -23,25 +23,26 @@ namespace Booking.API.Controllers
 			_bookingTourService = bookingTourService;
 		}
 
-		//[HttpGet]
-  //      [RoleRequirement(ERole.Admin)]
-  //      public async Task<IActionResult> GetAllAsync()
-		//{
-		//	var response = await _bookingTourService.GetAllAsync();
-		//	return StatusCode(response.StatusCode, response);
-		//}
+		[HttpGet]
+		[RoleRequirement(ERole.Admin)]
+		public async Task<IActionResult> GetAllAsync()
+		{
+			var response = await _bookingTourService.GetAllAsync();
+			return StatusCode(response.StatusCode, response);
+		}
 
-		//[HttpGet("{id:int}")]
-		//public async Task<IActionResult> GetByIdAsync(int id)
-		//{
-		//	var response = await _bookingTourService.GetByIdAsync(id);
-		//	return StatusCode(response.StatusCode, response);
-		//}
-  //      [HttpGet("current-user")]
-  //      public async Task<IActionResult> GetByCurrentUserAsync()
-  //      {
-  //          var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-		//	return Ok();
-  //      }
-    }
+		[HttpGet("{id:int}")]
+		public async Task<IActionResult> GetByIdAsync(int id)
+		{
+			var response = await _bookingTourService.GetByIdAsync(id);
+			return StatusCode(response.StatusCode, response);
+		}
+		[HttpGet("current-user")]
+		public async Task<IActionResult> GetByCurrentUserAsync()
+		{
+			var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var response = await _bookingTourService.GetCurrentUserAsync(int.Parse(userId!));
+			return StatusCode(response.StatusCode,response);
+		}
+	}
 }

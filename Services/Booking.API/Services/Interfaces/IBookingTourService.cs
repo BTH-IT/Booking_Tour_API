@@ -7,5 +7,7 @@ namespace Booking.API.Services.Interfaces
     {
 		Task<ApiResponse<List<BookingTourResponseDTO>>> GetAllAsync();
 		Task<ApiResponse<BookingTourResponseDTO>> GetByIdAsync(int id);
-	}
+        Task<ApiResponse<List<BookingTourResponseDTO>>> GetCurrentUserAsync(int userId);
+
+    }
 }
