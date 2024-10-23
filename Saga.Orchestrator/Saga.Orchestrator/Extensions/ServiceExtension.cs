@@ -3,6 +3,7 @@ using Infrastructure.Extensions;
 using Saga.Orchestrator.API.GrpcClient.Protos;
 using Booking.API.GrpcServer.Protos;
 using Saga.Orchestrator.BookingRoomOrderManagers;
+using Saga.Orchestrator.BookingTourOrderManagers;
 namespace Saga.Orchestrator.API.Extensions
 {
     public static class ServiceExtension
@@ -54,6 +55,7 @@ namespace Saga.Orchestrator.API.Extensions
         public static IServiceCollection AddInfrastructures(this IServiceCollection services)
         {
             services.AddTransient<BookingRoomManager>();
+            services.AddTransient<BookingTourManager>();
             return services;
         }
     }

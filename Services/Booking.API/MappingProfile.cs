@@ -52,6 +52,9 @@ namespace Booking.API
 				});
             CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
             CreateMap<RoomResponse, RoomResponseDTO>().ReverseMap();
+
+			CreateMap<ScheduleResponse, ScheduleResponseDTO>().ReverseMap();
+			CreateMap<TourResponse, TourResponseDTO>().ReverseMap();
         }
 	}
 }

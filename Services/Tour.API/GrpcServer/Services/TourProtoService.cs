@@ -53,10 +53,17 @@ namespace Tour.API.GrpcServer.Services
 
             schedule.AvailableSeats = schedule.AvailableSeats -  request.Count;
             
-            await scheduleRepository.UpdateAsync(schedule);
-            response.Result = true;
-            response.Message = "Cập nhật thành công";
-            
+            var result = await scheduleRepository.UpdateAsync(schedule);
+            if(result > 0)
+            {
+                response.Result = true;
+                response.Message = "Cập nhật thành công";
+            }
+            else
+            {
+                response.Result = false;
+                response.Message = "Cập nhật thất bại";
+            }
             return response;
         }
     }
