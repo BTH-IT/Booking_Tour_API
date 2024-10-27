@@ -1,6 +1,7 @@
 ﻿using Contracts.Domains.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Room.API.Entities;
 using Room.API.Persistence;
 using Room.API.Repositories.Interfaces;
@@ -77,6 +78,24 @@ namespace Room.API.Repositories
                 query = query.Where(r => r.Price <= searchRequest.MaxPrice);
             }
 
+            if (searchRequest.HotelRules != null && searchRequest.HotelRules.Any())
+            {
+                query = query.Where(r => r.Hotel.HotelRules != null &&
+                   EF.Functions.JsonContains(r.Hotel.HotelRules, JsonConvert.SerializeObject(searchRequest.HotelRules)));
+            }
+
+            if (searchRequest.HotelAmenities != null && searchRequest.HotelAmenities.Any())
+            {
+                query = query.Where(r => r.Hotel.HotelAmenities != null &&
+                    EF.Functions.JsonContains(r.Hotel.HotelAmenities, JsonConvert.SerializeObject(searchRequest.HotelAmenities)));
+            }
+
+            if (searchRequest.RoomAmenities != null && searchRequest.RoomAmenities.Any())
+            {
+                query = query.Where(r => r.RoomAmenities != null &&
+                    EF.Functions.JsonContains(r.RoomAmenities, JsonConvert.SerializeObject(searchRequest.RoomAmenities)));
+            }
+
             switch (searchRequest.SortBy?.ToLower())
             {
                 case "price":
@@ -100,6 +119,7 @@ namespace Room.API.Repositories
             }
 
             var totalItems = await query.CountAsync();
+
             var rooms = await query
                 .Skip((searchRequest.PageNumber - 1) * searchRequest.PageSize)
                 .Take(searchRequest.PageSize)

@@ -38,7 +38,10 @@
 		public double? MaxPrice { get; set; }
 		public DateTime? CheckIn { get; set; }
 		public DateTime? CheckOut { get; set; }
-		public string? SortBy { get; set; } = "Price"; 
+        public string[]? HotelRules { get; set; }
+        public string[]? HotelAmenities { get; set; }
+        public string[]? RoomAmenities { get; set; }
+        public string? SortBy { get; set; } = "Price"; 
 		public string? SortOrder { get; set; } = "asc"; 
 		public int PageNumber { get; set; } = 1;
 		public int PageSize { get; set; } = 10;
