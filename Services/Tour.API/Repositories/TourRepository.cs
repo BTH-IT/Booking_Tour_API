@@ -48,110 +48,96 @@ namespace Tour.API.Repositories
 			}
 		}
 
-		public async Task<TourSearchResult> SearchToursAsync(TourSearchRequestDTO searchRequest)
-		{
-			// Lấy danh sách tất cả các tour
-			var tourList = FindAll();
-			var query = tourList.Where(t => t.DeletedAt == null);
+        public async Task<TourSearchResult> SearchToursAsync(TourSearchRequestDTO searchRequest)
+        {
+            // Khởi tạo truy vấn với điều kiện chưa bị xóa
+            var query = FindByCondition(t => t.DeletedAt == null, false, t => t.Destination);
 
-			// Kiểm tra null và tính minPrice, maxPrice với toán tử null-coalescing (??)
-			var minPrice = (await query.MinAsync(e => (decimal?)e.Price)) ?? 0m;
-			var maxPrice = (await query.MaxAsync(e => (decimal?)e.Price)) ?? 0m;
+            // Tính toán giá min và max
+            var minPrice = (await query.MinAsync(e => (decimal?)e.Price)) ?? 0m;
+            var maxPrice = (await query.MaxAsync(e => (decimal?)e.Price)) ?? 0m;
 
-			// Lọc theo các điều kiện tìm kiếm
-			if (!string.IsNullOrWhiteSpace(searchRequest.Keyword))
-			{
-				query = query.Where(t => t.Name.Contains(searchRequest.Keyword) || t.Detail.Contains(searchRequest.Keyword));
-			}
-			if (searchRequest.MinPrice.HasValue && searchRequest.MaxPrice.HasValue)
-			{
-				query = query.Where(t => t.Price >= searchRequest.MinPrice.Value && t.Price <= searchRequest.MaxPrice.Value);
-			}
-			if (searchRequest.StartDate.HasValue && searchRequest.EndDate.HasValue)
-			{
-				query = query.Where(t => t.DateFrom >= searchRequest.StartDate && t.DateTo <= searchRequest.EndDate);
-			}
-			else if (searchRequest.StartDate.HasValue)
-			{
-				query = query.Where(t => t.DateFrom >= searchRequest.StartDate);
-			}
-			else if (searchRequest.EndDate.HasValue)
-			{
-				query = query.Where(t => t.DateTo <= searchRequest.EndDate);
-			}
-			if (searchRequest.Rating.HasValue)
-			{
-				query = query.Where(t => t.Rate <= searchRequest.Rating);
-			}
-			if (searchRequest.Activities?.Any() == true)
-			{
-				query = query.Where(t => t.ActivityList.Any(a => searchRequest.Activities.Contains(a)));
-			}
-			if (searchRequest.Destinations?.Any() == true)
-			{
-				query = query.Where(t => searchRequest.Destinations.Contains(t.DestinationId.ToString()));
-			}
+            // Lọc theo tên tour
+            if (!string.IsNullOrWhiteSpace(searchRequest.Keyword))
+            {
+                query = query.Where(t => t.Name.Contains(searchRequest.Keyword) || t.Detail.Contains(searchRequest.Keyword));
+            }
 
-			// Đếm tổng số kết quả trước khi sắp xếp
-			var totalItems = await query.CountAsync();
+            // Lọc theo địa điểm
+            if (searchRequest.Destinations?.Any() == true)
+            {
+                query = query.Where(t => searchRequest.Destinations.Contains(t.DestinationId.ToString()));
+            }
 
-			// Lấy danh sách TourEntity từ database
-			var queryResult = await query.ToListAsync();
+            // Lọc theo giá
+            if (searchRequest.MinPrice.HasValue)
+            {
+                query = query.Where(t => t.Price >= searchRequest.MinPrice);
+            }
 
-			// Sắp xếp kết quả trong bộ nhớ
-			if (!string.IsNullOrEmpty(searchRequest.SortBy))
-			{
-				switch (searchRequest.SortBy.ToLower())
-				{
-					case "releasedate":
-						queryResult = searchRequest.IsDescending
-							? queryResult.OrderByDescending(t => (DateTime.Now - t.DateFrom).TotalDays).ToList()
-							: queryResult.OrderBy(t => (DateTime.Now - t.DateFrom).TotalDays).ToList();
-						break;
+            if (searchRequest.MaxPrice.HasValue)
+            {
+                query = query.Where(t => t.Price <= searchRequest.MaxPrice);
+            }
 
-					case "tourdate":
-						queryResult = searchRequest.IsDescending
-							? queryResult.OrderByDescending(t => (t.DateTo - t.DateFrom).TotalDays).ToList()
-							: queryResult.OrderBy(t => (t.DateTo - t.DateFrom).TotalDays).ToList();
-						break;
+            // Lọc theo ngày
+            if (searchRequest.StartDate.HasValue)
+            {
+                query = query.Where(t => t.DateFrom >= searchRequest.StartDate);
+            }
 
-					case "name":
-						queryResult = searchRequest.IsDescending
-							? queryResult.OrderByDescending(t => t.Name).ToList()
-							: queryResult.OrderBy(t => t.Name).ToList();
-						break;
+            if (searchRequest.EndDate.HasValue)
+            {
+                query = query.Where(t => t.DateTo <= searchRequest.EndDate);
+            }
 
-					case "price":
-						queryResult = searchRequest.IsDescending
-							? queryResult.OrderByDescending(t => t.Price).ToList()
-							: queryResult.OrderBy(t => t.Price).ToList();
-						break;
+            // Lọc theo đánh giá
+            if (searchRequest.Rating.HasValue)
+            {
+                query = query.Where(t => t.Rate <= searchRequest.Rating);
+            }
 
-					case "rating":
-						queryResult = searchRequest.IsDescending
-							? queryResult.OrderByDescending(t => t.Rate).ToList()
-							: queryResult.OrderBy(t => t.Rate).ToList();
-						break;
+            // Thực hiện truy vấn để lấy danh sách tour và chuyển sang một danh sách
+            var tours = await query.ToListAsync();
+            var currentDate = DateTime.Now;
 
-					default:
-						queryResult = queryResult.OrderBy(t => t.Name).ToList();
-						break;
-				}
-			}
+            // Sắp xếp kết quả dựa trên yêu cầu
+            var sortedTours = searchRequest.SortBy?.ToLower() switch
+            {
+                "releasedate" => searchRequest.IsDescending ?
+                    tours.OrderByDescending(t => (currentDate - t.DateFrom).TotalDays).ToList() :
+                    tours.OrderBy(t => (currentDate - t.DateFrom).TotalDays).ToList(),
+                "tourdate" => searchRequest.IsDescending ?
+                    tours.OrderByDescending(t => (t.DateTo - t.DateFrom).TotalDays).ToList() :
+                    tours.OrderBy(t => (t.DateTo - t.DateFrom).TotalDays).ToList(),
+                "name" => searchRequest.IsDescending ?
+                    tours.OrderByDescending(t => t.Name).ToList() :
+                    tours.OrderBy(t => t.Name).ToList(),
+                "price" => searchRequest.IsDescending ?
+                    tours.OrderByDescending(t => t.Price).ToList() :
+                    tours.OrderBy(t => t.Price).ToList(),
+                "rating" => searchRequest.IsDescending ?
+                    tours.OrderByDescending(t => t.Rate).ToList() :
+                    tours.OrderBy(t => t.Rate).ToList(),
+                _ => tours.OrderBy(t => t.Name).ToList()
+            };
 
-			// Thực hiện phân trang
-			var paginatedTours = queryResult
-				.Skip((searchRequest.PageNumber - 1) * searchRequest.PageSize)
-				.Take(searchRequest.PageSize)
-				.ToList();
+            // Đếm tổng số kết quả
+            var totalItems = sortedTours.Count;
 
-			// Trả về kết quả tìm kiếm với danh sách tour, giá trị min/max của price
-			return new TourSearchResult
-			{
-				Tours = paginatedTours,
-				MinPrice = minPrice,
-				MaxPrice = maxPrice
-			};
-		}
-	}
+            // Phân trang
+            var paginatedTours = sortedTours
+                .Skip((searchRequest.PageNumber - 1) * searchRequest.PageSize)
+                .Take(searchRequest.PageSize)
+                .ToList();
+
+            // Trả về kết quả tìm kiếm với danh sách tour, giá trị min/max của price
+            return new TourSearchResult
+            {
+                Tours = paginatedTours,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+            };
+        }
+    }
 }
