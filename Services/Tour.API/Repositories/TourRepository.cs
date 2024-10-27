@@ -50,26 +50,21 @@ namespace Tour.API.Repositories
 
         public async Task<TourSearchResult> SearchToursAsync(TourSearchRequestDTO searchRequest)
         {
-            // Khởi tạo truy vấn với điều kiện chưa bị xóa
             var query = FindByCondition(t => t.DeletedAt == null, false, t => t.Destination);
 
-            // Tính toán giá min và max
             var minPrice = (await query.MinAsync(e => (decimal?)e.Price)) ?? 0m;
             var maxPrice = (await query.MaxAsync(e => (decimal?)e.Price)) ?? 0m;
 
-            // Lọc theo tên tour
             if (!string.IsNullOrWhiteSpace(searchRequest.Keyword))
             {
                 query = query.Where(t => t.Name.Contains(searchRequest.Keyword) || t.Detail.Contains(searchRequest.Keyword));
             }
 
-            // Lọc theo địa điểm
             if (searchRequest.Destinations?.Any() == true)
             {
                 query = query.Where(t => searchRequest.Destinations.Contains(t.DestinationId.ToString()));
             }
 
-            // Lọc theo giá
             if (searchRequest.MinPrice.HasValue)
             {
                 query = query.Where(t => t.Price >= searchRequest.MinPrice);
@@ -80,7 +75,6 @@ namespace Tour.API.Repositories
                 query = query.Where(t => t.Price <= searchRequest.MaxPrice);
             }
 
-            // Lọc theo ngày
             if (searchRequest.StartDate.HasValue)
             {
                 query = query.Where(t => t.DateFrom >= searchRequest.StartDate);
@@ -91,17 +85,15 @@ namespace Tour.API.Repositories
                 query = query.Where(t => t.DateTo <= searchRequest.EndDate);
             }
 
-            // Lọc theo đánh giá
             if (searchRequest.Rating.HasValue)
             {
                 query = query.Where(t => t.Rate <= searchRequest.Rating);
             }
 
-            // Thực hiện truy vấn để lấy danh sách tour và chuyển sang một danh sách
             var tours = await query.ToListAsync();
+
             var currentDate = DateTime.Now;
 
-            // Sắp xếp kết quả dựa trên yêu cầu
             var sortedTours = searchRequest.SortBy?.ToLower() switch
             {
                 "releasedate" => searchRequest.IsDescending ?
@@ -122,16 +114,13 @@ namespace Tour.API.Repositories
                 _ => tours.OrderBy(t => t.Name).ToList()
             };
 
-            // Đếm tổng số kết quả
             var totalItems = sortedTours.Count;
 
-            // Phân trang
             var paginatedTours = sortedTours
                 .Skip((searchRequest.PageNumber - 1) * searchRequest.PageSize)
                 .Take(searchRequest.PageSize)
                 .ToList();
 
-            // Trả về kết quả tìm kiếm với danh sách tour, giá trị min/max của price
             return new TourSearchResult
             {
                 Tours = paginatedTours,
