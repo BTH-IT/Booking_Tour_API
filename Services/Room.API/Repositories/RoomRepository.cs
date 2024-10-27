@@ -5,7 +5,7 @@ using Room.API.Entities;
 using Room.API.Persistence;
 using Room.API.Repositories.Interfaces;
 using Shared.DTOs;
-using Shared.Helper;
+using System.Linq;
 
 namespace Room.API.Repositories
 {
@@ -45,64 +45,67 @@ namespace Room.API.Repositories
 			}
 		}
 
-		public async Task<PagedResult<RoomEntity>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
-		{
-			var query = FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel);
+        public async Task<RoomSearchResult> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
+        {
+            var query = FindByCondition(r => r.DeletedAt == null, false, r => r.Hotel);
 
-			if (!string.IsNullOrEmpty(searchRequest.Name))
-			{
-				query = query.Where(r => r.Name.Contains(searchRequest.Name));
-			}
+            var minPrice = (await query.MinAsync(e => (decimal?)e.Price)) ?? 0m;
+            var maxPrice = (await query.MaxAsync(e => (decimal?)e.Price)) ?? 0m;
 
-			if (!string.IsNullOrEmpty(searchRequest.Location))
-			{
-				query = query.Where(r => r.Hotel.Location.Contains(searchRequest.Location));
-			}
+            if (!string.IsNullOrEmpty(searchRequest.Name))
+            {
+                query = query.Where(r => r.Name.Contains(searchRequest.Name));
+            }
 
-			if (searchRequest.MaxGuests.HasValue)
-			{
-				query = query.Where(r => r.MaxGuests >= searchRequest.MaxGuests);
-			}
+            if (searchRequest.LocationCode != null && searchRequest.LocationCode.Any())
+            {
+                query = query.Where(r => searchRequest.LocationCode.Contains(r.Hotel.LocationCode.ToString()));
+            }
 
-			if (searchRequest.MinPrice.HasValue)
-			{
-				query = query.Where(r => r.Price >= searchRequest.MinPrice);
-			}
+            if (searchRequest.MaxGuests.HasValue)
+            {
+                query = query.Where(r => r.MaxGuests >= searchRequest.MaxGuests);
+            }
 
-			if (searchRequest.MaxPrice.HasValue)
-			{
-				query = query.Where(r => r.Price <= searchRequest.MaxPrice);
-			}
+            if (searchRequest.MinPrice.HasValue)
+            {
+                query = query.Where(r => r.Price >= searchRequest.MinPrice);
+            }
 
-			switch (searchRequest.SortBy?.ToLower())
-			{
-				case "price":
-					query = searchRequest.SortOrder == "desc"
-						? query.OrderByDescending(r => r.Price)
-						: query.OrderBy(r => r.Price);
-					break;
-				case "maxguests":
-					query = searchRequest.SortOrder == "desc"
-						? query.OrderByDescending(r => r.MaxGuests)
-						: query.OrderBy(r => r.MaxGuests);
-					break;
-				case "name":
-					query = searchRequest.SortOrder == "desc"
-						? query.OrderByDescending(r => r.Name)
-						: query.OrderBy(r => r.Name);
-					break;
-				default:
-					query = query.OrderBy(r => r.Name);
-					break;
-			}
+            if (searchRequest.MaxPrice.HasValue)
+            {
+                query = query.Where(r => r.Price <= searchRequest.MaxPrice);
+            }
 
-			var totalItems = await query.CountAsync();
-			var rooms = await query
-				.Skip((searchRequest.PageNumber - 1) * searchRequest.PageSize)
-				.Take(searchRequest.PageSize)
-				.ToListAsync();
+            switch (searchRequest.SortBy?.ToLower())
+            {
+                case "price":
+                    query = searchRequest.SortOrder == "desc"
+                        ? query.OrderByDescending(r => r.Price)
+                        : query.OrderBy(r => r.Price);
+                    break;
+                case "maxguests":
+                    query = searchRequest.SortOrder == "desc"
+                        ? query.OrderByDescending(r => r.MaxGuests)
+                        : query.OrderBy(r => r.MaxGuests);
+                    break;
+                case "name":
+                    query = searchRequest.SortOrder == "desc"
+                        ? query.OrderByDescending(r => r.Name)
+                        : query.OrderBy(r => r.Name);
+                    break;
+                default:
+                    query = query.OrderBy(r => r.Name);
+                    break;
+            }
 
-			return new PagedResult<RoomEntity>(rooms, totalItems, searchRequest.PageNumber, searchRequest.PageSize);
-		}
-	}
+            var totalItems = await query.CountAsync();
+            var rooms = await query
+                .Skip((searchRequest.PageNumber - 1) * searchRequest.PageSize)
+                .Take(searchRequest.PageSize)
+                .ToListAsync();
+
+            return new RoomSearchResult(rooms, totalItems, minPrice, maxPrice, searchRequest.PageNumber, searchRequest.PageSize);
+        }
+    }
 }
