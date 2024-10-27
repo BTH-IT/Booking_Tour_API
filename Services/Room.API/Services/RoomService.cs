@@ -216,31 +216,33 @@ namespace Room.API.Services
 			}
 		}
 
-		public async Task<ApiResponse<PagedRoomResponseDTO>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
-		{
-			_logger.Information("Begin: RoomService - SearchRoomsAsync");
+        public async Task<ApiResponse<RoomSearchResponseDTO>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
+        {
+            _logger.Information("Begin: RoomService - SearchRoomsAsync");
 
-			try
-			{
-				var pagedResult = await _roomRepository.SearchRoomsAsync(searchRequest);
-				var data = _mapper.Map<List<RoomResponseDTO>>(pagedResult.Items);
+            try
+            {
+                var result = await _roomRepository.SearchRoomsAsync(searchRequest);
+                var data = _mapper.Map<List<RoomResponseDTO>>(result.Tours);
 
-				var pagedResponse = new PagedRoomResponseDTO
-				{
-					Rooms = data,
-					TotalItems = pagedResult.TotalItems,
-					PageNumber = pagedResult.PageNumber,
-					PageSize = pagedResult.PageSize
-				};
+                var response = new RoomSearchResponseDTO
+                {
+                    Rooms = data,
+                    TotalItems = result.TotalItems,
+                    MinPrice = result.MinPrice,
+                    MaxPrice = result.MaxPrice,
+                    PageNumber = result.PageNumber,
+                    PageSize = result.PageSize
+                };
 
-				_logger.Information("End: RoomService - SearchRoomsAsync");
-				return new ApiResponse<PagedRoomResponseDTO>(200, pagedResponse, "Rooms retrieved successfully");
-			}
-			catch (Exception ex)
-			{
-				_logger.Error($"Error in RoomService - SearchRoomsAsync: {ex.Message}", ex);
-				return new ApiResponse<PagedRoomResponseDTO>(500, null, $"An error occurred while searching for rooms: {ex.Message}");
-			}
-		}
-	}
+                _logger.Information("End: RoomService - SearchRoomsAsync");
+                return new ApiResponse<RoomSearchResponseDTO>(200, response, "Rooms retrieved successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error in RoomService - SearchRoomsAsync: {ex.Message}", ex);
+                return new ApiResponse<RoomSearchResponseDTO>(500, null, $"An error occurred while searching for rooms: {ex.Message}");
+            }
+        }
+    }
 }

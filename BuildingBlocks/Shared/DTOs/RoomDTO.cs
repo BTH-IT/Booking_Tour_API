@@ -32,7 +32,7 @@
 	public class RoomSearchRequestDTO
 	{
 		public string? Name { get; set; }
-		public string? Location { get; set; }
+		public string[]? LocationCode { get; set; }
 		public int? MaxGuests { get; set; }
 		public double? MinPrice { get; set; }
 		public double? MaxPrice { get; set; }
@@ -44,11 +44,13 @@
 		public int PageSize { get; set; } = 10;
 	}
 
-	public class PagedRoomResponseDTO
-	{
+	public class RoomSearchResponseDTO
+    {
 		public required List<RoomResponseDTO> Rooms { get; set; }
 		public required int TotalItems { get; set; }
-		public required int PageNumber { get; set; }
+        public decimal? MinPrice { get; set; }
+        public decimal? MaxPrice { get; set; }
+        public required int PageNumber { get; set; }
 		public required int PageSize { get; set; }
 	}
 }
