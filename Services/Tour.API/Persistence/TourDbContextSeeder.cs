@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shared.DTOs;
 using Tour.API.Entities;
 using Tour.API.Persistence;
 using ILogger = Serilog.ILogger;
@@ -196,46 +197,10 @@ namespace Room.API.Persistence
                     var haLongTour = _context.Tours.First(t => t.Name == "Tour Hạ Long");
                     var daNangTour = _context.Tours.First(t => t.Name == "Tour Đà Nẵng");
                     var phuQuocTour = _context.Tours.First(t => t.Name == "Tour Phú Quốc");
-
-                    _context.Schedules.AddRange(new List<Schedule>
-                {
-                    new Schedule
-                    {
-                        DateStart = DateTime.UtcNow.AddDays(7),
-                        DateEnd = DateTime.UtcNow.AddDays(10),
-                        AvailableSeats = 15,
-                        TourId = haNoiTour.Id,
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
-                    },
-                    new Schedule
-                    {
-                        DateStart = DateTime.UtcNow.AddDays(10),
-                        DateEnd = DateTime.UtcNow.AddDays(15),
-                        AvailableSeats = 20,
-                        TourId = haLongTour.Id,
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
-                    },
-                    new Schedule
-                    {
-                        DateStart = DateTime.UtcNow.AddDays(15),
-                        DateEnd = DateTime.UtcNow.AddDays(20),
-                        AvailableSeats = 25,
-                        TourId = daNangTour.Id,
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
-                    },
-                    new Schedule
-                    {
-                        DateStart = DateTime.UtcNow.AddDays(20),
-                        DateEnd = DateTime.UtcNow.AddDays(25),
-                        AvailableSeats = 30,
-                        TourId = phuQuocTour.Id,
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
-                    }
-                });
+                    SeedScheduleForTour(haNoiTour);
+                    SeedScheduleForTour(haLongTour);
+                    SeedScheduleForTour(daNangTour);
+                    SeedScheduleForTour(phuQuocTour);
                     await _context.SaveChangesAsync();
                     _logger.Information("Seeded Schedule.");
                 }
@@ -246,6 +211,32 @@ namespace Room.API.Persistence
             {
                 _logger.Error($"An error occurred while seeding the database: {ex.Message}");
             }
+        }
+        private void SeedScheduleForTour(TourEntity tour)
+        {
+            _logger.Information($"Seeding Schedule For {tour.Name}");
+            var dateFrom = tour.DateFrom;
+            var dateTo = tour.DateTo;
+            while (dateFrom <= dateTo)
+            {
+                var dateStart = dateFrom;
+                dateFrom = dateFrom.AddDays(tour.DayList?.Count() ?? 0);
+                var dateEnd = dateFrom;
+
+                if (dateEnd >= dateTo)
+                {
+                    break;
+                }
+                _context.Schedules.Add(new Schedule()
+                {
+                    DateStart = dateStart,
+                    DateEnd = dateEnd,
+                    AvailableSeats = tour.MaxGuests,
+                    TourId = tour.Id,
+                });
+                dateFrom = dateFrom.AddDays(2);
+            }
+            _logger.Information($"Seeded Schedule For {tour.Name}");
         }
     }
 }
