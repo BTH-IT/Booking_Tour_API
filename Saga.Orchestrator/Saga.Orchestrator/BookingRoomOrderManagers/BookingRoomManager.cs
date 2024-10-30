@@ -100,16 +100,28 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
             {
                 _logger.Information("Begin : CheckRoomIsAvailableAsync - BookingRoomManager");
                 _logger.Information($"State Machine : {_stateMachine.State} ");
+                
                 var roomIds = roomsInfo.Rooms.Select(c => c.Id);
                 var request = new CheckRoomsIsBookedRequest();
                 request.RoomIds.AddRange(roomIds);
                 request.CheckIn = Timestamp.FromDateTime(requestDto.CheckIn!.Value.ToUniversalTime()) ;
                 request.CheckOut = Timestamp.FromDateTime(requestDto.CheckOut!.Value.ToUniversalTime());
                 var response = await _bookingGrpcServiceClient.CheckRoomsIsBookedAsync(request);
+                
+                
                 if(response.Result == false)
                 {
                     throw new Exception(response.Message);
+                }
+                foreach(var item in requestDto.BookingRoomDetails)
+                {
+                    var roomInfo = roomsInfo.Rooms.FirstOrDefault(c=>c.Id == item.RoomId);
+                    if(roomInfo!.MaxGuests < (item.Adults + item.Children))
+                    {
+                        throw new Exception($"Phòng với id :{roomInfo.Id} cho phép tối đa {roomInfo.MaxGuests} người");
+                    }
                 }    
+
                 await _stateMachine.FireAsync(EBookingRoomAction.CreateBookingRoom);
             }
             catch (Exception ex) 
