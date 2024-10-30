@@ -11,7 +11,7 @@
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public float Rate { get; set; }
-        public string Video { get; set; }
+        public required string Video { get; set; }
         public float SalePercent { get; set; }
         public string[]? PriceExcludeList { get; set; }
         public string[]? PriceIncludeList { get; set; }
@@ -19,6 +19,7 @@
         public string[]? ImageList { get; set; }
         public string[]? DayList { get; set; }
         public int DestinationId { get; set; }
+        public required List<TourRoomRequestDTO> TourRooms { get; set; }
     }
     public class TourResponseDTO
     {
@@ -32,7 +33,7 @@
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public float Rate { get; set; }
-        public string Video { get; set; }
+        public required string Video { get; set; }
         public float SalePercent { get; set; }
         public string[]? PriceExcludeList { get; set; }
         public string[]? PriceIncludeList { get; set; }
@@ -40,13 +41,14 @@
         public string[]? ImageList { get; set; }
         public string[]? DayList { get; set; }
 		public int DestinationId { get; set; }
-		public DestinationRequestDTO? Destination { get; set; }
+		public DestinationResponseDTO? Destination { get; set; }
         public List<ReviewTourDTO>? ReviewList { get; set; }
-	}
+        public required List<TourRoomResponseDTO> TourRooms { get; set; }
+    }
 
 	public class TourSearchResponseDTO
     {
-        public List<TourResponseDTO> Tours { get; set; }
+        public required List<TourResponseDTO> Tours { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
     }

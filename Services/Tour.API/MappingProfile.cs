@@ -21,10 +21,13 @@ public class MappingProfile : Profile
 		CreateMap<TourRequestDTO, TourEntity>()
 			.ForMember(dest => dest.DayList, opt => opt.MapFrom(src => src.DayList))
 			.ReverseMap();
-				
 
-		// Ánh xạ giữa Schedule và ScheduleResponseDTO
-		CreateMap<Schedule, ScheduleResponseDTO>().ReverseMap();
+        // Ánh xạ giữa TourRoom và TourRoomsDTO
+        CreateMap<TourRoom, TourRoomResponseDTO>().ReverseMap();
+        CreateMap<TourRoomRequestDTO, TourRoom>();
+
+        // Ánh xạ giữa Schedule và ScheduleResponseDTO
+        CreateMap<Schedule, ScheduleResponseDTO>().ReverseMap();
 		CreateMap<ScheduleRequestDTO, Schedule>();
 
 		// Ánh xạ giữa Review (Entities.Review) và Review (DTOs.Review)

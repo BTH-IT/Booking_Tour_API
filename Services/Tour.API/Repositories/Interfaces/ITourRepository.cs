@@ -19,7 +19,7 @@ namespace Tour.API.Repositories.Interfaces
         Task<TourEntity> GetTourByNameAsync(string name);
 		Task<int> CreateTourAsync(TourEntity tour);
 		Task<int> UpdateTourAsync(TourEntity tour); 
-        Task SoftDeleteTourAsync(int id);
+        Task DeleteTourAsync(int id);
 		Task<TourSearchResult> SearchToursAsync(TourSearchRequestDTO searchRequest);
 	}
 }

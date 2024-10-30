@@ -12,8 +12,8 @@ using Tour.API.Persistence;
 namespace Tour.API.Migrations
 {
     [DbContext(typeof(TourDbContext))]
-    [Migration("20241018211916_InitDb")]
-    partial class InitDb
+    [Migration("20241030155147_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,6 +171,36 @@ namespace Tour.API.Migrations
                     b.ToTable("tours");
                 });
 
+            modelBuilder.Entity("Tour.API.Entities.TourRoom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TourId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TourId");
+
+                    b.ToTable("tour_rooms");
+                });
+
             modelBuilder.Entity("Tour.API.Entities.Schedule", b =>
                 {
                     b.HasOne("Tour.API.Entities.TourEntity", "Tour")
@@ -193,6 +223,17 @@ namespace Tour.API.Migrations
                     b.Navigation("Destination");
                 });
 
+            modelBuilder.Entity("Tour.API.Entities.TourRoom", b =>
+                {
+                    b.HasOne("Tour.API.Entities.TourEntity", "Tour")
+                        .WithMany("TourRooms")
+                        .HasForeignKey("TourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tour");
+                });
+
             modelBuilder.Entity("Tour.API.Entities.DestinationEntity", b =>
                 {
                     b.Navigation("Tours");
@@ -201,6 +242,8 @@ namespace Tour.API.Migrations
             modelBuilder.Entity("Tour.API.Entities.TourEntity", b =>
                 {
                     b.Navigation("Schedules");
+
+                    b.Navigation("TourRooms");
                 });
 #pragma warning restore 612, 618
         }
