@@ -55,6 +55,7 @@ namespace Booking.API.Services
 				return new ApiResponse<List<BookingRoomResponseDTO>>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
+
 		public async Task<ApiResponse<BookingRoomResponseDTO>> GetByIdAsync(int id)
 		{
 			_logger.Information($"Begin: BookingRoomService - GetByIdAsync: {id}");
@@ -82,6 +83,7 @@ namespace Booking.API.Services
 				return new ApiResponse<BookingRoomResponseDTO>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
+
         public async Task<ApiResponse<List<BookingRoomResponseDTO>>> GetCurrentUserAsync(int userId)
         {
             _logger.Information($"Begin: BookingRoomService - GetCurrentUserAsync: {userId}");
@@ -104,6 +106,7 @@ namespace Booking.API.Services
                 return new ApiResponse<List<BookingRoomResponseDTO>>(500, null, $"Có lỗi xảy ra: {ex.Message}");
             }
         }
+
 		private async Task GetUserFromGrpcAsync(BookingRoomResponseDTO dto)
 		{
 			_logger.Information($"START - BookingRoomService - GetUserFromGrpcAsync");
@@ -124,6 +127,7 @@ namespace Booking.API.Services
 				_logger.Error("ERROR - BookingRoomService - GetUserFromGrpcAsync");
 			}
 		}
+
 		private async Task GetRoomsFromGrpcAsync(BookingRoomResponseDTO dto)
 		{
             _logger.Information($"START - BookingRoomService - GetRoomsFromGrpcAsync");
@@ -157,7 +161,7 @@ namespace Booking.API.Services
 
         public async Task<ApiResponse<RoomBookingDataDTO>> GetRoomCheckInCheckOutDataAsync(int roomId)
         {
-			var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>true,false,c=>c.DetailBookingRooms!).ToListAsync();
+			var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>true,false,c=>c.DetailBookingRooms!.Where(tr => tr.DeletedAt == null)).ToListAsync();
 			var roomBookingData = new RoomBookingDataDTO()
 			{
 				Data = new List<DetailRoomBookingDateDTO>()
