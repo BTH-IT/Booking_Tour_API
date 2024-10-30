@@ -40,8 +40,9 @@ namespace Tour.API.Entities
 		public int DestinationId { get; set; } 
         [ForeignKey(nameof(DestinationId))]
         public virtual DestinationEntity Destination { get; set; }
-		public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>(); 
-		[Column(TypeName = "JSON")]
+		public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+        public virtual ICollection<TourRoom> TourRooms { get; set; } = new List<TourRoom>();
+        [Column(TypeName = "JSON")]
 		public string? Activities
 		{
 			get => ActivityList == null ? null : JsonConvert.SerializeObject(ActivityList);

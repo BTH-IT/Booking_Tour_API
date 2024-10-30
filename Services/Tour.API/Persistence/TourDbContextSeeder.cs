@@ -15,6 +15,7 @@ namespace Room.API.Persistence
             this._context = context;
             this._logger = logger;
         }
+
         public async Task InitialiseAsync()
         {
             try
@@ -31,6 +32,7 @@ namespace Room.API.Persistence
                 _logger.Error($"Failed to Initialise database :{ex.Message}");
             }
         }
+
         public async Task SeedAsync()
         {
             try
@@ -206,12 +208,54 @@ namespace Room.API.Persistence
                 }
 
                 _logger.Information("Database seeding completed.");
+
+                // Seed TourRoom
+                if (!_context.TourRooms.Any())
+                {
+                    var haNoiTour = _context.Tours.First(t => t.Name == "Tour Hà Nội");
+                    var haLongTour = _context.Tours.First(t => t.Name == "Tour Hạ Long");
+                    var daNangTour = _context.Tours.First(t => t.Name == "Tour Đà Nẵng");
+                    var phuQuocTour = _context.Tours.First(t => t.Name == "Tour Phú Quốc");
+
+
+                    // Thêm TourRoom cho từng tour
+                    _context.TourRooms.AddRange(new List<TourRoom>
+                    {
+                        new TourRoom
+                        {
+                            TourId = haNoiTour.Id,
+                            RoomId = 1,
+                            CreatedAt = DateTime.UtcNow
+                        },
+                        new TourRoom
+                        {
+                            TourId = haLongTour.Id,
+                            RoomId = 2, 
+                            CreatedAt = DateTime.UtcNow
+                        },
+                        new TourRoom
+                        {
+                            TourId = daNangTour.Id,
+                            RoomId = 3,
+                            CreatedAt = DateTime.UtcNow
+                        },
+                        new TourRoom
+                        {
+                            TourId = phuQuocTour.Id,
+                            RoomId = 4,
+                            CreatedAt = DateTime.UtcNow
+                        }
+                    });
+                    await _context.SaveChangesAsync();
+                    _logger.Information("Seeded TourRoom.");
+                }
             }
             catch (Exception ex)
             {
                 _logger.Error($"An error occurred while seeding the database: {ex.Message}");
             }
         }
+
         private void SeedScheduleForTour(TourEntity tour)
         {
             _logger.Information($"Seeding Schedule For {tour.Name}");
