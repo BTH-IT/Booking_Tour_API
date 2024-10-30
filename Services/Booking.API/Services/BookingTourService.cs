@@ -35,6 +35,7 @@ namespace Booking.API.Services
 			_identityGrpcServiceClient = identityGrpcServiceClient;	
 			_tourGrpcServiceClient = tourGrpcServiceClient;
 		}
+
 		public async Task<ApiResponse<List<BookingTourResponseDTO>>> GetAllAsync()
 		{
 			_logger.Information("Begin: BookingTourService - GetAllAsync");
@@ -59,6 +60,7 @@ namespace Booking.API.Services
 				return new ApiResponse<List<BookingTourResponseDTO>>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
+
 		public async Task<ApiResponse<BookingTourResponseDTO>> GetByIdAsync(int id)
 		{
 			_logger.Information($"Begin: BookingTourService - GetByIdAsync: {id}");
@@ -89,6 +91,7 @@ namespace Booking.API.Services
 				return new ApiResponse<BookingTourResponseDTO>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
+
         public async Task<ApiResponse<List<BookingTourResponseDTO>>> GetCurrentUserAsync(int userId)
         {
             _logger.Information($"START - BookingTourService - GetUserFromGrpcAsync");
@@ -112,6 +115,7 @@ namespace Booking.API.Services
                 return new ApiResponse<List<BookingTourResponseDTO>>(500, null, $"Có lỗi xảy ra: {ex.Message}");
             }
         }
+
         private async Task GetUserFromGrpcAsync(BookingTourResponseDTO dto)
         {
 			_logger.Information($"START - BookingTourService - GetUserFromGrpcAsync");
@@ -132,6 +136,7 @@ namespace Booking.API.Services
 				_logger.Error("ERROR - BookingTourService - GetUserFromGrpcAsync");
 			}
 		}
+
 		private async Task GetScheduleFromGrpcAsync(BookingTourResponseDTO item)
 		{
             _logger.Information($"START - BookingTourService - GetScheduleFromGrpcAsync");
@@ -152,7 +157,5 @@ namespace Booking.API.Services
                 _logger.Error("ERROR - BookingRoomService - GetScheduleFromGrpcAsync");
             }
         }
-
-        
     }
 }
