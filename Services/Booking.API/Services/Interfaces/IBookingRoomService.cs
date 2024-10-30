@@ -8,5 +8,7 @@ namespace Booking.API.Services.Interfaces
 		Task<ApiResponse<List<BookingRoomResponseDTO>>> GetAllAsync();
 		Task<ApiResponse<BookingRoomResponseDTO>> GetByIdAsync(int id);
 		Task<ApiResponse<List<BookingRoomResponseDTO>>> GetCurrentUserAsync(int userId);
-	}
+		Task<ApiResponse<RoomBookingDataDTO>> GetRoomCheckInCheckOutDataAsync(int roomId);
+
+    }
 }

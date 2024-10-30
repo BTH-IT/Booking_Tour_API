@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Booking.API.Entities;
 using Booking.API.GrpcClient.Protos;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Shared.DTOs;
 using Shared.Helper;
 using ILogger = Serilog.ILogger;
@@ -155,6 +153,28 @@ namespace Booking.API.Services
 
                 _logger.Error("ERROR - BookingRoomService - GetRoomsFromGrpcAsync");
             }
+        }
+
+        public async Task<ApiResponse<RoomBookingDataDTO>> GetRoomCheckInCheckOutDataAsync(int roomId)
+        {
+			var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>true,false,c=>c.DetailBookingRooms!).ToListAsync();
+			var roomBookingData = new RoomBookingDataDTO()
+			{
+				Data = new List<DetailRoomBookingDateDTO>()
+			};
+			foreach(var item in  bookingRooms)
+			{
+				if(item.DetailBookingRooms != null &&  item.DetailBookingRooms.Any(e=>e.RoomId.Equals(roomId)))
+				{
+					roomBookingData.Data.Add(new DetailRoomBookingDateDTO()
+					{
+						CheckIn = item.CheckIn!.Value,
+						CheckOut = item.CheckOut!.Value
+					});
+				}
+			}
+			var response = new ApiResponse<RoomBookingDataDTO>(200,roomBookingData,"Lấy dữ liệu thành công");
+			return response;
         }
     }
 }
