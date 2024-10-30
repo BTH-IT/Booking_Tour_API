@@ -22,4 +22,13 @@
 		public double PriceTotal { get; set; }
 		public List<DetailBookingRoomRequestDTO> DetailBookingRooms { get; set; }
 	}
+	public class RoomBookingDataDTO
+	{
+		public List<DetailRoomBookingDateDTO> Data { get; set; }
+	}
+	public class DetailRoomBookingDateDTO
+	{
+		public DateTime CheckIn { get; set; }
+		public DateTime CheckOut { get; set; }
+	} 
 }

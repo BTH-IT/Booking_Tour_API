@@ -11,7 +11,6 @@ namespace Booking.API.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	[Authorize]
 	public class BookingRoomsController : ControllerBase
 	{
 		private readonly IBookingRoomService _bookingRoomService;
@@ -39,6 +38,12 @@ namespace Booking.API.Controllers
 		{
 			var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 			var response = await _bookingRoomService.GetCurrentUserAsync(int.Parse(userId));
+			return StatusCode(response.StatusCode, response);
+		}
+		[HttpGet("{roomId:int}/data")]
+		public async Task<IActionResult> GetRoomCheckInCheckOutDataAsync(int roomId)
+		{
+			var response = await _bookingRoomService.GetRoomCheckInCheckOutDataAsync(roomId);
 			return StatusCode(response.StatusCode, response);
 		}
 	}
