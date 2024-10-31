@@ -4,7 +4,10 @@ using Shared.Helper;
 using Tour.API.Entities;
 using Tour.API.Repositories.Interfaces;
 using Tour.API.Services.Interfaces;
+using Tour.API.GrpcClient.Protos;
 using ILogger = Serilog.ILogger;
+using Grpc.Core;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tour.API.Services
 {
@@ -15,14 +18,51 @@ namespace Tour.API.Services
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IScheduleService _scheduleService;
+        private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
 
-        public TourService(ITourRepository tourRepository, ITourRoomRepository tourRoomRepository, IScheduleService scheduleService, IMapper mapper, ILogger logger)
+        public TourService(ITourRepository tourRepository, 
+            ITourRoomRepository tourRoomRepository,
+            IScheduleService scheduleService, 
+            RoomGrpcService.RoomGrpcServiceClient roomGrpcServiceClient,
+            IMapper mapper,
+            ILogger logger)
         {
             _tourRepository = tourRepository;
             _tourRoomRepository = tourRoomRepository;
             _scheduleService = scheduleService;
+            _roomGrpcServiceClient = roomGrpcServiceClient;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        private async Task GetRoomsFromGrpcAsync(TourResponseDTO dto)
+        {
+            _logger.Information($"START - BookingRoomService - GetRoomsFromGrpcAsync");
+            try
+            {
+                var roomIds = dto.TourRooms.Select(c => c.RoomId);
+
+                var request = new GetRoomsByIdsRequest();
+
+                request.Ids.AddRange(roomIds);
+
+                var roomInfos = await _roomGrpcServiceClient.GetRoomsByIdsAsync(request);
+
+                var roomsDto = _mapper.Map<List<RoomResponseDTO>>(roomInfos.Rooms);
+
+                var roomDictionary = roomsDto.ToDictionary(c => c.Id);
+
+                foreach (var item in dto.TourRooms)
+                {
+                    item.Room = roomDictionary[item.RoomId];
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+
+                _logger.Error("ERROR - BookingRoomService - GetRoomsFromGrpcAsync");
+            }
         }
 
         public async Task<ApiResponse<List<TourResponseDTO>>> GetAllAsync()
@@ -31,8 +71,14 @@ namespace Tour.API.Services
             try
             {
                 var tours = await _tourRepository.GetToursAsync();
-                var data = _mapper.Map<List<TourResponseDTO>>(tours);
-                return new ApiResponse<List<TourResponseDTO>>(200, data, "Successfully retrieved the list of tours");
+                var tourDtos = _mapper.Map<List<TourResponseDTO>>(tours);
+
+                    foreach (var item in tourDtos)
+                    {
+					    await GetRoomsFromGrpcAsync(item);
+                    }
+
+                return new ApiResponse<List<TourResponseDTO>>(200, tourDtos, "Successfully retrieved the list of tours");
             }
             catch (Exception ex)
             {
@@ -54,6 +100,9 @@ namespace Tour.API.Services
                 if (tour == null) return NotFound<TourResponseDTO>(id);
 
                 var data = _mapper.Map<TourResponseDTO>(tour);
+
+                await GetRoomsFromGrpcAsync(data);
+
                 return new ApiResponse<TourResponseDTO>(200, data, "Successfully retrieved tour data");
             }
             catch (Exception ex)

@@ -1,5 +1,4 @@
-﻿
-using Common.Logging;
+﻿using Common.Logging;
 using Serilog;
 
 namespace Tour.API.Extensions

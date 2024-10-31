@@ -13,10 +13,19 @@ using Tour.API.Services;
 using FluentValidation;
 using Shared.DTOs;
 using Tour.API.Validators;
+using Infrastructure.Polly.GprcPolly;
+using Tour.API.GrpcClient.Protos;
 namespace Tour.API.Extensions
 {
     public static class ServiceExtensions
     {
+        public static IServiceCollection AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
+        {
+            var grpcSettings = configuration.GetSection(nameof(GrpcSettings));
+            services.AddSingleton(grpcSettings);
+            return services;
+        }
+
         public static IServiceCollection ConfigureIdentityDbContext(this IServiceCollection services)
         {
             var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
@@ -58,6 +67,13 @@ namespace Tour.API.Extensions
             );
             return services;
         }
-
+        public static IServiceCollection AddGrpcClients(this IServiceCollection services)
+        {
+            var grpcOptions = services.GetOptions<GrpcSettings>(nameof(GrpcSettings));
+            services.AddGrpcClient<RoomGrpcService.RoomGrpcServiceClient>(options => {
+                options.Address = new Uri(grpcOptions.RoomAddress ?? throw new Exception("Configration Not found"));
+            });
+            return services;
+        }
     }
 }
