@@ -1,0 +1,36 @@
+﻿syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+option csharp_namespace = "Tour.API.GrpcClient.Protos";
+
+service RoomGrpcService{
+	rpc GetRoomsByIds (GetRoomsByIdsRequest) returns (GetRoomsByIdsResponse);
+	rpc UpdateRoomsAvailability (UpdateRoomsAvailabilityRequest) returns (UpdateRoomsAvailabilityResponse);
+}
+
+message GetRoomsByIdsRequest{
+	repeated int32 ids = 1;
+}
+message RoomResponse{
+	int32 Id = 1;
+	string Name=2;
+	double Price=3;
+	bool IsAvailable=4;
+	int32 MaxGuests = 5;
+	HotelResponse Hotel = 6;
+}
+message HotelResponse{
+	int32 Id = 1;
+	string Name = 2;
+	string Location = 3;
+	string Description = 4;
+}
+message GetRoomsByIdsResponse{
+	repeated RoomResponse Rooms=1;
+}
+message UpdateRoomsAvailabilityRequest{
+	repeated int32 Ids = 1;
+	bool isAvailable = 2;
+}
+message UpdateRoomsAvailabilityResponse{
+	bool Result = 1;
+}

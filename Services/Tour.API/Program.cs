@@ -21,6 +21,7 @@ try
 
     // Add services to the container.
     builder.Services.AddControllers();
+    builder.Services.AddConfigurationSettings(builder.Configuration);
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
@@ -50,30 +51,6 @@ try
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
 
-    // Add Grpc
-    builder.Services.AddGrpc(options =>
-    {
-        options.Interceptors.Add<GrpcExceptionInterceptor>(); 
-    });
-    builder.WebHost.ConfigureKestrel(options =>
-    {
-        if (builder.Environment.IsDevelopment())
-        {
-            options.ListenAnyIP(5004);
-            options.ListenAnyIP(5104, listenOptions =>
-            {
-                listenOptions.Protocols = HttpProtocols.Http2;
-            });
-        }
-        else if (builder.Environment.IsEnvironment("docker"))
-        {
-            options.ListenAnyIP(80);
-            options.ListenAnyIP(81, listenOptions =>
-            {
-                listenOptions.Protocols = HttpProtocols.Http2;
-            });
-        }
-    });
     // Add Authentication
     builder.Services.AddAuthentication(cfg =>
     {
@@ -124,6 +101,32 @@ try
             });
         }
     );
+    //Add Grpc
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5004);
+            options.ListenAnyIP(5104, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+        else if (builder.Environment.IsEnvironment("docker"))
+        {
+            options.ListenAnyIP(80);
+            options.ListenAnyIP(81, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+    });
+    builder.Services.AddGrpc(options =>
+    {
+        options.Interceptors.Add<GrpcExceptionInterceptor>();
+    });
+    //Add GrpcClient
+    builder.Services.AddGrpcClients();
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
