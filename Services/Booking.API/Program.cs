@@ -8,15 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Shared.DTOs;
 using System.Text;
-using EventBus.Masstransit;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Booking.API.GrpcServer.Protos;
 using Booking.API.GrpcServer.Services;
 using Contracts.Exceptions;
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
 
 try

@@ -285,7 +285,6 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                 await _stateMachine.FireAsync(EBookingTourAction.Rollback);
             }
         }
-
         private async Task RollBackAsync()
         {
             try
