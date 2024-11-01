@@ -16,6 +16,18 @@
         "PUT",
         "DELETE"
       ],
+      "RateLimitOptions": {
+        "ClientWhiteList": [],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "PeriodTimespan": 10,
+        "Limit": 10
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 10000
+      },
       "SwaggerKey": "identity.api"
     },
     {
@@ -86,6 +98,18 @@
         "POST",
         "DELETE"
       ],
+      "RateLimitOptions": {
+        "ClientWhiteList": [],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "PeriodTimespan": 10,
+        "Limit": 10
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 10000
+      },
       "SwaggerKey": "booking.api"
     },
     {
@@ -103,6 +127,18 @@
         "POST",
         "DELETE"
       ],
+      "RateLimitOptions": {
+        "ClientWhiteList": [],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "PeriodTimespan": 10,
+        "Limit": 10
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 10000
+      },
       "SwaggerKey": "saga.api"
     }
   ],
