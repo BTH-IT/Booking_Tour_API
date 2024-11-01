@@ -3,6 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Shared.DTOs;
 using Tour.API.Entities;
+using Tour.API.GrpcClient.Protos;
 using Tour.API.GrpcServer.Protos;
 
 public class MappingProfile : Profile
@@ -49,6 +50,10 @@ public class MappingProfile : Profile
 			.ForMember(dest =>dest.Tour,opt => opt.MapFrom(src=>src.Tour))
 			.ForMember(dest => dest.DateStart,opt=>opt.MapFrom(src=> Timestamp.FromDateTime(src.DateStart.Value.ToUniversalTime())))
 			.ForMember(dest => dest.DateEnd,opt=>opt.MapFrom(src=> Timestamp.FromDateTime(src.DateEnd.Value.ToUniversalTime())));
-        ;
+        CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
+        CreateMap<RoomResponse, RoomResponseDTO>().ReverseMap();
+        CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
+        CreateMap<ReviewResponse, ReviewRoomDTO>().ReverseMap();
+
     }
 }
