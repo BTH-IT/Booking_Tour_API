@@ -79,7 +79,7 @@ namespace Room.API.Persistence
 									ImagesList = new string[5],
 									Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 									Detail = $"Chi tiết về phòng {j} tại {hotel.Name}",
-									Price = 100 + (j * 20), 
+									Price = 100 + (j * 20),
 									IsAvailable = true,
 									MaxGuests = 2,
 									CreatedAt = DateTime.UtcNow,
@@ -117,13 +117,15 @@ namespace Room.API.Persistence
 								});
 							}
 
-							hotel.HotelRulesList = new[]  { "Không hút thuốc trong phòng.", "Giữ yên lặng từ 22h đến 6h sáng."};
-							hotel.HotelAmenitiesList = new[]  { "Bể bơi ngoài trời", "Phòng Gym" , "Spa"};
+							hotel.HotelRulesList = new[] { "Không hút thuốc trong phòng.", "Giữ yên lặng từ 22h đến 6h sáng." };
+							hotel.HotelAmenitiesList = new[] { "Bể bơi ngoài trời", "Phòng Gym", "Spa" };
 
 							hotels.Add(hotel);
 						}
 						count++;
 					}
+
+
 
 					await _context.Hotels.AddRangeAsync(hotels);
 					await _context.SaveChangesAsync();

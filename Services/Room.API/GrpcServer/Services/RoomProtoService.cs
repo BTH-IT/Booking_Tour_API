@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Grpc.Core;
+using Room.API.Entities;
 using Room.API.GrpcServer.Protos;
 using Room.API.Repositories.Interfaces;
 using ILogger = Serilog.ILogger;
