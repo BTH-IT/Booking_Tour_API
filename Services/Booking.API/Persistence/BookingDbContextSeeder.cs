@@ -101,16 +101,12 @@ namespace Booking.API.Persistence
 					UserId = 1,
 					ScheduleId = 1,
 					Seats = 4,
-					Umbrella = true,
-					IsCleaningFee = false,
 					IsTip = true,
 					IsEntranceTicket = true,
 					Status = true,
 					PriceTotal = 500.00,
-					Coupon = 50.00,
 					DateStart = DateTime.ParseExact("2024-10-27 04:22:09.812176", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),	
 					DateEnd = DateTime.ParseExact("2024-10-30 04:22:09.812238", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
-					PaymentMethod = 1,
 					CreatedAt = DateTime.Now,
 					Travellers = JsonConvert.SerializeObject(new[]
 					{
@@ -124,16 +120,12 @@ namespace Booking.API.Persistence
 					UserId = 2,
 					ScheduleId = 2,
 					Seats = 2,
-					Umbrella = false,
-					IsCleaningFee = true,
 					IsTip = false,
 					IsEntranceTicket = false,
 					Status = true,
                     DateStart = DateTime.ParseExact("2024-10-30 04:22:09.812598", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
                     DateEnd = DateTime.ParseExact("2024-11-04 04:22:09.812599", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
                     PriceTotal = 300.00,
-					Coupon = 20.00,
-					PaymentMethod = 2,
 					CreatedAt = DateTime.Now,
 					Travellers = JsonConvert.SerializeObject(new[]
 					{
@@ -143,41 +135,6 @@ namespace Booking.API.Persistence
 				};
 
 				await _context.BookingTours.AddRangeAsync(bookingTour1, bookingTour2);
-			}
-
-			if (!_context.TourBookingRooms.Any())
-			{
-				var tourBookingRoom1 = new TourBookingRoom
-				{
-					BookingTourId = 1,
-					RoomId = 1,
-					Price = 75.00,
-					Adults = 2,
-					Children = 0,
-					CreatedAt = DateTime.Now
-				};
-
-				var tourBookingRoom2 = new TourBookingRoom
-				{
-					BookingTourId = 1,
-					RoomId = 2,
-					Price = 75.00,
-					Adults = 0,
-					Children = 2,
-					CreatedAt = DateTime.Now
-				};
-
-				var tourBookingRoom3 = new TourBookingRoom
-				{
-					BookingTourId = 2,
-					RoomId = 3,
-					Price = 100.00,
-					Adults = 2,
-					Children = 1,
-					CreatedAt = DateTime.Now
-				};
-
-				await _context.TourBookingRooms.AddRangeAsync(tourBookingRoom1, tourBookingRoom2, tourBookingRoom3);
 			}
 
 			await _context.SaveChangesAsync();

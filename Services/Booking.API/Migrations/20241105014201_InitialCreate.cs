@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Booking.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDb : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,14 +45,13 @@ namespace Booking.API.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
                     Seats = table.Column<int>(type: "int", nullable: false),
-                    Umbrella = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    IsCleaningFee = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IsLunch = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsTip = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsEntranceTicket = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     PriceTotal = table.Column<double>(type: "double", nullable: false),
-                    Coupon = table.Column<double>(type: "double", nullable: false),
-                    PaymentMethod = table.Column<int>(type: "int", nullable: false),
+                    DateStart = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DateEnd = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -92,58 +91,23 @@ namespace Booking.API.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "TourBookingRooms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    BookingTourId = table.Column<int>(type: "int", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<double>(type: "double", nullable: false),
-                    Adults = table.Column<int>(type: "int", nullable: false),
-                    Children = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TourBookingRooms", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TourBookingRooms_BookingTours_BookingTourId",
-                        column: x => x.BookingTourId,
-                        principalTable: "BookingTours",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
             migrationBuilder.CreateIndex(
                 name: "IX_DetailBookingRooms_BookingId",
                 table: "DetailBookingRooms",
                 column: "BookingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TourBookingRooms_BookingTourId",
-                table: "TourBookingRooms",
-                column: "BookingTourId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BookingTours");
+
+            migrationBuilder.DropTable(
                 name: "DetailBookingRooms");
 
             migrationBuilder.DropTable(
-                name: "TourBookingRooms");
-
-            migrationBuilder.DropTable(
                 name: "BookingRooms");
-
-            migrationBuilder.DropTable(
-                name: "BookingTours");
         }
     }
 }
