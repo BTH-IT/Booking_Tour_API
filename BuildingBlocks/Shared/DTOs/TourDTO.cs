@@ -19,7 +19,6 @@
         public string[]? ImageList { get; set; }
         public string[]? DayList { get; set; }
         public int DestinationId { get; set; }
-        public required List<TourRoomRequestDTO> TourRooms { get; set; }
     }
     public class TourResponseDTO
     {
@@ -43,7 +42,6 @@
 		public int DestinationId { get; set; }
 		public DestinationResponseDTO? Destination { get; set; }
         public List<ReviewTourDTO>? ReviewList { get; set; }
-        public required List<TourRoomResponseDTO> TourRooms { get; set; }
     }
 
 	public class TourSearchResponseDTO

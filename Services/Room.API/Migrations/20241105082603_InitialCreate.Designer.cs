@@ -12,8 +12,8 @@ using Room.API.Persistence;
 namespace Room.API.Migrations
 {
     [DbContext(typeof(RoomDbContext))]
-    [Migration("20241018201006_InitDb")]
-    partial class InitDb
+    [Migration("20241105082603_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

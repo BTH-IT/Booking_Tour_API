@@ -57,14 +57,6 @@ message CreateBookingTourRequest{
     google.protobuf.Timestamp DateEnd = 10;
 	repeated TravellerDetail TravellerDetail = 11;
 }
-
-message TourBookingRoomDetail{
-	int32 RoomId = 1;
-	int32 Adult = 2;
-	int32 Children = 3;
-	double Price = 4;
-}
-
 message TravellerDetail {
 	string Gender = 1;
 	string FullName = 2;

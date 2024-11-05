@@ -15,16 +15,15 @@ namespace Tour.API.Repositories
 		}
 
         public async Task<IEnumerable<TourEntity>> GetToursAsync() => 
-            await FindByCondition(r => r.DeletedAt == null, false, r => r.Destination, r => r.TourRooms
-                .Where(tr => tr.DeletedAt == null)) 
+            await FindByCondition(r => r.DeletedAt == null, false, r => r.Destination) 
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
 
         public Task<TourEntity?> GetTourByIdAsync(int id) =>
-			 FindByCondition(t => t.Id == id, false, r => r.Destination, r => r.TourRooms.Where(tr => tr.DeletedAt == null)).SingleOrDefaultAsync();
+			 FindByCondition(t => t.Id == id, false, r => r.Destination).SingleOrDefaultAsync();
 
 		public Task<TourEntity?> GetTourByNameAsync(string name) =>
-			 FindByCondition(t => t.Name.Equals(name), false, r => r.Destination, r => r.TourRooms.Where(tr => tr.DeletedAt == null)).SingleOrDefaultAsync();
+			 FindByCondition(t => t.Name.Equals(name), false, r => r.Destination).SingleOrDefaultAsync();
 
 		public Task<int> CreateTourAsync(TourEntity tour) => CreateAsync(tour);
 
@@ -42,7 +41,7 @@ namespace Tour.API.Repositories
 
         public async Task<TourSearchResult> SearchToursAsync(TourSearchRequestDTO searchRequest)
         {
-            var query = FindByCondition(t => t.DeletedAt == null, false, t => t.Destination, t => t.TourRooms);
+            var query = FindByCondition(t => t.DeletedAt == null, false, t => t.Destination);
 
             var minPrice = (await query.MinAsync(e => (decimal?)e.Price)) ?? 0m;
             var maxPrice = (await query.MaxAsync(e => (decimal?)e.Price)) ?? 0m;
