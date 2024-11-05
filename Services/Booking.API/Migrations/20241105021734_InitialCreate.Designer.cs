@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.API.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20241105014201_InitialCreate")]
+    [Migration("20241105021734_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -100,8 +100,9 @@ namespace Booking.API.Migrations
                     b.Property<int>("Seats")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Travellers")
                         .IsRequired()
