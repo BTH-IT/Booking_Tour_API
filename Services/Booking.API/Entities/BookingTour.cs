@@ -17,8 +17,6 @@ namespace Booking.API.Entities
         public bool IsEntranceTicket { get; set; }
         public string Status { get; set; }    
         public double PriceTotal { get; set; }  
-		public DateTime? DateStart { get; set; }
-        public DateTime? DateEnd { get; set; }
         [NotMapped]
         public List<Traveller>  TravellerList { get; set; }
         public DateTime CreatedAt { get ; set ; }

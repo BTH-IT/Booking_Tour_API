@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.API.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20241105021734_InitialCreate")]
+    [Migration("20241105092006_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -71,12 +71,6 @@ namespace Booking.API.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateEnd")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateStart")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")
