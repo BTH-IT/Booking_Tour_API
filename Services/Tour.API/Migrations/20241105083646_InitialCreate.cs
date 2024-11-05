@@ -111,38 +111,9 @@ namespace Tour.API.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "tour_rooms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TourId = table.Column<int>(type: "int", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tour_rooms", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tour_rooms_tours_TourId",
-                        column: x => x.TourId,
-                        principalTable: "tours",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
             migrationBuilder.CreateIndex(
                 name: "IX_schedules_TourId",
                 table: "schedules",
-                column: "TourId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tour_rooms_TourId",
-                table: "tour_rooms",
                 column: "TourId");
 
             migrationBuilder.CreateIndex(
@@ -156,9 +127,6 @@ namespace Tour.API.Migrations
         {
             migrationBuilder.DropTable(
                 name: "schedules");
-
-            migrationBuilder.DropTable(
-                name: "tour_rooms");
 
             migrationBuilder.DropTable(
                 name: "tours");

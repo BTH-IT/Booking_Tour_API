@@ -6,7 +6,8 @@ namespace Room.API.Persistence
     public class RoomDbContext : DbContext
     {
         public DbSet<Hotel> Hotels { get; set; }
-        public DbSet<RoomEntity> Rooms { get; set; }  
+        public DbSet<RoomEntity> Rooms { get; set; }
+
         public RoomDbContext(DbContextOptions<RoomDbContext> options) : base(options)
         {
         }

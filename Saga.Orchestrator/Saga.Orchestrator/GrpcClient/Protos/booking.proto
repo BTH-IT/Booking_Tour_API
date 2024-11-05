@@ -51,22 +51,14 @@ message CreateBookingTourRequest{
 	bool IsLunch = 4;
 	bool IsTip = 5 ;
 	bool IsEntranceTicket = 6;
-	bool Status = 7;
+	string Status = 7;
 	double PriceTotal = 8;
 	google.protobuf.Timestamp DateStart = 9;
     google.protobuf.Timestamp DateEnd = 10;
 	repeated TravellerDetail TravellerDetail = 11;
 }
-
-message TourBookingRoomDetail{
-	int32 RoomId = 1;
-	int32 Adult = 2;
-	int32 Children = 3;
-	double Price = 4;
-}
-
 message TravellerDetail {
-	bool Gender = 1;
+	string Gender = 1;
 	string FullName = 2;
 	int32 Age = 3;
 	string Phone = 4;
