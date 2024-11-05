@@ -40,8 +40,6 @@ namespace Booking.API
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<TravellerDTO>>(src.Travellers));
 				});
 
-			CreateMap<TourBookingRoom, TourBookingRoomResponseDTO>().ReverseMap();
-			CreateMap<TourBookingRoomRequestDTO, TourBookingRoom>();
 
 			CreateMap<Traveller, TravellerDTO>().ReverseMap();
 			CreateMap<GetUserByIdResponse, UserResponseDTO>()
