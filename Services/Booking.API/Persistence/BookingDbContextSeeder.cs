@@ -103,15 +103,15 @@ namespace Booking.API.Persistence
 					Seats = 4,
 					IsTip = true,
 					IsEntranceTicket = true,
-					Status = true,
+					Status = "true",
 					PriceTotal = 500.00,
 					DateStart = DateTime.ParseExact("2024-10-27 04:22:09.812176", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),	
 					DateEnd = DateTime.ParseExact("2024-10-30 04:22:09.812238", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
 					CreatedAt = DateTime.Now,
 					Travellers = JsonConvert.SerializeObject(new[]
 					{
-						new Traveller { Gender = true, Fullname = "Nguyễn Văn A", Age = 30, Phone = "0123456789" },
-						new Traveller { Gender = false, Fullname = "Trần Thị B", Age = 28, Phone = "0987654321" }
+						new Traveller { Gender = "Nam", Fullname = "Nguyễn Văn A", Age = 30, Phone = "0123456789" },
+						new Traveller { Gender = "Nam", Fullname = "Trần Thị B", Age = 28, Phone = "0987654321" }
 					})
 				};
 
@@ -122,15 +122,15 @@ namespace Booking.API.Persistence
 					Seats = 2,
 					IsTip = false,
 					IsEntranceTicket = false,
-					Status = true,
+					Status = "true",
                     DateStart = DateTime.ParseExact("2024-10-30 04:22:09.812598", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
                     DateEnd = DateTime.ParseExact("2024-11-04 04:22:09.812599", "yyyy-MM-dd HH:mm:ss.ffffff", System.Globalization.CultureInfo.InvariantCulture),
                     PriceTotal = 300.00,
 					CreatedAt = DateTime.Now,
 					Travellers = JsonConvert.SerializeObject(new[]
 					{
-						new Traveller { Gender = true, Fullname = "Lê Văn C", Age = 35, Phone = "0111222333" },
-						new Traveller { Gender = false, Fullname = "Phạm Thị D", Age = 32, Phone = "0222333444" }
+						new Traveller { Gender = "Nam", Fullname = "Lê Văn C", Age = 35, Phone = "0111222333" },
+						new Traveller { Gender = "Nam", Fullname = "Phạm Thị D", Age = 32, Phone = "0222333444" }
 					})
 				};
 

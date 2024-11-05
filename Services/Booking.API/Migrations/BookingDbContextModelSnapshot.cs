@@ -97,8 +97,9 @@ namespace Booking.API.Migrations
                     b.Property<int>("Seats")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Travellers")
                         .IsRequired()

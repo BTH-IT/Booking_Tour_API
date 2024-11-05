@@ -48,7 +48,8 @@ namespace Booking.API.Migrations
                     IsLunch = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsTip = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsEntranceTicket = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Status = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     PriceTotal = table.Column<double>(type: "double", nullable: false),
                     DateStart = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DateEnd = table.Column<DateTime>(type: "datetime(6)", nullable: true),
