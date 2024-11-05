@@ -8,7 +8,6 @@ namespace Booking.API.Persistence
         #region db_set
         public DbSet<BookingTour> BookingTours { get; set; }
         public DbSet<BookingRoom> BookingRooms { get; set; }
-        public DbSet<TourBookingRoom> TourBookingRooms { get; set; }
         public DbSet<DetailBookingRoom> DetailBookingRooms { get; set; }
 
         #endregion
@@ -23,11 +22,6 @@ namespace Booking.API.Persistence
                 .WithMany(e => e.DetailBookingRooms)
                 .HasForeignKey(c => c.BookingId);
 
-            modelBuilder.Entity<TourBookingRoom>()
-                .HasOne(c => c.BookingTour)
-                .WithMany(e => e.TourBookingRooms)
-                .HasForeignKey(c=> c.BookingTourId);
-            
             base.OnModelCreating(modelBuilder);
         }
     }
