@@ -70,12 +70,6 @@ namespace Booking.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DateEnd")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateStart")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
@@ -97,8 +91,9 @@ namespace Booking.API.Migrations
                     b.Property<int>("Seats")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Travellers")
                         .IsRequired()

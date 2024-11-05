@@ -38,9 +38,6 @@ namespace Booking.API.GrpcServer.Services
             var bookingRoomsByDate = await bookingRoomRepository.FindByCondition(c=>
              c.CheckIn <= dateEnd && c.CheckOut >= dateStart,false,c=>c.DetailBookingRooms).ToListAsync();
 
-            var bookingToursByDate = await tourRepository.FindByCondition(c =>
-             c.DateStart <= dateEnd && c.DateEnd >= dateStart, false).ToListAsync();
-
             foreach(var item in request.RoomIds)
             {
                 if(bookingRoomsByDate.Any(c=>c.DetailBookingRooms.Any(e=>e.RoomId.Equals(item))))
@@ -128,8 +125,6 @@ namespace Booking.API.GrpcServer.Services
                 IsEntranceTicket = request.IsEntranceTicket,
                 Status = request.Status,
                 PriceTotal = request.PriceTotal,
-                DateStart = request.DateStart.ToDateTime(),
-                DateEnd = request.DateEnd.ToDateTime(), 
                 CreatedAt = DateTime.Now,
                 TravellerList = new List<Traveller>()
             };

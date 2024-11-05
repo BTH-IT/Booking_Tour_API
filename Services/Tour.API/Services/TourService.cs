@@ -14,55 +14,22 @@ namespace Tour.API.Services
     public class TourService : ITourService
     {
         private readonly ITourRepository _tourRepository;
-        private readonly ITourRoomRepository _tourRoomRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IScheduleService _scheduleService;
         private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
 
         public TourService(ITourRepository tourRepository, 
-            ITourRoomRepository tourRoomRepository,
             IScheduleService scheduleService, 
             RoomGrpcService.RoomGrpcServiceClient roomGrpcServiceClient,
             IMapper mapper,
             ILogger logger)
         {
             _tourRepository = tourRepository;
-            _tourRoomRepository = tourRoomRepository;
             _scheduleService = scheduleService;
             _roomGrpcServiceClient = roomGrpcServiceClient;
             _mapper = mapper;
             _logger = logger;
-        }
-
-        private async Task GetRoomsFromGrpcAsync(TourResponseDTO dto)
-        {
-            _logger.Information($"START - BookingRoomService - GetRoomsFromGrpcAsync");
-            try
-            {
-                var roomIds = dto.TourRooms.Select(c => c.RoomId);
-
-                var request = new GetRoomsByIdsRequest();
-
-                request.Ids.AddRange(roomIds);
-
-                var roomInfos = await _roomGrpcServiceClient.GetRoomsByIdsAsync(request);
-
-                var roomsDto = _mapper.Map<List<RoomResponseDTO>>(roomInfos.Rooms);
-
-                var roomDictionary = roomsDto.ToDictionary(c => c.Id);
-
-                foreach (var item in dto.TourRooms)
-                {
-                    item.Room = roomDictionary[item.RoomId];
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
-
-                _logger.Error("ERROR - BookingRoomService - GetRoomsFromGrpcAsync");
-            }
         }
 
         public async Task<ApiResponse<List<TourResponseDTO>>> GetAllAsync()
@@ -72,11 +39,6 @@ namespace Tour.API.Services
             {
                 var tours = await _tourRepository.GetToursAsync();
                 var tourDtos = _mapper.Map<List<TourResponseDTO>>(tours);
-
-                    foreach (var item in tourDtos)
-                    {
-					    await GetRoomsFromGrpcAsync(item);
-                    }
 
                 return new ApiResponse<List<TourResponseDTO>>(200, tourDtos, "Successfully retrieved the list of tours");
             }
@@ -100,8 +62,6 @@ namespace Tour.API.Services
                 if (tour == null) return NotFound<TourResponseDTO>(id);
 
                 var data = _mapper.Map<TourResponseDTO>(tour);
-
-                await GetRoomsFromGrpcAsync(data);
 
                 return new ApiResponse<TourResponseDTO>(200, data, "Successfully retrieved tour data");
             }
@@ -182,7 +142,6 @@ namespace Tour.API.Services
                 tour.UpdatedAt = DateTime.UtcNow;
 
                 var result = await _tourRepository.UpdateTourAsync(tour);
-                await UpdateTourRoomsAsync(id, item.TourRooms);
 
                 var updatedTour = await _tourRepository.GetTourByIdAsync(id);
                 var responseData = _mapper.Map<TourResponseDTO>(updatedTour);
@@ -198,31 +157,6 @@ namespace Tour.API.Services
                 _logger.Information("End: UpdateAsync");
             }
         }
-
-        private async Task UpdateTourRoomsAsync(int tourId, List<TourRoomRequestDTO> newTourRooms)
-        {
-            var existingTourRooms = await _tourRoomRepository.GetTourRoomsByTourIdAsync(tourId);
-            var existingRoomIds = existingTourRooms.Select(tr => tr.RoomId).ToHashSet();
-
-            foreach (var tourRoom in existingTourRooms.Where(tr => !newTourRooms.Any(nr => nr.RoomId == tr.RoomId)))
-            {
-                await _tourRoomRepository.DeleteTourRoomAsync(tourRoom.Id);
-            }
-
-            foreach (var newTourRoom in newTourRooms)
-            {
-                if (!existingRoomIds.Contains(newTourRoom.RoomId))
-                {
-                    await _tourRoomRepository.CreateTourRoomAsync(new TourRoom
-                    {
-                        TourId = tourId,
-                        RoomId = newTourRoom.RoomId,
-                        CreatedAt = DateTime.UtcNow
-                    });
-                }
-            }
-        }
-
         public async Task<ApiResponse<int>> DeleteAsync(int id)
         {
             _logger.Information($"Begin: DeleteAsync, id: {id}");
@@ -231,7 +165,6 @@ namespace Tour.API.Services
                 var tour = await _tourRepository.GetTourByIdAsync(id);
                 if (tour == null) return NotFound<int>(id);
 
-                await DeleteTourRoomsAsync(id);
                 await _tourRepository.DeleteTourAsync(id);
 
                 return new ApiResponse<int>(200, id, "Successfully deleted the tour (soft delete)");
@@ -244,15 +177,6 @@ namespace Tour.API.Services
             finally
             {
                 _logger.Information("End: DeleteAsync");
-            }
-        }
-
-        private async Task DeleteTourRoomsAsync(int tourId)
-        {
-            var tourRooms = await _tourRoomRepository.GetTourRoomsByTourIdAsync(tourId);
-            foreach (var tourRoom in tourRooms)
-            {
-                await _tourRoomRepository.DeleteTourRoomAsync(tourRoom.Id);
             }
         }
 
