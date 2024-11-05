@@ -97,8 +97,6 @@ namespace Booking.API.Persistence
                         IsEntranceTicket = random.Next(0, 2) == 1,
                         Status = "true",
                         PriceTotal = random.NextDouble() * 1000 + 300,
-                        DateStart = DateTime.Now.AddDays(-random.Next(0, 60)),
-                        DateEnd = DateTime.Now.AddDays(-random.Next(0, 60) + random.Next(1, 5)),
                         CreatedAt = DateTime.Now,
                         Travellers = JsonConvert.SerializeObject(travellers)
                     };
