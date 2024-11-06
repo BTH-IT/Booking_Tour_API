@@ -95,6 +95,7 @@ namespace Identity.API.Services
 		{
 			_logger.Information($"Begin: UserService - UpdateAsync");
 			var user = await _userRepository.GetUserByIdAsync(item.Id.Value);
+			var accountId = user.AccountId;
 			if (user == null)
 			{
 				return new ApiResponse<UserResponseDTO>(404, null, "User not found");
@@ -106,6 +107,8 @@ namespace Identity.API.Services
 			}
 
 			user = _mapper.Map<User>(item);
+			user.AccountId = accountId;
+
 			var result = await _userRepository.UpdateAsync(user);
 			if (result > 0)
 			{

@@ -13,6 +13,7 @@ namespace Identity.API.Entites
         public string Phone { get; set; }
         public string Gender { get; set; }
         public int AccountId { get; set; }  
+        public string Avatar { get; set; }
         public Account Account { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
