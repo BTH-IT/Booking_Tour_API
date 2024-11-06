@@ -41,7 +41,6 @@ namespace Booking.API.Extensions
 					.AddScoped<IBookingRoomRepository, BookingRoomRepository>()
 					.AddScoped<IBookingTourRepository, BookingTourRepository>()
 					.AddScoped<IDetailBookingRoomRepository, DetailBookingRoomRepository>()
-					.AddScoped<ITourBookingRoomRepository, TourBookingRoomRepository>()
 					.AddScoped<IBookingRoomService, BookingRoomService>()
 					.AddScoped<IBookingTourService, BookingTourService>()
 					.AddScoped<BookingDbContextSeeder>();

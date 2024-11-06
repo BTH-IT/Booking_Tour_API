@@ -14,10 +14,10 @@ namespace Booking.API.Repositories
 		}
 
 		public async Task<IEnumerable<BookingTour>> GetBookingToursAsync() =>
-			await FindByCondition(h => h.DeletedAt == null, false, h => h.TourBookingRooms.Where(tr => tr.DeletedAt == null)).OrderByDescending(r => r.CreatedAt).ToListAsync();
+			await FindByCondition(h => h.DeletedAt == null, false).OrderByDescending(r => r.CreatedAt).ToListAsync();
 
 		public Task<BookingTour> GetBookingTourByIdAsync(int id) =>
-			FindByCondition(h => h.Id.Equals(id) && h.DeletedAt == null, false, h => h.TourBookingRooms.Where(tr => tr.DeletedAt == null)).SingleOrDefaultAsync();
+			FindByCondition(h => h.Id.Equals(id) && h.DeletedAt == null, false).SingleOrDefaultAsync();
 
 		public Task<int> CreateBookingTourAsync(BookingTour bookingTour) => CreateAsync(bookingTour);
 

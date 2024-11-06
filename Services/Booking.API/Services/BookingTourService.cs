@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
-using Booking.API.Entities;
 using Booking.API.GrpcClient.Protos;
-using Booking.API.Repositories;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
-using Grpc.Net.Client.Balancer;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Shared.DTOs;
 using Shared.Helper;
 using ILogger = Serilog.ILogger;
@@ -16,20 +12,17 @@ namespace Booking.API.Services
 	public class BookingTourService : IBookingTourService
 	{
 		private readonly IBookingTourRepository _bookingTourRepository;
-		private readonly ITourBookingRoomRepository _tourBookingRoomRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
 		private readonly IdentityGrpcService.IdentityGrpcServiceClient _identityGrpcServiceClient;	
 		private readonly TourGrpcService.TourGrpcServiceClient _tourGrpcServiceClient;
 		public BookingTourService(IBookingTourRepository bookingTourRepository, 
-			ITourBookingRoomRepository tourBookingRoomRepository, 
 			IMapper mapper, 
 			ILogger logger,
 			IdentityGrpcService.IdentityGrpcServiceClient identityGrpcServiceClient,
 			TourGrpcService.TourGrpcServiceClient tourGrpcServiceClient)
 		{
 			_bookingTourRepository = bookingTourRepository;
-			_tourBookingRoomRepository = tourBookingRoomRepository;
 			_mapper = mapper;
 			_logger = logger;
 			_identityGrpcServiceClient = identityGrpcServiceClient;	
@@ -97,7 +90,7 @@ namespace Booking.API.Services
             _logger.Information($"START - BookingTourService - GetUserFromGrpcAsync");
             try
             {
-                var bookingTours = await _bookingTourRepository.FindByCondition(c => c.UserId.Equals(userId), false, c => c.TourBookingRooms).ToListAsync();
+                var bookingTours = await _bookingTourRepository.FindByCondition(c => c.UserId.Equals(userId), false).ToListAsync();
                 var bookingTourDtos = _mapper.Map<List<BookingTourResponseDTO>>(bookingTours);
                 foreach (var item in bookingTourDtos)
                 {

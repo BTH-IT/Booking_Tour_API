@@ -145,41 +145,6 @@ namespace Booking.API.Persistence
 				await _context.BookingTours.AddRangeAsync(bookingTour1, bookingTour2);
 			}
 
-			if (!_context.TourBookingRooms.Any())
-			{
-				var tourBookingRoom1 = new TourBookingRoom
-				{
-					BookingTourId = 1,
-					RoomId = 1,
-					Price = 75.00,
-					Adults = 2,
-					Children = 0,
-					CreatedAt = DateTime.Now
-				};
-
-				var tourBookingRoom2 = new TourBookingRoom
-				{
-					BookingTourId = 1,
-					RoomId = 2,
-					Price = 75.00,
-					Adults = 0,
-					Children = 2,
-					CreatedAt = DateTime.Now
-				};
-
-				var tourBookingRoom3 = new TourBookingRoom
-				{
-					BookingTourId = 2,
-					RoomId = 3,
-					Price = 100.00,
-					Adults = 2,
-					Children = 1,
-					CreatedAt = DateTime.Now
-				};
-
-				await _context.TourBookingRooms.AddRangeAsync(tourBookingRoom1, tourBookingRoom2, tourBookingRoom3);
-			}
-
 			await _context.SaveChangesAsync();
 			_logger.Information("Seeded initial data to Db");
 		}

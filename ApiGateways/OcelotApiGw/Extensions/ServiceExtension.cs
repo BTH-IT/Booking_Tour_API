@@ -1,7 +1,6 @@
 ﻿using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Provider.Polly;
-using System.Configuration;
 
 namespace OcelotApiGw.Extensions
 {

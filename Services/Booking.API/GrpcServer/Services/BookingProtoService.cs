@@ -2,11 +2,7 @@
 using Booking.API.GrpcServer.Protos;
 using Booking.API.Repositories.Interfaces;
 using Grpc.Core;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.Net.WebSockets;
-using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
 namespace Booking.API.GrpcServer.Services
 {
@@ -15,17 +11,15 @@ namespace Booking.API.GrpcServer.Services
         private readonly IBookingRoomRepository bookingRoomRepository;
         private readonly IDetailBookingRoomRepository detailBookingRoomRepository;
         private readonly IBookingTourRepository tourRepository;
-        private readonly ITourBookingRoomRepository tourBookingRoomRepository;
         
         public BookingProtoService(IBookingRoomRepository bookingRoomRepository,
             IDetailBookingRoomRepository detailBookingRoomRepository,
-            IBookingTourRepository tourRepository,
-            ITourBookingRoomRepository tourBookingRoomRepository)
+            IBookingTourRepository tourRepository
+           )
         {
             this.bookingRoomRepository = bookingRoomRepository;
             this.detailBookingRoomRepository = detailBookingRoomRepository;
             this.tourRepository = tourRepository;
-            this.tourBookingRoomRepository = tourBookingRoomRepository;
         }
         #region booking_room
         public override async Task<CheckRoomsIsBookedResponse> CheckRoomsIsBooked(CheckRoomsIsBookedRequest request, ServerCallContext context)
@@ -41,9 +35,6 @@ namespace Booking.API.GrpcServer.Services
             var bookingRoomsByDate = await bookingRoomRepository.FindByCondition(c=>
              c.CheckIn <= dateEnd && c.CheckOut >= dateStart,false,c=>c.DetailBookingRooms).ToListAsync();
 
-            var bookingToursByDate = await tourRepository.FindByCondition(c =>
-             c.DateStart <= dateEnd && c.DateEnd >= dateStart, false, c => c.TourBookingRooms).ToListAsync();
-
             foreach(var item in request.RoomIds)
             {
                 if(bookingRoomsByDate.Any(c=>c.DetailBookingRooms.Any(e=>e.RoomId.Equals(item))))
@@ -51,11 +42,6 @@ namespace Booking.API.GrpcServer.Services
                     resposne.Message = $"Phòng với id :{item} đã được đặt trong khoảng thời gian trên ";
                     resposne.Result = false ;
                 }    
-                if(bookingToursByDate.Any(c=>c.TourBookingRooms.Any(e=>e.RoomId.Equals(item))))
-                {
-                    resposne.Message = $"Phòng với id :{item} đã được đặt trong khoảng thời gian trên ";
-                    resposne.Result = false;
-                }
             }
             return resposne;
         }
@@ -156,21 +142,6 @@ namespace Booking.API.GrpcServer.Services
                 });
             }
             var bookingTourId  = await tourRepository.CreateAsync(newBookingTour);
-
-            var newTourBookingRooms = new List<TourBookingRoom>();
-            foreach(var item in request.TourBookingRooms)
-            {
-                newTourBookingRooms.Add(new TourBookingRoom
-                {
-                    BookingTourId =bookingTourId,
-                    RoomId = item.RoomId,
-                    Price = item.Price,
-                    Adults = item.Adult,
-                    Children = item.Children, 
-                    CreatedAt = DateTime.Now
-                });
-            }
-            await tourBookingRoomRepository.CreateListAsync(newTourBookingRooms);
             return new BookingTourResponse()
             {
                 BookingTourId =bookingTourId,
@@ -185,13 +156,6 @@ namespace Booking.API.GrpcServer.Services
                 return new DeleteBookingTourResponse() { Result = false };
             }
             await tourRepository.DeleteBookingTourAsync(bookingTour.Id);
-            if(bookingTour.TourBookingRooms != null)
-            {
-                foreach (var item in bookingTour.TourBookingRooms)
-                {
-                    await tourBookingRoomRepository.DeleteTourBookingRoomAsync(item.Id);
-                }
-            }    
             return new DeleteBookingTourResponse
             {
                 Result = true
