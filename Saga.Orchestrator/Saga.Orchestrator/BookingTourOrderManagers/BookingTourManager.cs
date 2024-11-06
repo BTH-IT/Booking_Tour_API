@@ -22,7 +22,6 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
         private string ErrorMessage = "";
         private int BookingTourId = -1;
         private ScheduleResponse? scheduleResponse;
-        private GetRoomsByIdsResponse? roomsInfo;
         private readonly StateMachine<EBookingTourState, EBookingTourAction> _stateMachine;
 
         public BookingTourManager(TourGrpcService.TourGrpcServiceClient tourGrpcServiceClient, 
@@ -43,28 +42,16 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
             _stateMachine.Configure(EBookingTourState.Initial)
                 .Permit(EBookingTourAction.GetScheduleInfo, EBookingTourState.GetScheduleInfoInProcessing)
                 .OnEntry(() => logger.Information("Entered Initial State"));
-            // Lấy thông tin phòng 
+            // Kiểm tra chỗ trống của lịch trình
             _stateMachine.Configure(EBookingTourState.GetScheduleInfoInProcessing)
-                .Permit(EBookingTourAction.GetRoomInfo, EBookingTourState.GetRoomsInfoInProcessing)
+                .Permit(EBookingTourAction.CheckScheduleIsAvailable, EBookingTourState.ScheduleCheckInProcessing)
                 .Permit(EBookingTourAction.Rollback, EBookingTourState.Failed)
                 .OnEntryAsync(GetScheduleInfoAsync);
             //Kiểm tra chỗ trống ở lịch trình
-            //_stateMachine.Configure(EBookingTourState.GetRoomsInfoInProcessing)
-            //    .Permit(EBookingTourAction.CheckScheduleIsAvailable, EBookingTourState.ScheduleCheckInProcessing)
-            //    .Permit(EBookingTourAction.Rollback, EBookingTourState.Failed)
-            //    .OnEntryAsync(GetRoomsInfoAsync);
-            // Kiểm tra chỗ trông ở phòng
             _stateMachine.Configure(EBookingTourState.ScheduleCheckInProcessing)
-                .Permit(EBookingTourAction.CheckRoomIsAvailable, EBookingTourState.RoomCheckInProcessing)
-                .Permit(EBookingTourAction.Rollback, EBookingTourState.Failed)
-                .OnEntryAsync(CheckScheduleIsAvailableAsync);
-
-            //Tạo hóa đơn
-            _stateMachine.Configure(EBookingTourState.RoomCheckInProcessing)
                 .Permit(EBookingTourAction.CreateBookingTour, EBookingTourState.InvoiceCreateInProcessing)
                 .Permit(EBookingTourAction.Rollback, EBookingTourState.Failed)
-                .OnEntryAsync(CheckRoomIsAvailableAsync);
-            
+                .OnEntryAsync(CheckScheduleIsAvailableAsync);
             //Cập nhật lịch trình
             _stateMachine.Configure(EBookingTourState.InvoiceCreateInProcessing)
                 .Permit(EBookingTourAction.UpdateScheduleSeat, EBookingTourState.UpdatingSchedule)
@@ -99,34 +86,13 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                 }
                 _logger.Information("End : GetRoomsInfoAsync - BookingTourManager");
 
-                await _stateMachine.FireAsync(EBookingTourAction.GetRoomInfo);
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.ToString());
-                _logger.Error("End : GetScheduleInfoAsync - BookingTourManager");
-                ErrorMessage = ex.Message;
-                await _stateMachine.FireAsync(EBookingTourAction.Rollback);
-            }
-        }
-        private async Task GetRoomsInfoAsync()
-        {
-            try
-            {
-                _logger.Information("Begin : GetRoomsInfoAsync - BookingTourManager");
-                _logger.Information($"State Machine : {_stateMachine.State} ");
-               
-
-                _logger.Information("End : GetRoomsInfoAsync - BookingTourManager");
-
                 await _stateMachine.FireAsync(EBookingTourAction.CheckScheduleIsAvailable);
 
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.ToString());
-                _logger.Error("End : GetRoomsInfoAsync - BookingTourManager");
+                _logger.Error("End : GetScheduleInfoAsync - BookingTourManager");
                 ErrorMessage = ex.Message;
                 await _stateMachine.FireAsync(EBookingTourAction.Rollback);
             }
@@ -143,50 +109,13 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                 }    
                 _logger.Information("End : CheckScheduleIsAvailableAsync - BookingTourManager");
 
-                await _stateMachine.FireAsync(EBookingTourAction.CheckRoomIsAvailable);
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.ToString());
-                _logger.Error("End : CheckScheduleIsAvailableAsync - BookingTourManager");
-                ErrorMessage = ex.Message;
-                await _stateMachine.FireAsync(EBookingTourAction.Rollback);
-            }
-        }
-        private async Task CheckRoomIsAvailableAsync()
-        {
-            try
-            {
-                _logger.Information("Begin : CheckRoomIsAvailableAsync - BookingTourManager");
-                _logger.Information($"State Machine : {_stateMachine.State} ");
-                if(roomsInfo != null)
-                {
-                    var roomIds = roomsInfo!.Rooms.Select(c => c.Id);
-                    if (roomIds != null && roomIds.Count() > 0)
-                    {
-                        var request = new CheckRoomsIsBookedRequest();
-
-                        request.RoomIds.AddRange(roomIds);
-                        request.CheckIn = scheduleResponse!.DateStart;
-                        request.CheckOut = scheduleResponse!.DateEnd;
-
-                        var response = await _bookingGrpcServiceClient.CheckRoomsIsBookedAsync(request);
-                        if (response.Result == false)
-                        {
-                            throw new Exception(response.Message);
-                        }
-                    }
-                }    
-                _logger.Information("End : CheckRoomIsAvailableAsync - BookingTourManager");
-
                 await _stateMachine.FireAsync(EBookingTourAction.CreateBookingTour);
 
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.ToString());
-                _logger.Error("End : CheckRoomIsAvailableAsync - BookingTourManager");
+                _logger.Error("End : CheckScheduleIsAvailableAsync - BookingTourManager");
                 ErrorMessage = ex.Message;
                 await _stateMachine.FireAsync(EBookingTourAction.Rollback);
             }
@@ -270,6 +199,11 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                     await _bookingGrpcServiceClient.DeleteBookingTourAsync(new DeleteBookingTourRequest
                     {
                         BookingTourId  = this.BookingTourId,
+                    });
+                    await _tourGrpcServiceClient.UpdateScheduleAvailableSeatAsync(new UpdateScheduleAvailableSeatRequest
+                    {
+                        ScheduleId = this.scheduleResponse!.Id,
+                        Count = this.requestDto!.Seats * (-1)
                     });
                 }
             }
