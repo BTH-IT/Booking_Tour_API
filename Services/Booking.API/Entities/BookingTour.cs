@@ -51,7 +51,6 @@ namespace Booking.API.Entities
 				}
 			}
 		}
-		public ICollection<TourBookingRoom> TourBookingRooms { get; set; }
     }
 
 	public class Traveller
