@@ -12,17 +12,11 @@ namespace Booking.API.Entities
         public int UserId { get; set; }
         public int ScheduleId { get; set; } 
         public int Seats {  get; set; } 
-        public bool Umbrella { get; set; }  
-        public bool IsCleaningFee { get; set; } 
-        public bool IsTip {  get; set; }    
+        public bool IsLunch { get; set; }
+		public bool IsTip {  get; set; }    
         public bool IsEntranceTicket { get; set; }
-        public bool Status { get; set; }    
+        public string Status { get; set; }    
         public double PriceTotal { get; set; }  
-        public double Coupon {  get; set; } 
-		public DateTime? DateStart { get; set; }
-        public DateTime? DateEnd { get; set; }
-
-        public int PaymentMethod { get; set; }
         [NotMapped]
         public List<Traveller>  TravellerList { get; set; }
         public DateTime CreatedAt { get ; set ; }
@@ -55,7 +49,7 @@ namespace Booking.API.Entities
 
 	public class Traveller
 	{
-		public bool Gender { get; set; }
+		public string Gender { get; set; }
 		public string Fullname { get; set; }
 		public sbyte Age { get; set; }
 		public string Phone { get; set; }

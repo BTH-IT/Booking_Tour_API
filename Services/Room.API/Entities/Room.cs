@@ -108,6 +108,6 @@ namespace Room.API.Entities
 		public DateTime CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
 		public DateTime? DeletedAt { get; set; }
-		public Hotel? Hotel { get; set; }
+        public Hotel? Hotel { get; set; }
 	}
 }

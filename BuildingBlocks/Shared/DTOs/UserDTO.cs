@@ -14,6 +14,7 @@ namespace Shared.DTOs
         public string Phone { get; set; }
 
         public string Gender { get; set; }
+        public string? Avatar {  get; set; }
         public AccountResponseDTO Account { get; set; }
     }
 
@@ -30,7 +31,8 @@ namespace Shared.DTOs
         public string Phone { get; set; }
 
         public string Gender { get; set; }
-        public int AccountId { get; set; }
-		public DateTime? DeletedAt { get; set; }
-	}
+        public int? AccountId { get; set; }
+        public string? Avatar { get; set; }
+
+    }
 }

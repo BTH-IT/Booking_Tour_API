@@ -118,16 +118,10 @@ namespace Booking.API.GrpcServer.Services
                 UserId = request.UserId,
                 ScheduleId = request.ScheduleId,
                 Seats = request.Seats,
-                Umbrella = request.Umbrella,
-                IsCleaningFee = request.IsCleaningFee,
                 IsTip = request.IsTip,
                 IsEntranceTicket = request.IsEntranceTicket,
                 Status = request.Status,
                 PriceTotal = request.PriceTotal,
-                Coupon = request.Coupon,
-                DateStart = request.DateStart.ToDateTime(),
-                DateEnd = request.DateEnd.ToDateTime(), 
-                PaymentMethod = request.PaymentMethod,
                 CreatedAt = DateTime.Now,
                 TravellerList = new List<Traveller>()
             };

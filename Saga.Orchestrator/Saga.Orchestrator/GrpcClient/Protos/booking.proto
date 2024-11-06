@@ -48,18 +48,12 @@ message CreateBookingTourRequest{
 	int32 UserId = 1;
 	int32 ScheduleId = 2;
 	int32 Seats = 3;
-	bool Umbrella = 4;
-	bool IsCleaningFee = 5;
-	bool IsTip = 6 ;
-	bool IsEntranceTicket = 7;
-	bool Status = 8;
-	double PriceTotal = 9;
-	float Coupon = 10;
-	int32 PaymentMethod = 11;
-	google.protobuf.Timestamp DateStart = 12;
-    google.protobuf.Timestamp DateEnd = 13;
-	repeated TourBookingRoomDetail TourBookingRooms = 14;
-	repeated TravellerDetail TravellerDetail = 15;
+	bool IsLunch = 4;
+	bool IsTip = 5 ;
+	bool IsEntranceTicket = 6;
+	string Status = 7;
+	double PriceTotal = 8;
+	repeated TravellerDetail TravellerDetail = 11;
 }
 
 message TourBookingRoomDetail{
@@ -70,7 +64,7 @@ message TourBookingRoomDetail{
 }
 
 message TravellerDetail {
-	bool Gender = 1;
+	string Gender = 1;
 	string FullName = 2;
 	int32 Age = 3;
 	string Phone = 4;
@@ -84,3 +78,4 @@ message DeleteBookingTourRequest{
 message DeleteBookingTourResponse{
     bool Result = 1;
 }
+

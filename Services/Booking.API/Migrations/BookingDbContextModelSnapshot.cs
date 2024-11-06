@@ -67,32 +67,20 @@ namespace Booking.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("Coupon")
-                        .HasColumnType("double");
-
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateEnd")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateStart")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsCleaningFee")
+                    b.Property<bool>("IsEntranceTicket")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("IsEntranceTicket")
+                    b.Property<bool>("IsLunch")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsTip")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
 
                     b.Property<double>("PriceTotal")
                         .HasColumnType("double");
@@ -103,15 +91,13 @@ namespace Booking.API.Migrations
                     b.Property<int>("Seats")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Travellers")
                         .IsRequired()
                         .HasColumnType("JSON");
-
-                    b.Property<bool>("Umbrella")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -163,45 +149,6 @@ namespace Booking.API.Migrations
                     b.ToTable("DetailBookingRooms");
                 });
 
-            modelBuilder.Entity("Booking.API.Entities.TourBookingRoom", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Adults")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BookingTourId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Children")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("double");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingTourId");
-
-                    b.ToTable("TourBookingRooms");
-                });
-
             modelBuilder.Entity("Booking.API.Entities.DetailBookingRoom", b =>
                 {
                     b.HasOne("Booking.API.Entities.BookingRoom", "BookingRoom")
@@ -213,25 +160,9 @@ namespace Booking.API.Migrations
                     b.Navigation("BookingRoom");
                 });
 
-            modelBuilder.Entity("Booking.API.Entities.TourBookingRoom", b =>
-                {
-                    b.HasOne("Booking.API.Entities.BookingTour", "BookingTour")
-                        .WithMany("TourBookingRooms")
-                        .HasForeignKey("BookingTourId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BookingTour");
-                });
-
             modelBuilder.Entity("Booking.API.Entities.BookingRoom", b =>
                 {
                     b.Navigation("DetailBookingRooms");
-                });
-
-            modelBuilder.Entity("Booking.API.Entities.BookingTour", b =>
-                {
-                    b.Navigation("TourBookingRooms");
                 });
 #pragma warning restore 612, 618
         }
