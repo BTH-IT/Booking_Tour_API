@@ -22,6 +22,7 @@ namespace Booking.API.Persistence
                 .WithMany(e => e.DetailBookingRooms)
                 .HasForeignKey(c => c.BookingId);
 
+            
             base.OnModelCreating(modelBuilder);
         }
     }

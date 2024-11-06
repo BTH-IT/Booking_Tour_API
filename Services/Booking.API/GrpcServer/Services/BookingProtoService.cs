@@ -2,11 +2,7 @@
 using Booking.API.GrpcServer.Protos;
 using Booking.API.Repositories.Interfaces;
 using Grpc.Core;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.Net.WebSockets;
-using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
 namespace Booking.API.GrpcServer.Services
 {
@@ -18,7 +14,8 @@ namespace Booking.API.GrpcServer.Services
         
         public BookingProtoService(IBookingRoomRepository bookingRoomRepository,
             IDetailBookingRoomRepository detailBookingRoomRepository,
-            IBookingTourRepository tourRepository)
+            IBookingTourRepository tourRepository
+           )
         {
             this.bookingRoomRepository = bookingRoomRepository;
             this.detailBookingRoomRepository = detailBookingRoomRepository;
@@ -139,7 +136,6 @@ namespace Booking.API.GrpcServer.Services
                 });
             }
             var bookingTourId  = await tourRepository.CreateAsync(newBookingTour);
-
             return new BookingTourResponse()
             {
                 BookingTourId =bookingTourId,

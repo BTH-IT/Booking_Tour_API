@@ -1,11 +1,9 @@
-﻿using Booking.API.Services;
-using Booking.API.Services.Interfaces;
+﻿using Booking.API.Services.Interfaces;
 using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Enums;
-using Shared.Helper;
 using System.Security.Claims;
 
 namespace Booking.API.Controllers
@@ -43,6 +41,15 @@ namespace Booking.API.Controllers
 			var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 			var response = await _bookingTourService.GetCurrentUserAsync(int.Parse(userId!));
 			return StatusCode(response.StatusCode,response);
+		}
+		[HttpPatch("{bookingTourId:int}/update-info")]
+		public async Task<IActionResult> UpdateBookingTourAsync(int bookingTourId,UpdateBookingTourInfoRequest requestDtO)
+		{
+			var userId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+			var userRole = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.Role)!);
+
+			var response = await _bookingTourService.UpdateBookingTourInfoAsync(bookingTourId, requestDtO, userId, userRole);
+			return StatusCode(response.StatusCode, response);			
 		}
 	}
 }

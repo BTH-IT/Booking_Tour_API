@@ -3,9 +3,7 @@
     public enum EBookingTourAction
     {
         GetScheduleInfo,
-        GetRoomInfo,
         CheckScheduleIsAvailable,
-        CheckRoomIsAvailable,
         CreateBookingTour,
         UpdateScheduleSeat,
         Finish,

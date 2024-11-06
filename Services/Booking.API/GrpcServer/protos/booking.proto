@@ -53,8 +53,6 @@ message CreateBookingTourRequest{
 	bool IsEntranceTicket = 6;
 	string Status = 7;
 	double PriceTotal = 8;
-	google.protobuf.Timestamp DateStart = 9;
-    google.protobuf.Timestamp DateEnd = 10;
 	repeated TravellerDetail TravellerDetail = 11;
 }
 
