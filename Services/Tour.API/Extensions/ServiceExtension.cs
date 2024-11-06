@@ -52,7 +52,6 @@ namespace Tour.API.Extensions
                 .AddScoped<ITourService, TourService>()
                 .AddScoped<IDestinationRepository, DestinationRepository>()
                 .AddScoped<IDestinationService, DestinationService>()
-                .AddScoped<ITourRoomRepository, TourRoomRepository>()
 				.AddScoped<IReviewTourService, ReviewTourService>()
                 .AddScoped<TourDbContextSeeder>();
 		}

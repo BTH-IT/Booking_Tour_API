@@ -49,10 +49,10 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                 .Permit(EBookingTourAction.Rollback, EBookingTourState.Failed)
                 .OnEntryAsync(GetScheduleInfoAsync);
             //Kiểm tra chỗ trống ở lịch trình
-            _stateMachine.Configure(EBookingTourState.GetRoomsInfoInProcessing)
-                .Permit(EBookingTourAction.CheckScheduleIsAvailable, EBookingTourState.ScheduleCheckInProcessing)
-                .Permit(EBookingTourAction.Rollback, EBookingTourState.Failed)
-                .OnEntryAsync(GetRoomsInfoAsync);
+            //_stateMachine.Configure(EBookingTourState.GetRoomsInfoInProcessing)
+            //    .Permit(EBookingTourAction.CheckScheduleIsAvailable, EBookingTourState.ScheduleCheckInProcessing)
+            //    .Permit(EBookingTourAction.Rollback, EBookingTourState.Failed)
+            //    .OnEntryAsync(GetRoomsInfoAsync);
             // Kiểm tra chỗ trông ở phòng
             _stateMachine.Configure(EBookingTourState.ScheduleCheckInProcessing)
                 .Permit(EBookingTourAction.CheckRoomIsAvailable, EBookingTourState.RoomCheckInProcessing)
@@ -116,17 +116,7 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
             {
                 _logger.Information("Begin : GetRoomsInfoAsync - BookingTourManager");
                 _logger.Information($"State Machine : {_stateMachine.State} ");
-                var roomIds = this.requestDto!.TourBookingRooms.Select(c => c.RoomId).ToList();
-                if (roomIds.Count >0)
-                {
-                    var request = new GetRoomsByIdsRequest();
-                    request.Ids.AddRange(roomIds);
-                    roomsInfo = await _roomGrpcServiceClient.GetRoomsByIdsAsync(request);
-                    if (roomsInfo.Rooms.Count != roomIds.Count)
-                    {
-                        throw new Exception("Có lỗi dữ liệu khi lấy dữ liệu phòng");
-                    }
-                }    
+               
 
                 _logger.Information("End : GetRoomsInfoAsync - BookingTourManager");
 
@@ -212,16 +202,10 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                     UserId = userId,
                     ScheduleId = requestDto!.ScheduleId,
                     Seats = requestDto!.Seats,
-                    Umbrella = requestDto!.Umbrella,
-                    IsCleaningFee = requestDto!.IsCleaningFee,
                     IsTip = requestDto!.IsTip,  
                     IsEntranceTicket = requestDto!.IsEntranceTicket,
                     Status = requestDto.Status,
                     PriceTotal = double.Parse(requestDto.PriceTotal.ToString()),
-                    Coupon = requestDto.Coupon,
-                    PaymentMethod = requestDto.PaymentMethod,
-                    DateStart = scheduleResponse!.DateStart,
-                    DateEnd = scheduleResponse.DateEnd,
                 };
                 foreach(var item in requestDto.Travellers)
                 {
@@ -231,16 +215,6 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                         FullName = item.Fullname,
                         Age = item.Age,
                         Phone = item.Phone,
-                    });
-                }
-                foreach (var item in requestDto.TourBookingRooms)
-                {
-                    request.TourBookingRooms.Add(new TourBookingRoomDetail
-                    {
-                        RoomId = item.RoomId,
-                        Adult = item.Adults,
-                        Children = item.Children,
-                        Price = item.Price, 
                     });
                 }
                 #endregion

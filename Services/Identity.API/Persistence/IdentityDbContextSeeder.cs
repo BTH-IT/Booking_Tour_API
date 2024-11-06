@@ -94,7 +94,7 @@ namespace Identity.API.Persistence
 						Country = GetRandomCountry(),
 						Phone = GetRandomPhoneNumber(),
 						Gender = GetRandomGender(),
-						AccountId = account.Id
+						AccountId = account.Id,
 					});
 				}
 				await _context.SaveChangesAsync();

@@ -92,7 +92,7 @@ namespace Room.API.Persistence
                         Expect = "Thăm lăng Bác, Văn Miếu Quốc Tử Giám.",
                         Price = 300.00m,
                         DateFrom = DateTime.UtcNow.AddDays(7),
-                        DateTo = DateTime.UtcNow.AddDays(10),
+                        DateTo = DateTime.UtcNow.AddDays(30),
                         Rate = 4.9f,
 						Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
                         SalePercent = 5,
@@ -100,7 +100,7 @@ namespace Room.API.Persistence
                         PriceIncludeList = new[] { "Khách sạn", "Di chuyển trong thành phố" },
                         ActivityList = new[] { "Tham quan", "Chụp ảnh" },
                         ImageList = new[] { "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg", "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg" },
-                        DayList = new[] {"Day 1", "Day 2" },
+                        DayList = new[] {"Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7", "Day 8" },
                         ReviewList = new List <Review>
 						{
                             new Review { Id = "1",  Content = "Chuyến đi tuyệt vời!", Rating = 5, CreatedAt = DateTime.UtcNow }
@@ -118,7 +118,7 @@ namespace Room.API.Persistence
                         Expect = "Du thuyền trên vịnh, tham quan hang động.",
                         Price = 500.00m,
                         DateFrom = DateTime.UtcNow.AddDays(10),
-                        DateTo = DateTime.UtcNow.AddDays(15),
+                        DateTo = DateTime.UtcNow.AddDays(30),
                         Rate = 4.8f,
 						Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 						SalePercent = 10,
@@ -126,7 +126,7 @@ namespace Room.API.Persistence
                         PriceIncludeList = new[] { "Khách sạn", "Du thuyền" },
                         ActivityList = new[] { "Tham quan", "Leo núi" },
                         ImageList = new[] { "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg", "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg" },
-                        DayList = new[] { "Day 1", "Day 2" },
+                        DayList = new[] { "Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7", "Day 8" },
                         ReviewList = new List <Review>
                         {
                             new Review { Id="1", Content = "Một kỳ nghỉ đáng nhớ!", Rating = 4.7f, CreatedAt = DateTime.UtcNow }
@@ -144,7 +144,7 @@ namespace Room.API.Persistence
                         Expect = "Ngắm cầu Rồng, thăm Bà Nà Hills.",
                         Price = 400.00m,
                         DateFrom = DateTime.UtcNow.AddDays(15),
-                        DateTo = DateTime.UtcNow.AddDays(20),
+                        DateTo = DateTime.UtcNow.AddDays(30),
                         Rate = 4.85f,
 						Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 						SalePercent = 12,
@@ -152,7 +152,7 @@ namespace Room.API.Persistence
                         PriceIncludeList = new[] { "Khách sạn", "Xe đưa đón" },
                         ActivityList = new[] { "Tham quan", "Tắm biển" },
                         ImageList = new[] { "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg", "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg" },
-						DayList = new[] { "Day 1", "Day 2" },
+						DayList = new[] {"Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7", "Day 8" },
                         ReviewList = new List <Review>
 						{
                             new Review { Id="1", Content = "Thành phố đẹp và dịch vụ rất tốt!", Rating = 4.8f, CreatedAt = DateTime.UtcNow }
@@ -170,7 +170,7 @@ namespace Room.API.Persistence
                         Expect = "Tắm biển, ngắm hoàng hôn trên đảo.",
                         Price = 600.00m,
                         DateFrom = DateTime.UtcNow.AddDays(20),
-                        DateTo = DateTime.UtcNow.AddDays(25),
+                        DateTo = DateTime.UtcNow.AddDays(30),
                         Rate = 4.9f,
 						Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 						SalePercent = 8,
@@ -178,7 +178,7 @@ namespace Room.API.Persistence
                         PriceIncludeList = new[] { "Khách sạn", "Thuyền đưa đón" },
                         ActivityList = new[] { "Tắm biển", "Lặn ngắm san hô" },
                         ImageList = new[] { "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg", "https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg" },
-						DayList = new[] { "Day 1", "Day 2" },
+						DayList = new[] {"Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7", "Day 8" },
                         ReviewList = new List <Review>
 						{
                             new Review { Id = "1",  Content = "Đảo ngọc đẹp như tranh vẽ!", Rating = 5, CreatedAt = DateTime.UtcNow }
@@ -209,46 +209,6 @@ namespace Room.API.Persistence
 
                 _logger.Information("Database seeding completed.");
 
-                // Seed TourRoom
-                if (!_context.TourRooms.Any())
-                {
-                    var haNoiTour = _context.Tours.First(t => t.Name == "Tour Hà Nội");
-                    var haLongTour = _context.Tours.First(t => t.Name == "Tour Hạ Long");
-                    var daNangTour = _context.Tours.First(t => t.Name == "Tour Đà Nẵng");
-                    var phuQuocTour = _context.Tours.First(t => t.Name == "Tour Phú Quốc");
-
-
-                    // Thêm TourRoom cho từng tour
-                    _context.TourRooms.AddRange(new List<TourRoom>
-                    {
-                        new TourRoom
-                        {
-                            TourId = haNoiTour.Id,
-                            RoomId = 1,
-                            CreatedAt = DateTime.UtcNow
-                        },
-                        new TourRoom
-                        {
-                            TourId = haLongTour.Id,
-                            RoomId = 2, 
-                            CreatedAt = DateTime.UtcNow
-                        },
-                        new TourRoom
-                        {
-                            TourId = daNangTour.Id,
-                            RoomId = 3,
-                            CreatedAt = DateTime.UtcNow
-                        },
-                        new TourRoom
-                        {
-                            TourId = phuQuocTour.Id,
-                            RoomId = 4,
-                            CreatedAt = DateTime.UtcNow
-                        }
-                    });
-                    await _context.SaveChangesAsync();
-                    _logger.Information("Seeded TourRoom.");
-                }
             }
             catch (Exception ex)
             {
@@ -264,8 +224,7 @@ namespace Room.API.Persistence
             while (dateFrom <= dateTo)
             {
                 var dateStart = dateFrom;
-                dateFrom = dateFrom.AddDays(tour.DayList?.Count() ?? 0);
-                var dateEnd = dateFrom;
+                var dateEnd = dateFrom.AddDays(tour.DayList?.Count() ?? 0);
 
                 if (dateEnd >= dateTo)
                 {
