@@ -37,4 +37,8 @@
 		public sbyte Age { get; set; }
 		public string Phone { get; set; }
 	}
+    public class UpdateBookingTourInfoRequest
+    {
+        public List<TravellerDTO> Travellers { get; set; }   = new List<TravellerDTO>();
+    }
 }

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Booking.API.Entities;
 using Booking.API.GrpcClient.Protos;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
+using Shared.Enums;
 using Shared.Helper;
 using ILogger = Serilog.ILogger;
 
@@ -84,6 +86,38 @@ namespace Booking.API.Services
 				return new ApiResponse<BookingTourResponseDTO>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
+        public async Task<ApiResponse<BookingTourResponseDTO>> UpdateBookingTourInfoAsync(int bookingTourId, UpdateBookingTourInfoRequest request, int userId, int role)
+        {
+            try
+            {
+                var bookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(bookingTourId);
+
+                if (bookingTour == null)
+                {
+                    _logger.Warning($"Booking tour with ID {bookingTourId} not found");
+                    return new ApiResponse<BookingTourResponseDTO>(404, null, "Booking tour not found");
+                }
+
+				if(bookingTour.UserId != userId && role != (int) ERole.Admin)
+				{
+                    _logger.Warning($"Bad request");
+                    return new ApiResponse<BookingTourResponseDTO>(403, null, "Not allowed to change this booking tour");
+                }	
+
+				bookingTour.TravellerList = _mapper.Map<List<Traveller>>(request.Travellers);
+				
+				_bookingTourRepository.Update(bookingTour);
+                _logger.Information($"End: BookingTourService - UpdateBookingTourInfoAsync: {bookingTourId}");
+
+				var data = await GetByIdAsync(bookingTourId);
+                return new ApiResponse<BookingTourResponseDTO>(200, data.Result, "Booking tour data retrieved successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error in BookingTourService - UpdateBookingTourInfoAsync: {ex.Message}", ex);
+                return new ApiResponse<BookingTourResponseDTO>(500, null, $"An error occurred: {ex.Message}");
+            }
+        }
 
         public async Task<ApiResponse<List<BookingTourResponseDTO>>> GetCurrentUserAsync(int userId)
         {
@@ -150,5 +184,7 @@ namespace Booking.API.Services
                 _logger.Error("ERROR - BookingRoomService - GetScheduleFromGrpcAsync");
             }
         }
+
+  
     }
 }
