@@ -8,7 +8,7 @@ namespace Identity.API.Services.Interfaces
         Task<ApiResponse<List<UserResponseDTO>>> GetAllAsync();
         Task<ApiResponse<UserResponseDTO>> GetUserByIdAsync(int id);
 		Task<ApiResponse<UserResponseDTO>> InsertAsync(UserRequestDTO item);
-        Task<ApiResponse<UserResponseDTO>> UpdateAsync(UserRequestDTO item);
+        Task<ApiResponse<UserResponseDTO>> UpdateAsync(int id, UserRequestDTO item);
         Task<ApiResponse<int>> DeleteAsync(int id);
     }
 }

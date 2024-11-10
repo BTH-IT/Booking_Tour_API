@@ -41,11 +41,11 @@ namespace Identity.API.Controllers
             var response = await _userService.DeleteAsync(id);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpPut]
+        [HttpPut("{id:int}")]
         [ApiValidationFilter]
-        public async Task<IActionResult> UpdateUserAsync(UserRequestDTO requestDTO)
+        public async Task<IActionResult> UpdateUserAsync(int id,UserRequestDTO requestDTO)
         {
-            var response = await _userService.UpdateAsync(requestDTO);
+            var response = await _userService.UpdateAsync(id,requestDTO);
             return StatusCode(response.StatusCode, response);
         }
     }

@@ -91,10 +91,10 @@ namespace Identity.API.Services
 			return new ApiResponse<UserResponseDTO>(200, userDto, "Creation successful");
 		}
 
-		public async Task<ApiResponse<UserResponseDTO>> UpdateAsync(UserRequestDTO item)
+		public async Task<ApiResponse<UserResponseDTO>> UpdateAsync(int id,UserRequestDTO item)
 		{
 			_logger.Information($"Begin: UserService - UpdateAsync");
-			var user = await _userRepository.GetUserByIdAsync(item.Id.Value);
+			var user = await _userRepository.GetUserByIdAsync(id);
 			var accountId = user.AccountId;
 			if (user == null)
 			{
