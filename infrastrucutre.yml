@@ -1,0 +1,14 @@
+services:
+  rabbitmq:
+    container_name: rabbitmq-container
+    image: rabbitmq:3-management-alpine
+    networks:
+      - infra-network
+    ports:
+      - 5672:5672
+      - 15672:15672
+  
+
+networks:
+  infra-network:
+    

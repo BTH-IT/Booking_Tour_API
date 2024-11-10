@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using EventBus.Masstransit;
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -121,12 +122,16 @@ try
             });
         }
     });
+
     builder.Services.AddGrpc(options =>
     {
         options.Interceptors.Add<GrpcExceptionInterceptor>();
     });
     //Add GrpcClient
     builder.Services.AddGrpcClients();
+
+    //Add Masstransit
+    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
