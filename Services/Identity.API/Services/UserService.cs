@@ -3,6 +3,7 @@ using Identity.API.Entites;
 using Identity.API.Repositories;
 using Identity.API.Repositories.Interfaces;
 using Identity.API.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
 using Shared.Helper;
@@ -30,7 +31,27 @@ namespace Identity.API.Services
 			_mapper = mapper;
 		}
 
-		public async Task<ApiResponse<int>> DeleteAsync(int id)
+        public async Task<ApiResponse<string>> ChanageUserPasswordAsync(int userId,ChangeUserPasswordRequestDto dto)
+        {
+            var user = await _userRepository.GetByIdAsync(userId,c=>c.Account);
+            if (user == null)
+                return new ApiResponse<string>(200,"",$"Không tìm thấy người dùng với id : {userId}");
+
+			if(user.Account!.Password != dto.CurrentPassword)
+			{
+                return new ApiResponse<string>(400, "", $"Mật khẩu không chính xác");
+            }
+			user.Account.Password = dto.NewPassword;
+			var result = await _accountRepository.UpdateAsync(user.Account);
+           
+			if (result > 0 )
+			{
+				return new ApiResponse<string>(200, "", "Đổi mật khẩu thành công");
+			}
+			return new ApiResponse<string>(400, "", "Đổi mật khẩu thất bại");
+        }
+
+        public async Task<ApiResponse<int>> DeleteAsync(int id)
 		{
 			_logger.Information($"Begin: UserService - DeleteAsync: {id}");
 			var user = await _userRepository.GetUserByIdAsync(id);
