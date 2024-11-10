@@ -10,5 +10,6 @@ namespace Identity.API.Services.Interfaces
 		Task<ApiResponse<UserResponseDTO>> InsertAsync(UserRequestDTO item);
         Task<ApiResponse<UserResponseDTO>> UpdateAsync(int id, UserRequestDTO item);
         Task<ApiResponse<int>> DeleteAsync(int id);
+        Task<ApiResponse<string>> ChanageUserPasswordAsync(int userId,ChangeUserPasswordRequestDto dto);
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Identity.API.Services;
 using Identity.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Helper;
+using System.Security.Claims;
 
 namespace Identity.API.Controllers
 {
@@ -46,6 +48,13 @@ namespace Identity.API.Controllers
         public async Task<IActionResult> UpdateUserAsync(int id,UserRequestDTO requestDTO)
         {
             var response = await _userService.UpdateAsync(id,requestDTO);
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpPatch("change-password")]
+        public async Task<IActionResult> PutUserPasswordAsync([FromBody] ChangeUserPasswordRequestDto request)
+        {
+            var currentUserId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.PrimarySid)!.ToString());
+            var response = await _userService.ChanageUserPasswordAsync(currentUserId, request);
             return StatusCode(response.StatusCode, response);
         }
     }
