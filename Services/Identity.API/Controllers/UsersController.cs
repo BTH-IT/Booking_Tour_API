@@ -28,7 +28,7 @@ namespace Identity.API.Controllers
             var response = await _userService.GetUserByIdAsync(id);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpPost()]
+        [HttpPost]
         [ApiValidationFilter]
         public async Task<IActionResult> CreateUserAsync(UserRequestDTO requestDTO)
         {
