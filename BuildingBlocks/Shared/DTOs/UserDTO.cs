@@ -35,4 +35,10 @@ namespace Shared.DTOs
         public string? Avatar { get; set; }
 
     }
+    public class ChangeUserPasswordRequestDto
+    {
+        public string CurrentPassword { get; set; }
+
+        public string NewPassword { get; set; }
+    }
 }
