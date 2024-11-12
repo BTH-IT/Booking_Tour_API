@@ -1,24 +1,5 @@
 services:
-  mysql:
-    container_name: mysql-container
-    image: mysql:9.0.1
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_ROOT_HOST: "%" # Allow root access from any host
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - apis-network
-    restart: always
-    # Healthcheck for mysql container
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
-      interval: 5s
-      timeout: 3s
-      retries: 2
-      start_period: 0s
+
   identity.api:
     image: identity-api
     build:
@@ -26,9 +7,6 @@ services:
       dockerfile: Services/Identity.API/Dockerfile
     networks:
       - apis-network
-    depends_on:
-      mysql:
-        condition: service_healthy
   room.api:
     image: room-api
     build:
@@ -36,9 +14,6 @@ services:
       dockerfile: Services/Room.API/Dockerfile
     networks:
       - apis-network
-    depends_on:
-      mysql:
-        condition: service_healthy
   tour.api:
     image: tour-api
     build:
@@ -47,7 +22,7 @@ services:
     networks:
       - apis-network
     depends_on:
-      mysql:
+      rabbitmq:
         condition: service_healthy
   booking.api:
     image: booking-api
@@ -57,7 +32,17 @@ services:
     networks:
       - apis-network
     depends_on:
-      mysql:
+      rabbitmq:
+        condition: service_healthy
+  realtime.api:
+    image: realtime-api
+    build: 
+      context: .
+      dockerfile: Services/Realtime.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      rabbitmq:
         condition: service_healthy
   rabbitmq:
     container_name: rabbitmq-container
@@ -67,6 +52,13 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   upload.api:
     image: upload-api
     build:
@@ -74,6 +66,7 @@ services:
         dockerfile: Services/Upload.API/Dockerfile
     networks:
       - apis-network  
+
   api_gateway:
     image: api-gateway
     build:
@@ -85,8 +78,10 @@ services:
       - tour.api
       - booking.api
       - saga.api
+      - realtime.api
     networks:
       - apis-network
+
   saga.api:
     image: saga-api
     build:
@@ -96,7 +91,3 @@ services:
       - apis-network
 networks:
   apis-network:
-    
-volumes:
-  mysql_data:
-    name: mysql_data

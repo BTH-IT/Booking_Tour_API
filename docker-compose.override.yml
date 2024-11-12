@@ -4,7 +4,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
       - ASPNETCORE_URLS=http://+:80;http://+:81
-      - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_identity;user=${DB_USER};password=${DB_PASSWORD}
+      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=bthungsi_booking_identity;user=${DB_USER};password=${DB_PASSWORD}
     ports:
       - "5001:80"
       - "5101:81"
@@ -13,7 +13,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
       - ASPNETCORE_URLS=http://+:80;http://+:81
-      - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_room;user=${DB_USER};password=${DB_PASSWORD}
+      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=bthungsi_booking_room;user=${DB_USER};password=${DB_PASSWORD}
     ports:
       - "5003:80"
       - "5103:81"
@@ -22,7 +22,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
       - ASPNETCORE_URLS=http://+:80;http://+:81
-      - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_tour;user=${DB_USER};password=${DB_PASSWORD}
+      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=bthungsi_booking_tour;user=${DB_USER};password=${DB_PASSWORD}
     ports:
       - "5004:80"
       - "5104:81"
@@ -31,7 +31,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
       - ASPNETCORE_URLS=http://+:80;http://+:81
-      - DatabaseSettings:ConnectionString=server=mysql;port=${DB_PORT};database=new_booking_bookingdata;user=${DB_USER};password=${DB_PASSWORD}
+      - DatabaseSettings:ConnectionString=server=${DB_SERVER};port=${DB_PORT};database=bthungsi_booking_bookingdata;user=${DB_USER};password=${DB_PASSWORD}
     ports:
       - "5002:80"
       - "5102:81"
@@ -61,3 +61,11 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "5007:80"
+
+  realtime.api:
+    container_name:  realtime.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=docker
+      - ASPNETCORE_URLS=http://+:80 
+    ports:
+      - "5008:80"

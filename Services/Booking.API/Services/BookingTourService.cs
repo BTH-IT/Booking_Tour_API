@@ -4,6 +4,7 @@ using Booking.API.GrpcClient.Protos;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Shared.Constants;
 using Shared.DTOs;
 using Shared.Enums;
 using Shared.Helper;
@@ -185,6 +186,39 @@ namespace Booking.API.Services
             }
         }
 
-  
+        public async Task<ApiResponse<string>> DeleteBookingTourAsync(int bookingTourId, int userId)
+        {
+            _logger.Information($"START - BookingTourService - DeleteBookingTourAsync");
+
+            var bookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(bookingTourId);
+
+			if(bookingTour.UserId != userId)
+			{
+				return new ApiResponse<string>(400,"","Chỉ có chủ của đơn đặt mới có thể hủy");
+			}
+			if(bookingTour.Status == Constants.OrderStatus.Paid)
+			{
+				return new ApiResponse<string>(400, "","Đơn đặt đã thanh toán không thể hủy");
+			}
+			bookingTour.Status = Constants.OrderStatus.Cancel;
+			var result = await _bookingTourRepository.UpdateAsync(bookingTour); 
+			if (result > 0)
+			{
+				var request = new UpdateScheduleAvailableSeatRequest
+				{
+					ScheduleId = bookingTour.ScheduleId,
+					Count = bookingTour.Seats*-1
+				};
+				var response = await _tourGrpcServiceClient.UpdateScheduleAvailableSeatAsync(request);
+				if(response.Result)
+				{
+                    // publish một event
+
+                }
+            }
+            _logger.Information($"END - BookingTourService - DeleteBookingTourAsync");
+
+            return new ApiResponse<string>(200, "", "Hủy đơn đặt thành công");
+        }
     }
 }

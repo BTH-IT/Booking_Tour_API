@@ -21,7 +21,7 @@
         public bool IsTip { get; set; }
         public bool IsEntranceTicket { get; set; }
         public decimal PriceTotal { get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
         public List<TravellerDTO> Travellers { get; set; }
     }
 }

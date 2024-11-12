@@ -9,5 +9,6 @@ namespace Booking.API.Services.Interfaces
 		Task<ApiResponse<BookingTourResponseDTO>> GetByIdAsync(int id);
         Task<ApiResponse<List<BookingTourResponseDTO>>> GetCurrentUserAsync(int userId);
         Task<ApiResponse<BookingTourResponseDTO>> UpdateBookingTourInfoAsync(int bookingTourId, UpdateBookingTourInfoRequest request, int userId, int role);
+        Task<ApiResponse<string>> DeleteBookingTourAsync(int bookingTourId, int userId);
     }
 }

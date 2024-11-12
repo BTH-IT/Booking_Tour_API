@@ -47,6 +47,7 @@ try
     app.UseAuthorization();
 
     app.MapHub<NotiHub>("/api/noti");
+
     app.MapControllers();
   
     app.Run();
