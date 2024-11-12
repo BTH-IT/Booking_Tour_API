@@ -194,7 +194,7 @@ namespace Booking.API.Services
 
                 foreach (var item in dto)
                 {
-                    item.User = userDictionary[item.UserId] != null ? userDictionary[item.UserId] : null;
+                    item.User = userDictionary.ContainsKey(item.UserId) ? userDictionary[item.UserId] : null;
                 }
                 _logger.Information($"END - BookingRoomService - GetUsersFromGrpcAsync");
 
