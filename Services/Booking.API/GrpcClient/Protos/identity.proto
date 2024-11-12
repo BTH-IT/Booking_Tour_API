@@ -4,6 +4,7 @@ option csharp_namespace = "Booking.API.GrpcClient.Protos";
 
 service IdentityGrpcService{
 	rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+	rpc GetUsersByIds (GetUsersByIdRequest) returns (GetUsersByIdsResponse);
 }
 
 message GetUserByIdRequest{
@@ -11,6 +12,20 @@ message GetUserByIdRequest{
 }
 
 message GetUserByIdResponse{
+    string Fullname = 1;
+    string Country = 2;
+	string Phone = 3;
+    string Gender = 4;
+	int32 Id = 5;
+    google.protobuf.Timestamp BirthDate = 6;
+}
+message GetUsersByIdRequest{
+	repeated int32 Ids  = 1;
+}
+message GetUsersByIdsResponse{
+	repeated UserResponse Users = 1;
+}
+message UserResponse{
     string Fullname = 1;
     string Country = 2;
 	string Phone = 3;

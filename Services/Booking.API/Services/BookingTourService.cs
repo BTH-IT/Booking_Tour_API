@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Booking.API.Entities;
 using Booking.API.GrpcClient.Protos;
+using Booking.API.Repositories;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -41,13 +42,9 @@ namespace Booking.API.Services
 				var bookingTours = await _bookingTourRepository.GetBookingToursAsync();
 				var data = _mapper.Map<List<BookingTourCustomResponseDTO>>(bookingTours);
 
-				foreach(var item in  data)
-				{
-					await GetUserFromGrpcAsync(item);
-					await GetScheduleFromGrpcAsync(item);
-
-				}
-				_logger.Information("End: BookingTourService - GetAllAsync");
+                await GetUsersFromGrpcAsync(data);
+                await GetAllInScheduleFromGrpcAsync(data);
+                _logger.Information("End: BookingTourService - GetAllAsync");
 				return new ApiResponse<List<BookingTourCustomResponseDTO>>(200, data, "Data retrieved successfully");
 			}
 			catch (Exception ex)
@@ -127,11 +124,8 @@ namespace Booking.API.Services
             {
                 var bookingTours = await _bookingTourRepository.FindByCondition(c => c.UserId.Equals(userId), false).ToListAsync();
                 var bookingTourDtos = _mapper.Map<List<BookingTourCustomResponseDTO>>(bookingTours);
-                foreach (var item in bookingTourDtos)
-                {
-                    await GetUserFromGrpcAsync(item);
-                    await GetScheduleFromGrpcAsync(item);
-                }
+                await GetUsersFromGrpcAsync(bookingTourDtos);
+                await GetAllInScheduleFromGrpcAsync(bookingTourDtos);
                 _logger.Information($"END - BookingTourService - GetUserFromGrpcAsync");
                 return new ApiResponse<List<BookingTourCustomResponseDTO>>(200, bookingTourDtos, "Lấy dữ liệu thành công");
 
@@ -164,8 +158,69 @@ namespace Booking.API.Services
 				_logger.Error("ERROR - BookingTourService - GetUserFromGrpcAsync");
 			}
 		}
+        private async Task GetUsersFromGrpcAsync(List<BookingTourCustomResponseDTO> dto)
+        {
+            _logger.Information($"START - BookingTourService - GetUsersFromGrpcAsync");
+            try
+            {
+                var userIds = dto.Select(c => c.UserId).ToList();
 
-		private async Task GetScheduleFromGrpcAsync(BookingTourCustomResponseDTO item)
+                var getUsersRequest = new GetUsersByIdRequest();
+
+                getUsersRequest.Ids.AddRange(userIds.Distinct().ToList());
+
+                var userInfos = await _identityGrpcServiceClient.GetUsersByIdsAsync(getUsersRequest);
+
+                var userDtos = _mapper.Map<List<UserResponseDTO>>(userInfos.Users);
+
+                var userDictionary = userDtos.ToDictionary(c => c.Id);
+
+                foreach (var item in dto)
+                {
+                    item.User = userDictionary[item.UserId] != null ? userDictionary[item.UserId] : null;
+                }
+                _logger.Information($"END - BookingTourService - GetUsersFromGrpcAsync");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+
+                _logger.Error("ERROR - BookingRoomService - GetUsersFromGrpcAsync");
+            }
+        }
+		private async Task GetAllInScheduleFromGrpcAsync(List<BookingTourCustomResponseDTO> dto)
+		{
+            _logger.Information($"START - BookingTourService - GetAllInScheduleFromGrpcAsync");
+            try
+            {
+                var scheduleIds = dto.Select(c => c.UserId).ToList();
+
+                var getSchedulesRequest = new GetSchedulesByIdsRequest();
+
+                getSchedulesRequest.Ids.AddRange(scheduleIds.Distinct().ToList());
+
+                var scheduleInfos = await _tourGrpcServiceClient.GetSchedulesByIdsAsync(getSchedulesRequest);
+
+                var scheduleDtos = _mapper.Map<List<ScheduleCustomResponseDTO>>(scheduleInfos.Schedules);
+
+                var scheduleDictionary = scheduleDtos.ToDictionary(c => c.Id);
+
+                foreach (var item in dto)
+                {
+                    item.Schedule = scheduleDictionary[item.ScheduleId] != null ? scheduleDictionary[item.ScheduleId] : null;
+                }
+                _logger.Information($"END - BookingTourService - GetAllInScheduleFromGrpcAsync");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+
+                _logger.Error("ERROR - BookingRoomService - GetAllInScheduleFromGrpcAsync");
+            }
+        }
+        private async Task GetScheduleFromGrpcAsync(BookingTourCustomResponseDTO item)
 		{
             _logger.Information($"START - BookingTourService - GetScheduleFromGrpcAsync");
             try
@@ -214,6 +269,25 @@ namespace Booking.API.Services
             _logger.Information($"END - BookingTourService - DeleteBookingTourAsync");
 
             return new ApiResponse<string>(200, "", "Hủy đơn đặt thành công");
+        }
+
+        public async Task<ApiResponse<string>> UpdateStatusBookingTourAsync(int bookingTourId, UpdateBookingStatusDTO dto)
+        {
+            var bookingTour = await _bookingTourRepository.GetBookingTourByIdAsync(bookingTourId);
+            if (bookingTour == null)
+            {
+                return new ApiResponse<string>(404, "", "Không tìm thấy đơn đặt");
+            }
+            if (bookingTour.Status.Equals(Constants.OrderStatus.Paid))
+            {
+                return new ApiResponse<string>(400, "", "Đơn đã thanh toán không thể thay đổi trạng thái");
+
+            }
+            bookingTour.Status = dto.Status;
+            await _bookingTourRepository.SaveChangesAsync();
+            _logger.Information($"END - BookingTourService - UpdateStatusBookingTourAsync");
+            return new ApiResponse<string>(400, "", "Cập nhật thành công");
+
         }
     }
 }

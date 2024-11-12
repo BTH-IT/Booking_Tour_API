@@ -30,16 +30,41 @@ namespace Tour.API.GrpcServer.Services
 
         public override async Task<GetScheduleByIdResponse> GetScheduleById(GetScheduleByIdRequest request, ServerCallContext context)
         {
+            logger.Information("START -- TourProtoService -- GetScheduleById");
             var schedule = await scheduleRepository.GetScheduleByIdAsync(request.Id);
             var response  = new GetScheduleByIdResponse()
             {
                 Schedule = mapper.Map<ScheduleResponse>(schedule)
-            };  
+            };
+            logger.Information("END -- TourProtoService -- GetScheduleById");
+
             return response;
+        }
+
+        public override async Task<GetSchedulesByIdsResponse> GetSchedulesByIds(GetSchedulesByIdsRequest request, ServerCallContext context)
+        {
+            logger.Information("START -- TourProtoService -- GetSchedulesByIds");
+
+            var scheduleIds = request.Ids.Distinct().ToList();
+            var response = new GetSchedulesByIdsResponse();
+            foreach ( var scheduleId in scheduleIds)
+            {
+                var schedule = await scheduleRepository.GetScheduleByIdAsync(scheduleId);
+                if(schedule != null)
+                {
+                    response.Schedules.Add(mapper.Map<ScheduleResponse>(schedule));
+                }    
+
+            }
+            logger.Information("END -- TourProtoSxervice -- GetSchedulesByIds");
+            return response;    
+
         }
 
         public override async Task<UpdateScheduleAvailableSeatResponse> UpdateScheduleAvailableSeat(UpdateScheduleAvailableSeatRequest request, ServerCallContext context)
         {
+            logger.Information("START -- TourProtoService -- UpdateScheduleAvailableSeat");
+
             var response = new UpdateScheduleAvailableSeatResponse();
             
             var schedule = await scheduleRepository.GetScheduleByIdAsync(request.ScheduleId);
@@ -76,6 +101,8 @@ namespace Tour.API.GrpcServer.Services
                 response.Result = false;
                 response.Message = "Cập nhật thất bại";
             }
+            logger.Information("END -- TourProtoService -- UpdateScheduleAvailableSeat");
+
             return response;
         }
     }
