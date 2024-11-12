@@ -1,6 +1,7 @@
 ﻿using Booking.API.Entities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Shared.Constants;
 using ILogger = Serilog.ILogger;
 
 namespace Booking.API.Persistence
@@ -50,6 +51,7 @@ namespace Booking.API.Persistence
                         CheckIn = DateTime.Now.AddDays(-random.Next(0, 60)),
                         CheckOut = DateTime.Now.AddDays(-random.Next(0, 60) + random.Next(1, 5)),
                         NumberOfPeople = random.Next(1, 5),
+                        Status = Constants.OrderStatus.Paid,
                         PriceTotal = random.NextDouble() * 500 + 100,
                         CreatedAt = DateTime.Now,
                         DetailBookingRooms = new List<DetailBookingRoom>
@@ -95,7 +97,7 @@ namespace Booking.API.Persistence
                         Seats = seats,
                         IsTip = random.Next(0, 2) == 1,
                         IsEntranceTicket = random.Next(0, 2) == 1,
-                        Status = "true",
+                        Status = Constants.OrderStatus.Paid,
                         PriceTotal = random.NextDouble() * 1000 + 300,
                         CreatedAt = DateTime.Now,
                         Travellers = JsonConvert.SerializeObject(travellers)

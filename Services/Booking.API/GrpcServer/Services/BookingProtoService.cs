@@ -3,7 +3,7 @@ using Booking.API.GrpcServer.Protos;
 using Booking.API.Repositories.Interfaces;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
-
+using ILogger = Serilog.ILogger;
 namespace Booking.API.GrpcServer.Services
 {
     public class BookingProtoService : BookingGrpcService.BookingGrpcServiceBase
@@ -11,19 +11,23 @@ namespace Booking.API.GrpcServer.Services
         private readonly IBookingRoomRepository bookingRoomRepository;
         private readonly IDetailBookingRoomRepository detailBookingRoomRepository;
         private readonly IBookingTourRepository tourRepository;
+        private ILogger _logger;
         
         public BookingProtoService(IBookingRoomRepository bookingRoomRepository,
             IDetailBookingRoomRepository detailBookingRoomRepository,
-            IBookingTourRepository tourRepository
+            IBookingTourRepository tourRepository,
+            ILogger logger
            )
         {
             this.bookingRoomRepository = bookingRoomRepository;
             this.detailBookingRoomRepository = detailBookingRoomRepository;
             this.tourRepository = tourRepository;
+            this._logger = logger;  
         }
         #region booking_room
         public override async Task<CheckRoomsIsBookedResponse> CheckRoomsIsBooked(CheckRoomsIsBookedRequest request, ServerCallContext context)
         {
+            _logger.Information($"START - BookingProtoService - CheckRoomsIsBooked");
             var resposne = new CheckRoomsIsBookedResponse()
             {
                 Result = true,
@@ -43,11 +47,15 @@ namespace Booking.API.GrpcServer.Services
                     resposne.Result = false ;
                 }    
             }
+            _logger.Information($"END - BookingProtoService - CheckRoomsIsBooked");
+
             return resposne;
         }
 
         public override async Task<BookingRoomResponse> CreateBookingRoom(CreateBookingRoomRequest request, ServerCallContext context)
         {
+            _logger.Information($"START - BookingProtoService - CreateBookingRoom");
+
             double totalPrice = 0;
             int numberOfGuests = 0;
             foreach(var item in request.BookingRoomDetails)
@@ -62,7 +70,8 @@ namespace Booking.API.GrpcServer.Services
                 CheckOut = request.CheckOut.ToDateTime(),
                 PriceTotal = totalPrice,    
                 NumberOfPeople = numberOfGuests,   
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                Status = request.Status,
             };
             var bookingRoomresult = await bookingRoomRepository.CreateAsync(newBookingRoom);
             if (bookingRoomresult <= 0) return new BookingRoomResponse()
@@ -83,6 +92,8 @@ namespace Booking.API.GrpcServer.Services
                 });
             }
             var detailBookingRoomResult = await detailBookingRoomRepository.CreateListAsync(newBookingRoomDetails);
+            _logger.Information($"END - BookingProtoService - CreateBookingRoom");
+
             return new BookingRoomResponse()
             {
                 BookingRoomId =  bookingRoomresult,
@@ -91,6 +102,8 @@ namespace Booking.API.GrpcServer.Services
   
         public override async Task<DeleteBookingRoomResponse> DeleteBookingRoom(DeleteBookingRoomRequest request, ServerCallContext context)
         {
+            _logger.Information($"START - BookingProtoService - DeleteBookingRoom");
+
             var bookingRoom = await bookingRoomRepository.GetBookingRoomByIdAsync(request.BookingRoomId);
             if (bookingRoom == null) return new DeleteBookingRoomResponse() { Result = false };
 
@@ -101,7 +114,9 @@ namespace Booking.API.GrpcServer.Services
                 {
                     await detailBookingRoomRepository.DeleteDetailBookingRoomAsync(item.Id);
                 }
-            }    
+            }
+            _logger.Information($"END - BookingProtoService - DeleteBookingRoom");
+
             return new DeleteBookingRoomResponse()
             {
                 Result = true   

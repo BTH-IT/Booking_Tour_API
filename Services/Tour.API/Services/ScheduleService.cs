@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using EventBus.IntergrationEvents.Events;
+using MassTransit;
 using Shared.DTOs;
 using Shared.Helper;
 using Tour.API.Entities;
@@ -13,12 +15,16 @@ namespace Tour.API.Services
 		private readonly IScheduleRepository _scheduleRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
-
-		public ScheduleService(IScheduleRepository scheduleRepository, IMapper mapper, ILogger logger)
+		private readonly IPublishEndpoint _publishEndpoint;
+		public ScheduleService(IScheduleRepository scheduleRepository, 
+			IMapper mapper, 
+			ILogger logger,
+			IPublishEndpoint publishEndpoint)
 		{
 			_scheduleRepository = scheduleRepository;
 			_mapper = mapper;
 			_logger = logger;
+			_publishEndpoint = publishEndpoint;
 		}
 
 		public async Task<ApiResponse<List<ScheduleResponseDTO>>> GetAllAsync()
@@ -137,9 +143,17 @@ namespace Tour.API.Services
 				}
 
 				var updatedSchedule = await _scheduleRepository.GetScheduleByIdAsync(id);
-				var responseData = _mapper.Map<ScheduleResponseDTO>(updatedSchedule);
+				
+                var responseData = _mapper.Map<ScheduleResponseDTO>(updatedSchedule);
 				_logger.Information("End: ScheduleService - UpdateAsync");
-
+				// publish event
+				await _publishEndpoint.Publish(new ScheduleUpdateEvent()
+				{
+					Id = Guid.NewGuid(),	
+					ObjectId  = schedule.Id,
+					Data = schedule.AvailableSeats,
+					CreationDate = DateTime.Now,
+				});
 				return result > 0
 					? new ApiResponse<ScheduleResponseDTO>(200, responseData, "Successfully updated the schedule.")
 					: new ApiResponse<ScheduleResponseDTO>(400, null, "Failed to update the schedule.");

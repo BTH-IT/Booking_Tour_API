@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Booking.API.GrpcServer.Services;
 using Contracts.Exceptions;
+using EventBus.Masstransit;
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -61,6 +62,9 @@ try
             )
         }
     );
+
+    //Add Masstransit
+    builder.Services.AddCustomMassTransit(builder.Environment,typeof(Program).Assembly);
     //Add Swagger Gen
     builder.Services.AddSwaggerGen(
         options =>
