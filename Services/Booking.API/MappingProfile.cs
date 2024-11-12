@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Booking.API.Entities;
 using Booking.API.GrpcClient.Protos;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Shared.DTOs;
 
@@ -39,9 +40,20 @@ namespace Booking.API
 					opt.PreCondition(src => src.Travellers != null);
 					opt.MapFrom(src => JsonConvert.DeserializeObject<List<TravellerDTO>>(src.Travellers));
 				});
+            CreateMap<BookingTourCustomResponseDTO, BookingTour>()
+				.ForMember(dest => dest.Travellers, opt =>
+				{
+					opt.PreCondition(src => src.Travellers != null);
+					opt.MapFrom(src => JsonConvert.SerializeObject(src.Travellers));
+				})
+				.ReverseMap()
+				.ForMember(dest => dest.Travellers, opt =>
+				{
+					opt.PreCondition(src => src.Travellers != null);
+					opt.MapFrom(src => JsonConvert.DeserializeObject<List<TravellerDTO>>(src.Travellers));
+				});
 
-
-			CreateMap<Traveller, TravellerDTO>().ReverseMap();
+            CreateMap<Traveller, TravellerDTO>().ReverseMap();
 			CreateMap<GetUserByIdResponse, UserResponseDTO>()
 				.ForMember(dest => dest.BirthDate, opt =>
 				{
@@ -50,9 +62,17 @@ namespace Booking.API
 				});
             CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
             CreateMap<RoomResponse, RoomResponseDTO>().ReverseMap();
+			CreateMap<ReviewResponse, ReviewRoomDTO>();
+			CreateMap<ScheduleResponse, ScheduleResponseDTO>()
+				.ForMember(dest => dest.DateStart, opt => opt.MapFrom(src => src.DateStart.ToDateTime()))
+				.ForMember(dest => dest.DateEnd, opt => opt.MapFrom(src => src.DateEnd.ToDateTime()));
 
-			CreateMap<ScheduleResponse, ScheduleResponseDTO>().ReverseMap();
-			CreateMap<TourResponse, TourResponseDTO>().ReverseMap();
+            CreateMap<ScheduleResponse, ScheduleCustomResponseDTO>()
+                .ForMember(dest => dest.DateStart, opt => opt.MapFrom(src => src.DateStart.ToDateTime()))
+                .ForMember(dest => dest.DateEnd, opt => opt.MapFrom(src => src.DateEnd.ToDateTime()));
+            CreateMap<TourResponse, TourCustomResponseDTO>()
+                .ForMember(dest => dest.DateFrom, opt => opt.MapFrom(src => src.DateFrom.ToDateTime()))
+                .ForMember(dest => dest.DateTo, opt => opt.MapFrom(src => src.DateTo.ToDateTime())); 
         }
 	}
 }
