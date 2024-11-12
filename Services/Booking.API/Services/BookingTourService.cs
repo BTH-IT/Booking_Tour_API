@@ -177,7 +177,7 @@ namespace Booking.API.Services
 
                 foreach (var item in dto)
                 {
-                    item.User = userDictionary[item.UserId] != null ? userDictionary[item.UserId] : null;
+                    item.User = userDictionary.ContainsKey(item.UserId) ? userDictionary[item.UserId] : null;
                 }
                 _logger.Information($"END - BookingTourService - GetUsersFromGrpcAsync");
 
@@ -194,7 +194,7 @@ namespace Booking.API.Services
             _logger.Information($"START - BookingTourService - GetAllInScheduleFromGrpcAsync");
             try
             {
-                var scheduleIds = dto.Select(c => c.UserId).ToList();
+                var scheduleIds = dto.Select(c => c.ScheduleId).ToList();
 
                 var getSchedulesRequest = new GetSchedulesByIdsRequest();
 
@@ -208,7 +208,7 @@ namespace Booking.API.Services
 
                 foreach (var item in dto)
                 {
-                    item.Schedule = scheduleDictionary[item.ScheduleId] != null ? scheduleDictionary[item.ScheduleId] : null;
+                    item.Schedule = scheduleDictionary.ContainsKey(item.ScheduleId)  ? scheduleDictionary[item.ScheduleId] : null;
                 }
                 _logger.Information($"END - BookingTourService - GetAllInScheduleFromGrpcAsync");
 
