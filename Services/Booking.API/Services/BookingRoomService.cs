@@ -3,6 +3,7 @@ using Booking.API.GrpcClient.Protos;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Shared.Constants;
 using Shared.DTOs;
 using Shared.Helper;
 using ILogger = Serilog.ILogger;
@@ -107,7 +108,29 @@ namespace Booking.API.Services
             }
         }
 
-		private async Task GetUserFromGrpcAsync(BookingRoomResponseDTO dto)
+        public async Task<ApiResponse<string>> DeleteBookingRoomIdAsync(int bookingRoomId, int userId)
+        {
+            _logger.Information($"START - BookingRoomService - DeleteBookingRoomId");
+
+            var bookingRoom = await _bookingRoomRepository.GetBookingRoomByIdAsync(bookingRoomId);
+
+			if (bookingRoom.UserId != userId)
+			{
+				return new ApiResponse<string>(400, "", "Chỉ có chủ của đơn đặt mới có thể hủy");
+			}
+			if(bookingRoom.Status.Equals(Constants.OrderStatus.Paid))
+			{
+                return new ApiResponse<string>(400, "", "Không thể hủy đơn đặt đã thanh toán");
+            }
+			bookingRoom.Status = Constants.OrderStatus.Cancel;
+			var result = await _bookingRoomRepository.UpdateAsync(bookingRoom);
+			if(result > 0)
+			{
+			}
+            _logger.Information($"END - BookingRoomService - DeleteBookingRoomId");
+			return new ApiResponse<string>(200,"","Hủy đơn đặt thành công");
+        }
+        private async Task GetUserFromGrpcAsync(BookingRoomResponseDTO dto)
 		{
 			_logger.Information($"START - BookingRoomService - GetUserFromGrpcAsync");
 			try
@@ -161,7 +184,9 @@ namespace Booking.API.Services
 
         public async Task<ApiResponse<RoomBookingDataDTO>> GetRoomCheckInCheckOutDataAsync(int roomId)
         {
-			var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>true,false,c=>c.DetailBookingRooms!.Where(tr => tr.DeletedAt == null)).ToListAsync();
+            _logger.Information($"START - BookingProtoService - GetRoomCheckInCheckOutDataAsync");
+
+            var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>!c.Status.Equals(Constants.OrderStatus.Cancel),false,c=>c.DetailBookingRooms!.Where(tr => tr.DeletedAt == null)).ToListAsync();
 			var roomBookingData = new RoomBookingDataDTO()
 			{
 				Data = new List<DetailRoomBookingDateDTO>()
@@ -177,8 +202,12 @@ namespace Booking.API.Services
 					});
 				}
 			}
-			var response = new ApiResponse<RoomBookingDataDTO>(200,roomBookingData,"Lấy dữ liệu thành công");
+            _logger.Information($"END - BookingProtoService - GetRoomCheckInCheckOutDataAsync");
+
+            var response = new ApiResponse<RoomBookingDataDTO>(200,roomBookingData,"Lấy dữ liệu thành công");
 			return response;
         }
+
+  
     }
 }

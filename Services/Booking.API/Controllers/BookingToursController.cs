@@ -51,5 +51,12 @@ namespace Booking.API.Controllers
 			var response = await _bookingTourService.UpdateBookingTourInfoAsync(bookingTourId, requestDtO, userId, userRole);
 			return StatusCode(response.StatusCode, response);			
 		}
-	}
+		[HttpDelete("{bookingTourId:int}/cancel")]
+		public async Task<IActionResult> DeleteBookingTourAsync(int bookingTourId)
+		{
+			var userId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+			var response = await _bookingTourService.DeleteBookingTourAsync(bookingTourId,userId);
+			return StatusCode(response.StatusCode, response);
+        }
+    }
 }

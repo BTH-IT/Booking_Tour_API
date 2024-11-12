@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using EventBus.IntergrationEvents.Events;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using MassTransit;
 using System;
 using System.Net.WebSockets;
 using Tour.API.GrpcServer.Protos;
@@ -14,13 +16,16 @@ namespace Tour.API.GrpcServer.Services
         private readonly IScheduleRepository scheduleRepository;
         private readonly ILogger logger;
         private readonly IMapper mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
         public TourProtoService(IScheduleRepository scheduleRepository,
             ILogger logger,
-            IMapper mapper)
+            IMapper mapper,
+            IPublishEndpoint publishEndpoint)
         {
             this.scheduleRepository = scheduleRepository;
             this.logger = logger;
             this.mapper = mapper;   
+            _publishEndpoint = publishEndpoint;
         }
 
         public override async Task<GetScheduleByIdResponse> GetScheduleById(GetScheduleByIdRequest request, ServerCallContext context)
@@ -58,6 +63,13 @@ namespace Tour.API.GrpcServer.Services
             {
                 response.Result = true;
                 response.Message = "Cập nhật thành công";
+                await _publishEndpoint.Publish(new ScheduleUpdateEvent()
+                {
+                    Id = Guid.NewGuid(),
+                    ObjectId = schedule.Id,
+                    Data = schedule.AvailableSeats,
+                    CreationDate = DateTime.Now,
+                });
             }
             else
             {

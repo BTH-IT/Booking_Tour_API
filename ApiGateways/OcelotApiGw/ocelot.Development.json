@@ -133,6 +133,24 @@
         "TimeoutValue": 10000
       },
       "SwaggerKey": "saga.api"
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5008
+        }
+      ],
+      "UpstreamPathTemplate": "/realtime/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+
+      ],
+      "SwaggerKey": "realtime.api"
     }
   ],
   "SwaggerEndPoints": [

@@ -6,8 +6,8 @@ using Tour.API.Repositories.Interfaces;
 using Tour.API.Services.Interfaces;
 using Tour.API.GrpcClient.Protos;
 using ILogger = Serilog.ILogger;
-using Grpc.Core;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using MassTransit;
+using EventBus.IntergrationEvents.Events;
 
 namespace Tour.API.Services
 {
