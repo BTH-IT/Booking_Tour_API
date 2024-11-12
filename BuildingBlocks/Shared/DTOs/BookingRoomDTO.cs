@@ -13,7 +13,10 @@
 		public UserResponseDTO User { get; set; }
 
 	}
-
+	public class UpdateBookingStatusDTO
+	{
+		public string Status { get; set; }
+	}
 	public class BookingRoomRequestDTO
 	{
 		public int UserId { get; set; }
