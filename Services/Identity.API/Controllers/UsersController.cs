@@ -45,12 +45,12 @@ namespace Identity.API.Controllers
         }
         [HttpPut("{id:int}")]
         [ApiValidationFilter]
-        public async Task<IActionResult> UpdateUserAsync(int id,UserRequestDTO requestDTO)
+        public async Task<IActionResult> UpdateUserAsync(int id,UpdateUserRequestDTO requestDTO)
         {
             var response = await _userService.UpdateAsync(id,requestDTO);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpPatch("change-password")]
+        [HttpPut("change-password")]
         public async Task<IActionResult> PutUserPasswordAsync([FromBody] ChangeUserPasswordRequestDto request)
         {
             var currentUserId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.PrimarySid)!.ToString());

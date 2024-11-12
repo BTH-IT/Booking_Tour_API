@@ -112,24 +112,21 @@ namespace Identity.API.Services
 			return new ApiResponse<UserResponseDTO>(200, userDto, "Creation successful");
 		}
 
-		public async Task<ApiResponse<UserResponseDTO>> UpdateAsync(int id,UserRequestDTO item)
+		public async Task<ApiResponse<UserResponseDTO>> UpdateAsync(int id,UpdateUserRequestDTO item)
 		{
 			_logger.Information($"Begin: UserService - UpdateAsync");
 			var user = await _userRepository.GetUserByIdAsync(id);
+			var userId = user.Id;
 			var accountId = user.AccountId;
 			if (user == null)
 			{
 				return new ApiResponse<UserResponseDTO>(404, null, "User not found");
 			}
 
-			if (await _userRepository.FindByCondition(c => c.AccountId.Equals(item.AccountId) && !c.Id.Equals(item.Id)).FirstOrDefaultAsync() != null)
-			{
-				return new ApiResponse<UserResponseDTO>(400, null, "Account is already assigned to another user");
-			}
-
 			user = _mapper.Map<User>(item);
-			user.AccountId = accountId;
-
+			user.Id = userId;
+			user.AccountId = accountId;	
+			
 			var result = await _userRepository.UpdateAsync(user);
 			if (result > 0)
 			{
