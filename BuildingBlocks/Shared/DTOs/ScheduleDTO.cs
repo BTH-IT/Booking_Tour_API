@@ -19,7 +19,15 @@ namespace Shared.DTOs
         public int AvailableSeats { get; set; }
 		public TourResponseDTO Tour { get; set; }
 	}
-
+    public class ScheduleCustomResponseDTO
+    {
+        public int Id { get; set; }
+        public int TourId { get; set; }
+        public DateTime DateStart { get; set; }
+        public DateTime DateEnd { get; set; }
+        public int AvailableSeats { get; set; }
+        public TourCustomResponseDTO Tour { get; set; }
+    }
     public class ScheduleRoomRequestDTO
     {
         public int RoomId { get; set; }

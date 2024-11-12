@@ -20,7 +20,9 @@ namespace Identity.API
 			CreateMap<AccountRequestDTO, Account>();
 
             CreateMap<Permission, PermissionResponseDTO>().ReverseMap();
-            CreateMap<PermissionRequestDTO, Permission>();   
+            CreateMap<PermissionRequestDTO, Permission>();
+
+            CreateMap<UpdateUserRequestDTO, User>();
         }
     }   
 }
