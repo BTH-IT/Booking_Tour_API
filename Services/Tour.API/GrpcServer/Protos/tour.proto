@@ -36,6 +36,7 @@ message TourResponse{
     float Rate = 10;
     float SalePercent = 11;
     DestinationResponse Destination = 12;
+    repeated string ImageList = 13;
 }
 
 message DestinationResponse{
