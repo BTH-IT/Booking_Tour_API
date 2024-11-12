@@ -32,14 +32,14 @@ namespace Booking.API.Services
 			_tourGrpcServiceClient = tourGrpcServiceClient;
 		}
 
-		public async Task<ApiResponse<List<BookingTourResponseDTO>>> GetAllAsync()
+		public async Task<ApiResponse<List<BookingTourCustomResponseDTO>>> GetAllAsync()
 		{
 			_logger.Information("Begin: BookingTourService - GetAllAsync");
 
 			try
 			{
 				var bookingTours = await _bookingTourRepository.GetBookingToursAsync();
-				var data = _mapper.Map<List<BookingTourResponseDTO>>(bookingTours);
+				var data = _mapper.Map<List<BookingTourCustomResponseDTO>>(bookingTours);
 
 				foreach(var item in  data)
 				{
@@ -48,16 +48,16 @@ namespace Booking.API.Services
 
 				}
 				_logger.Information("End: BookingTourService - GetAllAsync");
-				return new ApiResponse<List<BookingTourResponseDTO>>(200, data, "Data retrieved successfully");
+				return new ApiResponse<List<BookingTourCustomResponseDTO>>(200, data, "Data retrieved successfully");
 			}
 			catch (Exception ex)
 			{
 				_logger.Error($"Error in BookingTourService - GetAllAsync: {ex.Message}", ex);
-				return new ApiResponse<List<BookingTourResponseDTO>>(500, null, $"An error occurred: {ex.Message}");
+				return new ApiResponse<List<BookingTourCustomResponseDTO>>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
 
-		public async Task<ApiResponse<BookingTourResponseDTO>> GetByIdAsync(int id)
+		public async Task<ApiResponse<BookingTourCustomResponseDTO>> GetByIdAsync(int id)
 		{
 			_logger.Information($"Begin: BookingTourService - GetByIdAsync: {id}");
 
@@ -70,24 +70,24 @@ namespace Booking.API.Services
                 if (bookingTour == null)
 				{
 					_logger.Warning($"Booking tour with ID {id} not found");
-					return new ApiResponse<BookingTourResponseDTO>(404, null, "Booking tour not found");
+					return new ApiResponse<BookingTourCustomResponseDTO>(404, null, "Booking tour not found");
 				}
 
-				var data = _mapper.Map<BookingTourResponseDTO>(bookingTour);
+				var data = _mapper.Map<BookingTourCustomResponseDTO>(bookingTour);
 
                 await GetUserFromGrpcAsync(data);
                 await GetScheduleFromGrpcAsync(data);
 
                 _logger.Information($"End: BookingTourService - GetByIdAsync: {id}");
-				return new ApiResponse<BookingTourResponseDTO>(200, data, "Booking tour data retrieved successfully");
+				return new ApiResponse<BookingTourCustomResponseDTO>(200, data, "Booking tour data retrieved successfully");
 			}
 			catch (Exception ex)
 			{
 				_logger.Error($"Error in BookingTourService - GetByIdAsync: {ex.Message}", ex);
-				return new ApiResponse<BookingTourResponseDTO>(500, null, $"An error occurred: {ex.Message}");
+				return new ApiResponse<BookingTourCustomResponseDTO>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
-        public async Task<ApiResponse<BookingTourResponseDTO>> UpdateBookingTourInfoAsync(int bookingTourId, UpdateBookingTourInfoRequest request, int userId, int role)
+        public async Task<ApiResponse<BookingTourCustomResponseDTO>> UpdateBookingTourInfoAsync(int bookingTourId, UpdateBookingTourInfoRequest request, int userId, int role)
         {
             try
             {
@@ -96,13 +96,13 @@ namespace Booking.API.Services
                 if (bookingTour == null)
                 {
                     _logger.Warning($"Booking tour with ID {bookingTourId} not found");
-                    return new ApiResponse<BookingTourResponseDTO>(404, null, "Booking tour not found");
+                    return new ApiResponse<BookingTourCustomResponseDTO>(404, null, "Booking tour not found");
                 }
 
 				if(bookingTour.UserId != userId && role != (int) ERole.Admin)
 				{
                     _logger.Warning($"Bad request");
-                    return new ApiResponse<BookingTourResponseDTO>(403, null, "Not allowed to change this booking tour");
+                    return new ApiResponse<BookingTourCustomResponseDTO>(403, null, "Not allowed to change this booking tour");
                 }	
 
 				bookingTour.TravellerList = _mapper.Map<List<Traveller>>(request.Travellers);
@@ -111,40 +111,40 @@ namespace Booking.API.Services
                 _logger.Information($"End: BookingTourService - UpdateBookingTourInfoAsync: {bookingTourId}");
 
 				var data = await GetByIdAsync(bookingTourId);
-                return new ApiResponse<BookingTourResponseDTO>(200, data.Result, "Booking tour data retrieved successfully");
+                return new ApiResponse<BookingTourCustomResponseDTO>(200, data.Result, "Booking tour data retrieved successfully");
             }
             catch (Exception ex)
             {
                 _logger.Error($"Error in BookingTourService - UpdateBookingTourInfoAsync: {ex.Message}", ex);
-                return new ApiResponse<BookingTourResponseDTO>(500, null, $"An error occurred: {ex.Message}");
+                return new ApiResponse<BookingTourCustomResponseDTO>(500, null, $"An error occurred: {ex.Message}");
             }
         }
 
-        public async Task<ApiResponse<List<BookingTourResponseDTO>>> GetCurrentUserAsync(int userId)
+        public async Task<ApiResponse<List<BookingTourCustomResponseDTO>>> GetCurrentUserAsync(int userId)
         {
             _logger.Information($"START - BookingTourService - GetUserFromGrpcAsync");
             try
             {
                 var bookingTours = await _bookingTourRepository.FindByCondition(c => c.UserId.Equals(userId), false).ToListAsync();
-                var bookingTourDtos = _mapper.Map<List<BookingTourResponseDTO>>(bookingTours);
+                var bookingTourDtos = _mapper.Map<List<BookingTourCustomResponseDTO>>(bookingTours);
                 foreach (var item in bookingTourDtos)
                 {
                     await GetUserFromGrpcAsync(item);
                     await GetScheduleFromGrpcAsync(item);
                 }
                 _logger.Information($"END - BookingTourService - GetUserFromGrpcAsync");
-                return new ApiResponse<List<BookingTourResponseDTO>>(200, bookingTourDtos, "Lấy dữ liệu thành công");
+                return new ApiResponse<List<BookingTourCustomResponseDTO>>(200, bookingTourDtos, "Lấy dữ liệu thành công");
 
             }
             catch (Exception ex)
             {
                 _logger.Error($"{ex.Message}");
                 _logger.Error("ERROR - BookingTourService - GetUserFromGrpcAsync");
-                return new ApiResponse<List<BookingTourResponseDTO>>(500, null, $"Có lỗi xảy ra: {ex.Message}");
+                return new ApiResponse<List<BookingTourCustomResponseDTO>>(500, null, $"Có lỗi xảy ra: {ex.Message}");
             }
         }
 
-        private async Task GetUserFromGrpcAsync(BookingTourResponseDTO dto)
+        private async Task GetUserFromGrpcAsync(BookingTourCustomResponseDTO dto)
         {
 			_logger.Information($"START - BookingTourService - GetUserFromGrpcAsync");
 			try
@@ -165,15 +165,15 @@ namespace Booking.API.Services
 			}
 		}
 
-		private async Task GetScheduleFromGrpcAsync(BookingTourResponseDTO item)
+		private async Task GetScheduleFromGrpcAsync(BookingTourCustomResponseDTO item)
 		{
             _logger.Information($"START - BookingTourService - GetScheduleFromGrpcAsync");
             try
             {
 				var request = new GetScheduleByIdRequest { Id = item.Id };	
-				var schedule = await _tourGrpcServiceClient.GetScheduleByIdAsync(request);
+				var response = await _tourGrpcServiceClient.GetScheduleByIdAsync(request);
 
-				item.Schedule = _mapper.Map<ScheduleResponseDTO>(schedule);
+				item.Schedule = _mapper.Map<ScheduleCustomResponseDTO>(response.Schedule);
 
                 _logger.Information($"END - BookingTourService - GetScheduleFromGrpcAsync");
 
@@ -210,11 +210,6 @@ namespace Booking.API.Services
 					Count = bookingTour.Seats*-1
 				};
 				var response = await _tourGrpcServiceClient.UpdateScheduleAvailableSeatAsync(request);
-				if(response.Result)
-				{
-                    // publish một event
-
-                }
             }
             _logger.Information($"END - BookingTourService - DeleteBookingTourAsync");
 
