@@ -10,5 +10,6 @@ namespace Booking.API.Services.Interfaces
 		Task<ApiResponse<List<BookingRoomResponseDTO>>> GetCurrentUserAsync(int userId);
 		Task<ApiResponse<RoomBookingDataDTO>> GetRoomCheckInCheckOutDataAsync(int roomId);
 		Task<ApiResponse<string>> DeleteBookingRoomIdAsync(int bookingRoomId,int userId);
+		Task<ApiResponse<string>> UpdateStatusBookingRoomAsync(int bookingRoomId, UpdateBookingStatusDTO dto);
     }
 }
