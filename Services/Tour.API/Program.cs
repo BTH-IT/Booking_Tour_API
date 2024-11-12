@@ -51,7 +51,8 @@ try
 
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
-
+    // Add Masstransit
+    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
     // Add Authentication
     builder.Services.AddAuthentication(cfg =>
     {
@@ -130,8 +131,6 @@ try
     //Add GrpcClient
     builder.Services.AddGrpcClients();
 
-    //Add Masstransit
-    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 

@@ -5,6 +5,7 @@ using Shared.DTOs;
 using Stateless;
 using Shared.Helper;
 using System.Security.Claims;
+using Shared.Constants;
 
 
 namespace Saga.Orchestrator.BookingTourOrderManagers
@@ -133,7 +134,7 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                     Seats = requestDto!.Seats,
                     IsTip = requestDto!.IsTip,  
                     IsEntranceTicket = requestDto!.IsEntranceTicket,
-                    Status = requestDto.Status,
+                    Status = Constants.OrderStatus.Pending,
                     PriceTotal = double.Parse(requestDto.PriceTotal.ToString()),
                 };
                 foreach(var item in requestDto.Travellers)

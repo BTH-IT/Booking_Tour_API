@@ -2,6 +2,7 @@
 using Google.Protobuf.WellKnownTypes;
 using MassTransit;
 using Saga.Orchestrator.API.GrpcClient.Protos;
+using Shared.Constants;
 using Shared.DTOs;
 using Shared.Helper;
 using Stateless;
@@ -143,7 +144,8 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
                 {
                     UserId = userId,
                     CheckIn = Timestamp.FromDateTime(requestDto.CheckIn!.Value.ToUniversalTime()),
-                    CheckOut = Timestamp.FromDateTime(requestDto.CheckOut!.Value.ToUniversalTime())
+                    CheckOut = Timestamp.FromDateTime(requestDto.CheckOut!.Value.ToUniversalTime()),
+                    Status = Constants.OrderStatus.Pending
                 };
                 foreach(var item in requestDto.BookingRoomDetails)
                 {

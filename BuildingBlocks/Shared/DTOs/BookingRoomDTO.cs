@@ -8,6 +8,7 @@
 		public DateTime? CheckOut { get; set; }
 		public int NumberOfPeople { get; set; }
 		public double PriceTotal { get; set; }
+		public string Status { get; set; } = string.Empty;
 		public List<DetailBookingRoomResponseDTO> DetailBookingRooms { get; set; }
 		public UserResponseDTO User { get; set; }
 

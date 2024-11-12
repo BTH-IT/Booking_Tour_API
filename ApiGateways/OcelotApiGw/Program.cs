@@ -33,8 +33,9 @@ try
 		app.UseSwagger();
 		app.UseSwaggerForOcelotUI();
 	}
-	app.UseCors("CorsPolicy");
 
+	app.UseCors("CorsPolicy");
+	app.UseWebSockets();
 	app.UseRouting();
 
 	app.UseOcelot().Wait();

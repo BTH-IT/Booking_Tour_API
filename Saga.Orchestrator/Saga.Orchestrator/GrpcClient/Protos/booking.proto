@@ -16,6 +16,7 @@ message CreateBookingRoomRequest{
 	repeated BookingRoomDetailRequest BookingRoomDetails = 2;
     google.protobuf.Timestamp CheckIn = 3;
     google.protobuf.Timestamp CheckOut = 4;
+	string Status = 5;
 }
 message BookingRoomDetailRequest{
 	int32 RoomId = 1;
