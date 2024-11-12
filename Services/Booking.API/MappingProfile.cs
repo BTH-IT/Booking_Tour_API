@@ -60,6 +60,12 @@ namespace Booking.API
 					opt.PreCondition(src => src.BirthDate != null);
 					opt.MapFrom(src => src.BirthDate.ToDateTime());
 				});
+            CreateMap<UserResponse, UserResponseDTO>()
+				.ForMember(dest => dest.BirthDate, opt =>
+				{
+					opt.PreCondition(src => src.BirthDate != null);
+					opt.MapFrom(src => src.BirthDate.ToDateTime());
+				});
             CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
             CreateMap<RoomResponse, RoomResponseDTO>().ReverseMap();
 			CreateMap<ReviewResponse, ReviewRoomDTO>();

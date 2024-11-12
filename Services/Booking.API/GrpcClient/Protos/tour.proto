@@ -5,6 +5,7 @@ option csharp_namespace = "Booking.API.GrpcClient.Protos";
 service TourGrpcService{
 	rpc GetScheduleById (GetScheduleByIdRequest) returns (GetScheduleByIdResponse);
     rpc UpdateScheduleAvailableSeat (UpdateScheduleAvailableSeatRequest) returns (UpdateScheduleAvailableSeatResponse);
+    rpc GetSchedulesByIds (GetSchedulesByIdsRequest) returns (GetSchedulesByIdsResponse);
 }
 message GetScheduleByIdRequest{
 	int32 id = 1;
@@ -51,4 +52,10 @@ message UpdateScheduleAvailableSeatRequest{
 message UpdateScheduleAvailableSeatResponse{
     bool Result = 1;
     string Message = 2;
+}
+message GetSchedulesByIdsRequest{
+    repeated int32 Ids= 1;
+}
+message GetSchedulesByIdsResponse{
+    repeated ScheduleResponse Schedules = 1;
 }

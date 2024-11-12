@@ -46,15 +46,15 @@ namespace Booking.API.Controllers
 			var response = await _bookingRoomService.GetRoomCheckInCheckOutDataAsync(roomId);
 			return StatusCode(response.StatusCode, response);
 		}
-        //[HttpPut("{roomId:int}/update-status")]
-        //[RoleRequirement(ERole.Admin)]
+		[HttpPut("{roomId:int}/update-status")]
+		[RoleRequirement(ERole.Admin)]
 
-        //public async Task<IActionResult> UpdateStatus(int roomId,)
-        //{
-        //    var response = await _bookingRoomService.GetRoomCheckInCheckOutDataAsync(roomId);
-        //    return StatusCode(response.StatusCode, response);
-        //}
-        [HttpDelete("{bookingRoomId:int}/cancel")]
+		public async Task<IActionResult> UpdateStatus(int roomId,UpdateBookingStatusDTO dto)
+		{
+			var response = await _bookingRoomService.GetRoomCheckInCheckOutDataAsync(roomId);
+			return StatusCode(response.StatusCode, response);
+		}
+		[HttpDelete("{bookingRoomId:int}/cancel")]
 		public async Task<IActionResult> DeleteBookingRoomId(int bookingRoomId)
 		{
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);

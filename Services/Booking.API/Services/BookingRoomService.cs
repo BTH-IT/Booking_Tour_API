@@ -42,12 +42,9 @@ namespace Booking.API.Services
 				var bookingRooms = await _bookingRoomRepository.GetBookingRoomsAsync();
 
 				var data = _mapper.Map<List<BookingRoomResponseDTO>>(bookingRooms);
-				foreach(var item in data)
-				{
-					await GetUserFromGrpcAsync(item);	
-					await GetRoomsFromGrpcAsync(item);
-				}	
-				_logger.Information("End: BookingRoomService - GetAllAsync");
+				await GetUsersFromGrpcAsync(data);
+				await GetAllInRoomsFromGrpcAsync(data);
+                _logger.Information("End: BookingRoomService - GetAllAsync");
 				return new ApiResponse<List<BookingRoomResponseDTO>>(200, data, "Data retrieved successfully");
 			}
 			catch (Exception ex)
@@ -93,11 +90,8 @@ namespace Booking.API.Services
             {
 				var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>c.UserId.Equals(userId),false,c=>c.DetailBookingRooms).ToListAsync();
 				var bookingRoomDtos = _mapper.Map<List<BookingRoomResponseDTO>>(bookingRooms);
-				foreach(var item in bookingRoomDtos)
-				{
-					await GetUserFromGrpcAsync(item);
-                    await GetRoomsFromGrpcAsync(item);
-                }
+				await GetUsersFromGrpcAsync(bookingRoomDtos);
+				await GetAllInRoomsFromGrpcAsync(bookingRoomDtos);
                 _logger.Information($"End: BookingRoomService - GetCurrentUserAsync: {userId} - Successfully.");
                 return new ApiResponse<List<BookingRoomResponseDTO>>(200, bookingRoomDtos, "Lấy dữ liệu thành công");
             }
@@ -181,10 +175,76 @@ namespace Booking.API.Services
                 _logger.Error("ERROR - BookingRoomService - GetRoomsFromGrpcAsync");
             }
         }
+        private async Task GetUsersFromGrpcAsync(List<BookingRoomResponseDTO> dto)
+        {
+            _logger.Information($"START - BookingRoomService - GetUsersFromGrpcAsync");
+            try
+            {
+				var userIds = dto.Select(c => c.UserId).ToList();	
 
+				var getUsersRequest = new GetUsersByIdRequest();
+
+				getUsersRequest.Ids.AddRange(userIds.Distinct().ToList());
+
+				var userInfos = await _identityGrpcServiceClient.GetUsersByIdsAsync(getUsersRequest);
+
+				var userDtos = _mapper.Map<List<UserResponseDTO>>(userInfos.Users);
+
+                var userDictionary = userDtos.ToDictionary(c => c.Id);
+
+                foreach (var item in dto)
+                {
+                    item.User = userDictionary[item.UserId] != null ? userDictionary[item.UserId] : null;
+                }
+                _logger.Information($"END - BookingRoomService - GetUsersFromGrpcAsync");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+
+                _logger.Error("ERROR - BookingRoomService - GetUsersFromGrpcAsync");
+            }
+        }
+        private async Task GetAllInRoomsFromGrpcAsync(List<BookingRoomResponseDTO> dto)
+        {
+            _logger.Information($"START - BookingRoomService - GetRoomsFromGrpcAsync");
+            try
+            {
+				var roomIds = new List<int>();
+                foreach(var item in dto)
+				{
+					roomIds.AddRange(item.DetailBookingRooms.Select(c => c.RoomId));
+				}
+
+				var getRoomsRequest = new GetRoomsByIdsRequest();
+				getRoomsRequest.Ids.AddRange(roomIds.Distinct().ToList());
+
+				var roomInfos = await _roomGrpcServiceClient.GetRoomsByIdsAsync(getRoomsRequest);
+
+				var roomDtos = _mapper.Map<List<RoomResponseDTO>>(roomInfos.Rooms);
+
+				var roomDictionary = roomDtos.ToDictionary(c => c.Id);
+
+                foreach(var item in dto)
+				{
+					foreach(var bookingRoom in item.DetailBookingRooms)
+					{
+						bookingRoom.Room = roomDictionary[bookingRoom.RoomId];
+					}	
+				}
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+
+                _logger.Error("ERROR - BookingRoomService - GetRoomsFromGrpcAsync");
+            }
+        }
         public async Task<ApiResponse<RoomBookingDataDTO>> GetRoomCheckInCheckOutDataAsync(int roomId)
         {
-            _logger.Information($"START - BookingProtoService - GetRoomCheckInCheckOutDataAsync");
+            _logger.Information($"START - BookingRoomService - GetRoomCheckInCheckOutDataAsync");
 
             var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>!c.Status.Equals(Constants.OrderStatus.Cancel),false,c=>c.DetailBookingRooms!.Where(tr => tr.DeletedAt == null)).ToListAsync();
 			var roomBookingData = new RoomBookingDataDTO()
@@ -202,12 +262,30 @@ namespace Booking.API.Services
 					});
 				}
 			}
-            _logger.Information($"END - BookingProtoService - GetRoomCheckInCheckOutDataAsync");
+            _logger.Information($"END - BookingRoomService - GetRoomCheckInCheckOutDataAsync");
 
             var response = new ApiResponse<RoomBookingDataDTO>(200,roomBookingData,"Lấy dữ liệu thành công");
 			return response;
         }
 
-  
+        public async Task<ApiResponse<string>> UpdateStatusBookingRoomAsync(int bookingRoomId, UpdateBookingStatusDTO dto)
+        {
+            _logger.Information($"START - BookingRoomService - UpdateStatusBookingRoomAsync");
+			var bookingRoom = await _bookingRoomRepository.GetBookingRoomByIdAsync(bookingRoomId);
+			if(bookingRoom == null)
+			{
+				return new ApiResponse<string>(404, "", "Không tìm thấy đơn đặt");
+			}
+			if(bookingRoom.Status.Equals(Constants.OrderStatus.Paid))
+			{
+                return new ApiResponse<string>(400, "", "Đơn đã thanh toán không thể thay đổi trạng thái");
+
+            }
+			bookingRoom.Status = dto.Status;
+			await _bookingRoomRepository.SaveChangesAsync();
+            _logger.Information($"END - BookingRoomService - UpdateStatusBookingRoomAsync");
+			return new ApiResponse<string>(400, "", "Cập nhật thành công");
+
+        }
     }
 }
