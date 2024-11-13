@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Booking.API.Entities;
 using Booking.API.GrpcClient.Protos;
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Services.Interfaces;
@@ -112,11 +113,17 @@ namespace Booking.API.Services
 			{
 				return new ApiResponse<string>(400, "", "Chỉ có chủ của đơn đặt mới có thể hủy");
 			}
-			if(bookingRoom.Status.Equals(Constants.OrderStatus.Paid))
+			if(bookingRoom.Status.Equals(Constants.OrderStatus.Done))
 			{
                 return new ApiResponse<string>(400, "", "Không thể hủy đơn đặt đã thanh toán");
             }
-			bookingRoom.Status = Constants.OrderStatus.Cancel;
+            var now = DateTime.Now;
+            TimeSpan timeDifference = bookingRoom.CreatedAt - now;
+            if (timeDifference.TotalHours >= 12)
+            {
+                return new ApiResponse<string>(400, "", "Đã qua 12 tiếng nên không thể hủy");
+            }
+            bookingRoom.Status = Constants.OrderStatus.Cancelled;
 			var result = await _bookingRoomRepository.UpdateAsync(bookingRoom);
 			if(result > 0)
 			{
@@ -246,7 +253,7 @@ namespace Booking.API.Services
         {
             _logger.Information($"START - BookingRoomService - GetRoomCheckInCheckOutDataAsync");
 
-            var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>!c.Status.Equals(Constants.OrderStatus.Cancel),false,c=>c.DetailBookingRooms!.Where(tr => tr.DeletedAt == null)).ToListAsync();
+            var bookingRooms = await _bookingRoomRepository.FindByCondition(c=>!c.Status.Equals(Constants.OrderStatus.Cancelled),false,c=>c.DetailBookingRooms!.Where(tr => tr.DeletedAt == null)).ToListAsync();
 			var roomBookingData = new RoomBookingDataDTO()
 			{
 				Data = new List<DetailRoomBookingDateDTO>()
@@ -276,7 +283,7 @@ namespace Booking.API.Services
 			{
 				return new ApiResponse<string>(404, "", "Không tìm thấy đơn đặt");
 			}
-			if(bookingRoom.Status.Equals(Constants.OrderStatus.Paid))
+			if(bookingRoom.Status.Equals(Constants.OrderStatus.Done))
 			{
                 return new ApiResponse<string>(400, "", "Đơn đã thanh toán không thể thay đổi trạng thái");
 
