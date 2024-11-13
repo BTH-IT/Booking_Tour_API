@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using EventBus.IntergrationEvents.Events;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MassTransit;
-using System;
-using System.Net.WebSockets;
 using Tour.API.GrpcServer.Protos;
 using Tour.API.Repositories.Interfaces;
-using Tour.API.Services;
 using ILogger = Serilog.ILogger;
 namespace Tour.API.GrpcServer.Services
 {

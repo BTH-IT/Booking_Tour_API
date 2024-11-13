@@ -9,9 +9,9 @@
         }
         public class OrderStatus 
         {
-            public const string Pending = "Pending";
-            public const string Paid = "Paid";
-            public const string Cancel = "Cancel";
+            public const string Pending = "pending";
+            public const string Done = "done";
+            public const string Cancelled = "cancelled";
         }
     }
 }
