@@ -9,6 +9,7 @@ using Shared.Constants;
 using Shared.DTOs;
 using Shared.Enums;
 using Shared.Helper;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using ILogger = Serilog.ILogger;
 
 namespace Booking.API.Services
@@ -53,7 +54,6 @@ namespace Booking.API.Services
 				return new ApiResponse<List<BookingTourCustomResponseDTO>>(500, null, $"An error occurred: {ex.Message}");
 			}
 		}
-
 		public async Task<ApiResponse<BookingTourCustomResponseDTO>> GetByIdAsync(int id)
 		{
 			_logger.Information($"Begin: BookingTourService - GetByIdAsync: {id}");
@@ -116,7 +116,6 @@ namespace Booking.API.Services
                 return new ApiResponse<BookingTourCustomResponseDTO>(500, null, $"An error occurred: {ex.Message}");
             }
         }
-
         public async Task<ApiResponse<List<BookingTourCustomResponseDTO>>> GetCurrentUserAsync(int userId)
         {
             _logger.Information($"START - BookingTourService - GetUserFromGrpcAsync");
@@ -137,7 +136,6 @@ namespace Booking.API.Services
                 return new ApiResponse<List<BookingTourCustomResponseDTO>>(500, null, $"Có lỗi xảy ra: {ex.Message}");
             }
         }
-
         private async Task GetUserFromGrpcAsync(BookingTourCustomResponseDTO dto)
         {
 			_logger.Information($"START - BookingTourService - GetUserFromGrpcAsync");
@@ -240,7 +238,6 @@ namespace Booking.API.Services
                 _logger.Error("ERROR - BookingRoomService - GetScheduleFromGrpcAsync");
             }
         }
-
         public async Task<ApiResponse<string>> DeleteBookingTourAsync(int bookingTourId, int userId)
         {
             _logger.Information($"START - BookingTourService - DeleteBookingTourAsync");
@@ -251,11 +248,18 @@ namespace Booking.API.Services
 			{
 				return new ApiResponse<string>(400,"","Chỉ có chủ của đơn đặt mới có thể hủy");
 			}
-			if(bookingTour.Status == Constants.OrderStatus.Paid)
+			if(bookingTour.Status == Constants.OrderStatus.Done)
 			{
 				return new ApiResponse<string>(400, "","Đơn đặt đã thanh toán không thể hủy");
-			}
-			bookingTour.Status = Constants.OrderStatus.Cancel;
+            }
+            var now = DateTime.Now;
+            TimeSpan timeDifference = bookingTour.CreatedAt - now;
+            if(timeDifference.TotalHours >= 12)
+            {
+                return new ApiResponse<string>(400, "", "Đã qua 12 tiếng nên không thể hủy");
+            }
+
+            bookingTour.Status = Constants.OrderStatus.Cancelled;
 			var result = await _bookingTourRepository.UpdateAsync(bookingTour); 
 			if (result > 0)
 			{
@@ -278,7 +282,7 @@ namespace Booking.API.Services
             {
                 return new ApiResponse<string>(404, "", "Không tìm thấy đơn đặt");
             }
-            if (bookingTour.Status.Equals(Constants.OrderStatus.Paid))
+            if (bookingTour.Status.Equals(Constants.OrderStatus.Done))
             {
                 return new ApiResponse<string>(400, "", "Đơn đã thanh toán không thể thay đổi trạng thái");
 
