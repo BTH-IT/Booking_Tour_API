@@ -118,7 +118,7 @@ namespace Booking.API.Services
                 return new ApiResponse<string>(400, "", "Không thể hủy đơn đặt đã thanh toán");
             }
             var now = DateTime.Now;
-            TimeSpan timeDifference = bookingRoom.CreatedAt - now;
+            TimeSpan timeDifference = bookingRoom.CheckIn!.Value - now;
             if (timeDifference.TotalHours >= 24)
             {
                 return new ApiResponse<string>(400, "", "Đã qua 24 tiếng nên không thể hủy");
