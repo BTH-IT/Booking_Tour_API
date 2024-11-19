@@ -21,7 +21,7 @@ Link Booking_Tour_FE: [https://github.com/BTH-IT/Booking_Tour_FE.git](https://gi
             <tr>
                 <td style="text-align: center;">2</td>
                 <td style="text-align: center;">3121560038</td>
-                <td><a href="#">Nguyễn Phúc Huy</a></td>
+                <td><a href="https://huy31203.github.io/Portfolio-Webpage/">Nguyễn Phúc Huy</a></td>
             </tr>
             <tr>
                 <td style="text-align: center;">3</td>
