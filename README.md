@@ -1,3 +1,5 @@
+Link Booking_Tour_FE: [https://github.com/BTH-IT/Booking_Tour_FE.git](https://github.com/BTH-IT/Booking_Tour_FE.git)
+
 <img alt="Static Badge" src="https://img.shields.io/badge/C%23-9.0-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/.NET-8.0-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/ASP.NET-8.0-blue">
 
 # Member
@@ -43,7 +45,7 @@
 # Booking Tours API
 This is an API for booking tours and hotel rooms in Ho Chi Minh City, built using a Microservice architecture.
 
-Link Booking_Tour_FE: [https://github.com/BTH-IT/Booking_Tour_FE.git](https://github.com/BTH-IT/Booking_Tour_FE.git)
+<img src="https://drive.google.com/uc?export=view&id=16eTj6cxHmOiU8b1_GU-UQmwmO0rp-FWR" alt="Booking Tours API Microservices">
 
 ## Services
 The project is divided into six main microservices, each responsible for a specific domain within the application:
@@ -90,6 +92,12 @@ Each service is independently deployable and scalable, ensuring efficient handli
 - **API Gateway (Ocelot)**: Used to route requests to appropriate microservices.
 - **Entity Framework**: Utilized for data access and Object-Relational Mapping (ORM).
 - **MySQL**: The relational database system for storing application data.
+
+---
+
+## Cloud Services
+
+- **AWS**: Used for hosting microservices, managing databases, and providing scalable cloud infrastructure. Key services include AWS EC2 for virtual servers, S3 for object storage, and RDS for relational databases.
 
 ---
 
@@ -329,7 +337,7 @@ For microservices, Docker can be an efficient way to containerize and run multip
     3. **Build và Run the Services**:
         To run the services, use Docker Compose:
         ```shell
-        sudo docker-compose up
+        docker-compose up --build
         ```
         This will start all the services defined in the `docker-compose.yml` file.
     
