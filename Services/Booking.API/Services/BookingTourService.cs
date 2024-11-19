@@ -254,9 +254,9 @@ namespace Booking.API.Services
             }
             var now = DateTime.Now;
             TimeSpan timeDifference = bookingTour.CreatedAt - now;
-            if(timeDifference.TotalHours >= 12)
+            if(timeDifference.TotalHours >= 24)
             {
-                return new ApiResponse<string>(400, "", "Đã qua 12 tiếng nên không thể hủy");
+                return new ApiResponse<string>(400, "", "Đã qua 24 tiếng nên không thể hủy");
             }
 
             bookingTour.Status = Constants.OrderStatus.Cancelled;
