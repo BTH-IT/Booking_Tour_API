@@ -45,20 +45,59 @@ This is an API for booking tours and hotel rooms in Ho Chi Minh City, built usin
 
 Link Booking_Tour_FE: [https://github.com/BTH-IT/Booking_Tour_FE.git](https://github.com/BTH-IT/Booking_Tour_FE.git)
 
-## Features
-- User Authentication: Users can register, log in, and refresh their tokens for secure access.
-- User Profile Management: Users can view and update their profiles, including changing their passwords.
-- Account Management: Admins can create, update, and delete user accounts.
-- Role and Permission Management: Admins can create, update, and delete user roles and access permissions.
-- Hotel Management: Admins can manage hotel details, add new hotels, and delete or update existing hotels.
-- Room Management: Admins can create, update, and delete rooms in hotels.
-- Destination Management: Admins can manage destinations, including creating, updating, and deleting destinations.
-- Tour Management: Admins can manage and view details of all available tours.
-- Schedule Management: Admins can manage tour schedules, including adding, updating, and deleting schedules.
-- Room Booking Management: Admins can manage all room bookings, view details, update room status, and delete bookings.
-- Tour Booking Management: Admins can manage all tour bookings, view booking details, update tours, and delete bookings.
-- Review Management: Users and admins can add, update, and delete reviews for hotels, rooms, and tours.
-- Search Functionality: Users and admins can search for rooms, tours, and other resources based on various criteria.
+## Services
+The project is divided into six main microservices, each responsible for a specific domain within the application:
+
+### 1. **Identity Service**
+- **User Authentication**: Users can register, log in, and authenticate access to the application.
+- **User Profile Management**: Users can view and update their profiles, including changing passwords.
+- **Account Management**: Admins can create, update, and delete user accounts.
+- **Role and Permission Management**: Admins can manage roles and permissions for users.
+
+### 2. **Room Service**
+- **Hotel Management**: Admins can manage hotel details, including adding, updating, and deleting hotels.
+- **Room Management**: Admins can create, update, and delete room records within hotels.
+- **Review Management**: Users and admins can add, update, and delete reviews for hotels and rooms.
+- **Search Functionality**: Users and admins can search for rooms based on various criteria.
+
+### 3. **Tour Service**
+- **Destination Management**: Admins can create, update, and delete destinations.
+- **Tour Management**: Admins can manage tours, view details, and update records.
+- **Schedule Management**: Admins can add, update, and delete tour schedules.
+- **Review Management**: Users and admins can add, update, and delete reviews for tours.
+- **Search Functionality**: Users and admins can search for tours based on various criteria.
+
+### 4. **Saga Orchestrator Service**
+- **Room Booking Management**: Admins can create, update room status, and delete bookings.
+- **Tour Booking Management**: Admins can create, update, and delete tour bookings.
+
+### 5. **Booking Service**
+- **Room Booking Management**: Admins can manage all room bookings and view their details.
+- **Tour Booking Management**: Admins can manage all tour bookings and view booking details.
+
+### 6. **Upload Service**
+- **Image Management**: Handles uploading, retrieving, and deleting images stored on Cloudinary.
+
+Each service is independently deployable and scalable, ensuring efficient handling of a large number of users and interactions.
+
+---
+
+## Technologies Used
+
+- **ASP.NET Core API**: The primary framework for building backend services.
+- **Microservices Architecture**: The application is divided into multiple microservices for scalability and maintainability.
+- **Docker**: Each microservice is containerized using Docker for seamless deployment and management.
+- **API Gateway (Ocelot)**: Used to route requests to appropriate microservices.
+- **Entity Framework**: Utilized for data access and Object-Relational Mapping (ORM).
+- **MySQL**: The relational database system for storing application data.
+
+---
+
+## Development Tools
+
+- **Visual Studio 2022**: The main Integrated Development Environment (IDE) for development.
+- **Visual Studio Code**: A lightweight and versatile code editor for development tasks.
+- **Git/GitHub**: The project is version-controlled using Git, and the repository is hosted on GitHub.
 
 ## Installation
 
