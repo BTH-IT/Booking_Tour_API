@@ -253,7 +253,7 @@ namespace Booking.API.Services
 				return new ApiResponse<string>(400, "","Đơn đặt đã thanh toán không thể hủy");
             }
             var now = DateTime.Now;
-            TimeSpan timeDifference = bookingTour.CreatedAt - now;
+            TimeSpan timeDifference = now - bookingTour.CreatedAt;
             if(timeDifference.TotalHours >= 24)
             {
                 return new ApiResponse<string>(400, "", "Đã qua 24 tiếng nên không thể hủy");
