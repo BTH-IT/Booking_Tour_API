@@ -13,6 +13,7 @@
         public decimal PriceTotal { get; set; }
         public DateTime? DateStart { get; set; }
         public DateTime? DateEnd { get; set; }
+        public DateTime? CreatedAt { get; set; }
         public UserResponseDTO User { get; set; }
 		public ScheduleResponseDTO Schedule { get; set; }
 		public List<TravellerDTO> Travellers { get; set; }
