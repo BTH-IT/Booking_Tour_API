@@ -121,7 +121,7 @@ I. Setting up Visual Studio Code (VSCode)
      cd .\Saga.Orchestrator\
      dotnet run
      ```
-     The Saga API will run on port `http://localhost:5007`.
+     The Saga Orchestrator API will run on port `http://localhost:5007`.
      
 II. Setting up Visual Studio 2022
 1. **Install the .NET SDK**:
@@ -249,13 +249,14 @@ For microservices, Docker can be an efficient way to containerize and run multip
      dotnet run
      ```
      The Booking API will run on port `http://localhost:5002`.
-  - **Run Saga Orchestrator API**:
+
+   - **Run Saga Orchestrator API**:
      Navigate to the `Saga.Orchestrator` folder and run the service:
      ```shell
      cd ./Saga.Orchestrator/
      dotnet run
      ```
-     The Identity API will run on port `http://localhost:5007`.
+     The Saga Orchestrator API will run on port `http://localhost:5007`.
 
 5. Docker Setup (Optional)
 For microservices, Docker can be an efficient way to containerize and run multiple services simultaneously. You can build Docker images for each service and orchestrate them with Docker Compose.
