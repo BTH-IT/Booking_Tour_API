@@ -10,6 +10,11 @@ namespace Realtime.API.Consumers
     {
         private readonly IHubContext<NotiHub> hubContext;
         private readonly ILogger logger;
+        public ReviewTourEventConsumer(IHubContext<NotiHub> hubContext, ILogger logger)
+        {
+            this.hubContext = hubContext;
+            this.logger = logger;
+        }
         public async Task Consume(ConsumeContext<ReviewTourEvent> context)
         {
             logger.Information("$START ReviewTourEventConsumer - Consume ");
