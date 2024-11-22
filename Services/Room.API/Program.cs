@@ -3,17 +3,15 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Room.API;
 using Room.API.Extensions;
 using Room.API.GrpcServer.Services;
 using Room.API.Persistence;
 using Room.API.Validators;
 using Serilog;
 using System.Text;
-using System.Text.Json.Serialization;
+using EventBus.Masstransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,6 +95,9 @@ try
     {
         options.Interceptors.Add<GrpcExceptionInterceptor>();
     });
+    // Add Masstransit
+    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
+
     builder.WebHost.ConfigureKestrel(options =>
     {
         if (builder.Environment.IsDevelopment())
