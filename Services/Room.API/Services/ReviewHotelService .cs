@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using EventBus.IntergrationEvents.Events;
+using MassTransit;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
@@ -11,12 +13,14 @@ public class ReviewHotelService : IReviewHotelService
 	private readonly IHotelRepository _hotelRepository;
 	private readonly IMapper _mapper;
 	private readonly ILogger _logger;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-	public ReviewHotelService(IHotelRepository hotelRepository, ILogger logger, IMapper mapper)
+    public ReviewHotelService(IHotelRepository hotelRepository, ILogger logger, IMapper mapper,IPublishEndpoint publishEndpoint)
 	{
 		_hotelRepository = hotelRepository;
 		_logger = logger;
 		_mapper = mapper;
+		_publishEndpoint = publishEndpoint;
 	}
 
 	public async Task<ApiResponse<ReviewHotelDTO>> CreateReviewAsync(ReviewHotelDTO reviewRequest)
@@ -50,7 +54,16 @@ public class ReviewHotelService : IReviewHotelService
 			}
 
 			var responseData = _mapper.Map<ReviewHotelDTO>(reviewEntity);
-			_logger.Information("End: ReviewHotelService - CreateReviewAsync");
+            // publish event
+            await _publishEndpoint.Publish(new ReviewHotelEvent()
+            {
+                Id = Guid.NewGuid(),
+                ObjectId = reviewEntity.HotelId,
+                Data = responseData,
+				Type = "CREATE",
+                CreationDate = DateTime.Now,
+            });
+            _logger.Information("End: ReviewHotelService - CreateReviewAsync");
 			return new ApiResponse<ReviewHotelDTO>(200, responseData, "Review created successfully");
 		}
 		catch (Exception ex)
@@ -92,7 +105,16 @@ public class ReviewHotelService : IReviewHotelService
 			}
 
 			var responseData = _mapper.Map<ReviewHotelDTO>(review);
-			_logger.Information("End: ReviewHotelService - UpdateReviewAsync");
+            // publish event
+            await _publishEndpoint.Publish(new ReviewHotelEvent()
+            {
+                Id = Guid.NewGuid(),
+                ObjectId = responseData.HotelId,
+                Data = responseData,
+                Type = "UPDATE",
+                CreationDate = DateTime.Now,
+            });
+            _logger.Information("End: ReviewHotelService - UpdateReviewAsync");
 			return new ApiResponse<ReviewHotelDTO>(200, responseData, "Review updated successfully");
 		}
 		catch (Exception ex)
@@ -129,7 +151,16 @@ public class ReviewHotelService : IReviewHotelService
 				_logger.Warning("Failed to deleted review hotel");
 				return new ApiResponse<int>(400, 0, "Error occurred while deleted review hotel");
 			}
-			_logger.Information($"End: ReviewHotelService - DeleteReviewAsync: {reviewId} - Successfully deleted the review.");
+            // publish event
+            await _publishEndpoint.Publish(new ReviewHotelEvent()
+            {
+                Id = Guid.NewGuid(),
+                ObjectId = review.HotelId,
+                Data = _mapper.Map<ReviewHotelDTO>(review),
+                Type = "DELETE",
+                CreationDate = DateTime.Now,
+            });
+            _logger.Information($"End: ReviewHotelService - DeleteReviewAsync: {reviewId} - Successfully deleted the review.");
 			return new ApiResponse<int>(200, 1, "Review deleted successfully.");
 		}
 		catch (Exception ex)

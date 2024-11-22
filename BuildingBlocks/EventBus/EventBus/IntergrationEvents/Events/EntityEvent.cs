@@ -2,8 +2,9 @@
 
 namespace EventBus.IntergrationEvents.Events
 {
-    public class EntityUpdateEvent<T> : IntergrationEvent, IEntityUpdateEvent<T>
+    public class EntityEvent<T> : IntergrationEvent, IEntityAddEvent<T>
     {
         public T? Data { get; set; }
+        public string Type { get; set; }
     }
 }
