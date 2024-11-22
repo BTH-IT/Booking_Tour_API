@@ -68,7 +68,8 @@ namespace Booking.API
 				});
             CreateMap<HotelResponse, HotelResponseDTO>().ReverseMap();
             CreateMap<RoomResponse, RoomResponseDTO>().ReverseMap();
-			CreateMap<ReviewResponse, ReviewRoomDTO>();
+			CreateMap<ReviewResponse, ReviewRoomDTO>()
+				.ForMember(dest=>dest.CreatedAt,opt => opt.MapFrom(src=>src.CreateAt.ToDateTime()));
 			CreateMap<ScheduleResponse, ScheduleResponseDTO>()
 				.ForMember(dest => dest.DateStart, opt => opt.MapFrom(src => src.DateStart.ToDateTime()))
 				.ForMember(dest => dest.DateEnd, opt => opt.MapFrom(src => src.DateEnd.ToDateTime()));
