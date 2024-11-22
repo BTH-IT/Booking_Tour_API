@@ -14,6 +14,9 @@ services:
       dockerfile: Services/Room.API/Dockerfile
     networks:
       - apis-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   tour.api:
     image: tour-api
     build:
