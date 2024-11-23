@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using Room.API.Entities;
 using Room.API.GrpcServer.Protos;
 using Shared.DTOs;
@@ -41,6 +42,8 @@ public class MappingProfile : Profile
             .ReverseMap();
 
         CreateMap<Hotel, HotelResponse>().ReverseMap();
-        CreateMap<ReviewRoom, ReviewResponse>().ReverseMap();
+        CreateMap<ReviewRoom, ReviewResponse>()
+			.ForMember(dest=>dest.CreateAt,opt => opt.MapFrom(src=>Timestamp.FromDateTime(src.CreatedAt.Value.ToUniversalTime())))
+			.ReverseMap();
     }
 }

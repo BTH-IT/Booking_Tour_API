@@ -18,18 +18,20 @@ namespace Tour.API.Services
         private readonly ILogger _logger;
         private readonly IScheduleService _scheduleService;
         private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
-
+        private readonly IPublishEndpoint _publishEndpoint;
         public TourService(ITourRepository tourRepository, 
             IScheduleService scheduleService, 
             RoomGrpcService.RoomGrpcServiceClient roomGrpcServiceClient,
             IMapper mapper,
-            ILogger logger)
+            ILogger logger,
+            IPublishEndpoint publishEndpoint)
         {
             _tourRepository = tourRepository;
             _scheduleService = scheduleService;
             _roomGrpcServiceClient = roomGrpcServiceClient;
             _mapper = mapper;
             _logger = logger;
+            _publishEndpoint = publishEndpoint; 
         }
 
         public async Task<ApiResponse<List<TourResponseDTO>>> GetAllAsync()
