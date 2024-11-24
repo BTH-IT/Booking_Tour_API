@@ -6,8 +6,8 @@ using Tour.API.Repositories.Interfaces;
 using Tour.API.Services.Interfaces;
 using Tour.API.GrpcClient.Protos;
 using ILogger = Serilog.ILogger;
-using MassTransit;
 using EventBus.IntergrationEvents.Events;
+using MassTransit;
 
 namespace Tour.API.Services
 {
@@ -19,8 +19,8 @@ namespace Tour.API.Services
         private readonly IScheduleService _scheduleService;
         private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
         private readonly IPublishEndpoint _publishEndpoint;
-        public TourService(ITourRepository tourRepository, 
-            IScheduleService scheduleService, 
+        public TourService(ITourRepository tourRepository,
+            IScheduleService scheduleService,
             RoomGrpcService.RoomGrpcServiceClient roomGrpcServiceClient,
             IMapper mapper,
             ILogger logger,
@@ -31,7 +31,7 @@ namespace Tour.API.Services
             _roomGrpcServiceClient = roomGrpcServiceClient;
             _mapper = mapper;
             _logger = logger;
-            _publishEndpoint = publishEndpoint; 
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<ApiResponse<List<TourResponseDTO>>> GetAllAsync()
@@ -91,6 +91,13 @@ namespace Tour.API.Services
                     await CreateSchedulesAsync(item, result);
                     var createdTour = await _tourRepository.GetTourByIdAsync(result);
                     var responseData = _mapper.Map<TourResponseDTO>(createdTour);
+                    await _publishEndpoint.Publish(new TourEvent
+                    {
+                        Id = Guid.NewGuid(),
+                        Data = responseData,
+                        Type = "CREATE",
+                    });
+
                     return new ApiResponse<TourResponseDTO>(200, responseData, "Tour created successfully");
                 }
 
@@ -147,6 +154,13 @@ namespace Tour.API.Services
 
                 var updatedTour = await _tourRepository.GetTourByIdAsync(id);
                 var responseData = _mapper.Map<TourResponseDTO>(updatedTour);
+                await _publishEndpoint.Publish(new TourEvent
+                {
+                    Id = Guid.NewGuid(),
+                    Data = responseData,
+                    Type = "UPDATE",
+                });
+
                 return new ApiResponse<TourResponseDTO>(result > 0 ? 200 : 400, responseData, result > 0 ? "Successfully updated the tour" : "Failed to update the tour");
             }
             catch (Exception ex)
@@ -167,7 +181,15 @@ namespace Tour.API.Services
                 var tour = await _tourRepository.GetTourByIdAsync(id);
                 if (tour == null) return NotFound<int>(id);
 
+                var responseData = _mapper.Map<TourResponseDTO>(tour);
                 await _tourRepository.DeleteTourAsync(id);
+
+                await _publishEndpoint.Publish(new TourEvent
+                {
+                    Id = Guid.NewGuid(),
+                    Data = responseData,
+                    Type = "DELETE",
+                });
 
                 return new ApiResponse<int>(200, id, "Successfully deleted the tour (soft delete)");
             }
