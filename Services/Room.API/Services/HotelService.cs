@@ -1,10 +1,12 @@
-﻿ using AutoMapper;
+﻿using AutoMapper;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
+using EventBus.IntergrationEvents.Events;
 using ILogger = Serilog.ILogger;
 
 namespace Room.API.Services
@@ -15,13 +17,15 @@ namespace Room.API.Services
 		private readonly IRoomRepository _roomRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
+		private readonly IPublishEndpoint _publishEndpoint;
 
-		public HotelService(IHotelRepository hotelRepository, IRoomRepository roomRepository, IMapper mapper, ILogger logger)
+		public HotelService(IHotelRepository hotelRepository, IRoomRepository roomRepository, IMapper mapper, ILogger logger, IPublishEndpoint publishEndpoint)
 		{
 			_hotelRepository = hotelRepository;
 			_roomRepository = roomRepository;
 			_mapper = mapper;
 			_logger = logger;
+			_publishEndpoint = publishEndpoint;
 		}
 
 		public async Task<ApiResponse<List<HotelResponseDTO>>> GetAllAsync()
@@ -37,7 +41,7 @@ namespace Room.API.Services
 					_logger.Warning("No hotels");
 					return new ApiResponse<List<HotelResponseDTO>>(204, null, "No hotels");
 				}
-				
+
 				var data = _mapper.Map<List<HotelResponseDTO>>(hotels);
 
 				_logger.Information("End: HotelService - GetAllAsync");
@@ -127,6 +131,12 @@ namespace Room.API.Services
 
 				var createdHotel = await _hotelRepository.GetHotelByIdAsync(newId);
 				var responseData = _mapper.Map<HotelResponseDTO>(createdHotel);
+				await _publishEndpoint.Publish(new HotelEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = responseData,
+					Type = "CREATE"
+				});
 
 				_logger.Information("End: HotelService - CreateAsync");
 				return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel created successfully");
@@ -171,6 +181,12 @@ namespace Room.API.Services
 
 				var updatedHotel = await _hotelRepository.GetHotelByIdAsync(id);
 				var responseData = _mapper.Map<HotelResponseDTO>(updatedHotel);
+				await _publishEndpoint.Publish(new HotelEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = responseData,
+					Type = "UPDATE"
+				});
 
 				_logger.Information("End: HotelService - UpdateAsync");
 				return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel updated successfully");
@@ -218,6 +234,15 @@ namespace Room.API.Services
 					_logger.Warning("Failed to delete hotel");
 					return new ApiResponse<int>(400, -1, "Error occurred while deleting hotel");
 				}
+
+				var responseData = _mapper.Map<HotelResponseDTO>(hotel);
+
+				await _publishEndpoint.Publish(new HotelEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = responseData,
+					Type = "DELETE"
+				});
 
 				_logger.Information($"End: HotelService - DeleteAsync : {id} - Successfully soft deleted the hotel and its rooms.");
 				return new ApiResponse<int>(200, rooms.Count(), "Successfully soft deleted the hotel and its associated rooms.");

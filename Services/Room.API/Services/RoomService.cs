@@ -6,6 +6,8 @@ using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
 using ILogger = Serilog.ILogger;
+using EventBus.IntergrationEvents.Events;
+using MassTransit;
 
 namespace Room.API.Services
 {
@@ -15,13 +17,15 @@ namespace Room.API.Services
 		private readonly IHotelRepository _hotelRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
+		private readonly IPublishEndpoint _publishEndpoint;
 
-		public RoomService(IRoomRepository roomRepository, IHotelRepository hotelRepository, IMapper mapper, ILogger logger)
+		public RoomService(IRoomRepository roomRepository, IHotelRepository hotelRepository, IMapper mapper, ILogger logger, IPublishEndpoint publishEndpoint)
 		{
 			_roomRepository = roomRepository;
 			_hotelRepository = hotelRepository;
 			_mapper = mapper;
 			_logger = logger;
+			_publishEndpoint = publishEndpoint;
 		}
 
 		public async Task<ApiResponse<List<RoomResponseDTO>>> GetAllAsync()
@@ -125,6 +129,12 @@ namespace Room.API.Services
 
 				var createdRoom = await _roomRepository.GetRoomByIdAsync(newId);
 				var data = _mapper.Map<RoomResponseDTO>(createdRoom);
+				await _publishEndpoint.Publish(new RoomEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = data,
+					Type = "CREATE"
+				});
 
 				_logger.Information("End: RoomService - CreateAsync");
 				return new ApiResponse<RoomResponseDTO>(200, data, "Room created successfully");
@@ -167,6 +177,12 @@ namespace Room.API.Services
 
 				var updatedRoom = await _roomRepository.GetRoomByIdAsync(id);
 				var data = _mapper.Map<RoomResponseDTO>(updatedRoom);
+				await _publishEndpoint.Publish(new RoomEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = data,
+					Type = "UPDATE"
+				});
 
 				_logger.Information("End: RoomService - UpdateAsync");
 				return new ApiResponse<RoomResponseDTO>(200, data, "Room updated successfully");
@@ -197,8 +213,15 @@ namespace Room.API.Services
 					return new ApiResponse<int>(400, 0, "Room is currently booked and cannot be deleted");
 				}
 
+				var data = _mapper.Map<RoomResponseDTO>(room);
 				room.DeletedAt = DateTime.UtcNow;
 				var result = await _roomRepository.UpdateRoomAsync(room);
+				await _publishEndpoint.Publish(new RoomEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = data,
+					Type = "DELETE"
+				});
 
 				if (result <= 0)
 				{
@@ -216,33 +239,33 @@ namespace Room.API.Services
 			}
 		}
 
-        public async Task<ApiResponse<RoomSearchResponseDTO>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
-        {
-            _logger.Information("Begin: RoomService - SearchRoomsAsync");
+		public async Task<ApiResponse<RoomSearchResponseDTO>> SearchRoomsAsync(RoomSearchRequestDTO searchRequest)
+		{
+			_logger.Information("Begin: RoomService - SearchRoomsAsync");
 
-            try
-            {
-                var result = await _roomRepository.SearchRoomsAsync(searchRequest);
-                var data = _mapper.Map<List<RoomResponseDTO>>(result.Tours);
+			try
+			{
+				var result = await _roomRepository.SearchRoomsAsync(searchRequest);
+				var data = _mapper.Map<List<RoomResponseDTO>>(result.Tours);
 
-                var response = new RoomSearchResponseDTO
-                {
-                    Rooms = data,
-                    TotalItems = result.TotalItems,
-                    MinPrice = result.MinPrice,
-                    MaxPrice = result.MaxPrice,
-                    PageNumber = result.PageNumber,
-                    PageSize = result.PageSize
-                };
+				var response = new RoomSearchResponseDTO
+				{
+					Rooms = data,
+					TotalItems = result.TotalItems,
+					MinPrice = result.MinPrice,
+					MaxPrice = result.MaxPrice,
+					PageNumber = result.PageNumber,
+					PageSize = result.PageSize
+				};
 
-                _logger.Information("End: RoomService - SearchRoomsAsync");
-                return new ApiResponse<RoomSearchResponseDTO>(200, response, "Rooms retrieved successfully");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"Error in RoomService - SearchRoomsAsync: {ex.Message}", ex);
-                return new ApiResponse<RoomSearchResponseDTO>(500, null, $"An error occurred while searching for rooms: {ex.Message}");
-            }
-        }
-    }
+				_logger.Information("End: RoomService - SearchRoomsAsync");
+				return new ApiResponse<RoomSearchResponseDTO>(200, response, "Rooms retrieved successfully");
+			}
+			catch (Exception ex)
+			{
+				_logger.Error($"Error in RoomService - SearchRoomsAsync: {ex.Message}", ex);
+				return new ApiResponse<RoomSearchResponseDTO>(500, null, $"An error occurred while searching for rooms: {ex.Message}");
+			}
+		}
+	}
 }

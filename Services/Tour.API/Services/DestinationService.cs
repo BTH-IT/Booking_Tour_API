@@ -6,6 +6,8 @@ using Tour.API.Entities;
 using Tour.API.Repositories.Interfaces;
 using Tour.API.Services.Interfaces;
 using ILogger = Serilog.ILogger;
+using EventBus.IntergrationEvents.Events;
+using MassTransit;
 
 namespace Tour.API.Services
 {
@@ -14,14 +16,17 @@ namespace Tour.API.Services
 		private readonly IDestinationRepository _destinationRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
+		private readonly IPublishEndpoint _publishEndpoint;
 
 		public DestinationService(IDestinationRepository destinationRepository,
-			IMapper mapper,
-			ILogger logger)
+		IMapper mapper,
+		ILogger logger,
+		IPublishEndpoint publishEndpoint)
 		{
 			_destinationRepository = destinationRepository;
 			_mapper = mapper;
 			_logger = logger;
+			_publishEndpoint = publishEndpoint;
 		}
 
 		public async Task<ApiResponse<List<DestinationResponseDTO>>> GetAllAsync()
@@ -79,6 +84,12 @@ namespace Tour.API.Services
 
 				var createdDestination = await _destinationRepository.GetDestinationByIdAsync(newId);
 				var responseData = _mapper.Map<DestinationResponseDTO>(createdDestination);
+				await _publishEndpoint.Publish(new DestinationEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = responseData,
+					Type = "CREATE"
+				});
 
 				_logger.Information("End: DestinationService - CreateAsync");
 				return new ApiResponse<DestinationResponseDTO>(200, responseData, "Destination created successfully.");
@@ -115,6 +126,12 @@ namespace Tour.API.Services
 
 				var updatedDestination = await _destinationRepository.GetDestinationByIdAsync(id);
 				var responseData = _mapper.Map<DestinationResponseDTO>(updatedDestination);
+				await _publishEndpoint.Publish(new DestinationEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = responseData,
+					Type = "UPDATE"
+				});
 
 				_logger.Information("End: DestinationService - UpdateAsync");
 				return result > 0
@@ -146,6 +163,17 @@ namespace Tour.API.Services
 				_destinationRepository.Delete(destination);
 				var result = await _destinationRepository.SaveChangesAsync();
 				_logger.Information("End: DestinationService - DeleteAsync");
+				var responseData = _mapper.Map<DestinationResponseDTO>(result);
+
+				if (result > 0)
+				{
+					await _publishEndpoint.Publish(new DestinationEvent
+					{
+						Id = Guid.NewGuid(),
+						Data = responseData,
+						Type = "DELETE"
+					});
+				}
 
 				return result > 0
 					? new ApiResponse<int>(200, result, "Destination deleted successfully.")
