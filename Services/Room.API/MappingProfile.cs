@@ -43,7 +43,7 @@ public class MappingProfile : Profile
 
         CreateMap<Hotel, HotelResponse>().ReverseMap();
         CreateMap<ReviewRoom, ReviewResponse>()
-			.ForMember(dest=>dest.CreateAt,opt => opt.MapFrom(src=>Timestamp.FromDateTime(src.CreatedAt.Value.ToUniversalTime())))
+			.ForMember(dest=>dest.CreatedAt,opt => opt.MapFrom(src=>Timestamp.FromDateTime(src.CreatedAt.Value.ToUniversalTime())))
 			.ReverseMap();
     }
 }
