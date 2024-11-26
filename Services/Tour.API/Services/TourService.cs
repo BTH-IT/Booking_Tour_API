@@ -122,7 +122,7 @@ namespace Tour.API.Services
             while (dateFrom <= dateTo)
             {
                 var dateStart = dateFrom;
-                dateFrom = dateFrom.AddDays(item.DayList?.Count() ?? 0);
+                dateFrom = dateFrom.AddDays(item.DayList?.Count() - 1 ?? 0);
                 var dateEnd = dateFrom;
 
                 if (dateEnd >= dateTo) break;
@@ -135,7 +135,7 @@ namespace Tour.API.Services
                     AvailableSeats = item.MaxGuests
                 });
 
-                dateFrom = dateFrom.AddDays(2);
+                dateFrom = dateFrom.AddDays(1);
             }
         }
 
