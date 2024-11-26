@@ -7,6 +7,7 @@ using Grpc.Core;
 using MassTransit;
 using MassTransit.Transports;
 using Microsoft.EntityFrameworkCore;
+using Shared.Constants;
 using Shared.DTOs;
 using ILogger = Serilog.ILogger;
 namespace Booking.API.GrpcServer.Services
@@ -48,7 +49,7 @@ namespace Booking.API.GrpcServer.Services
             var dateEnd = request.CheckOut.ToDateTime();    
 
             var bookingRoomsByDate = await bookingRoomRepository.FindByCondition(c=>
-             c.CheckIn <= dateEnd && c.CheckOut >= dateStart,false,c=>c.DetailBookingRooms).ToListAsync();
+             c.CheckIn <= dateEnd && c.CheckOut >= dateStart && !c.Status.Equals(Constants.OrderStatus.Cancelled),false,c=>c.DetailBookingRooms).ToListAsync();
 
             foreach(var item in request.RoomIds)
             {
