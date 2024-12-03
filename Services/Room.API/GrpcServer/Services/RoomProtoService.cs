@@ -1,13 +1,20 @@
+<<<<<<< HEAD
 ﻿using AutoMapper;
 using Grpc.Core;
 using Room.API.Entities;
 using Room.API.GrpcServer.Protos;
 using Room.API.Repositories.Interfaces;
 using ILogger = Serilog.ILogger;
+=======
+﻿using Grpc.Core;
+using Room.API.GrpcServer.Protos;
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 namespace Room.API.GrpcServer.Services
 {
     public class RoomProtoService : RoomGrpcService.RoomGrpcServiceBase
     {
+<<<<<<< HEAD
         private readonly IRoomRepository roomRepository;
         private readonly ILogger logger;
         private readonly IMapper mapper;
@@ -59,6 +66,14 @@ namespace Room.API.GrpcServer.Services
             }
             logger.Information("End : UpdateRoomsAvailability - RoomGrpcServer");
             return response;
+=======
+        public override Task<GetRoomByIdResponse> GetRoomById(GetRoomByIdRequest request, ServerCallContext context)
+        {
+            return Task.FromResult(new GetRoomByIdResponse()
+            {
+                Result = 101
+            });
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
         }
     }
 }

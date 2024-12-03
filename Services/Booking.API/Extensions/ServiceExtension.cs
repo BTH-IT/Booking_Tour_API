@@ -5,10 +5,15 @@ using MySqlConnector;
 using Shared.Configurations;
 using Infrastructure.Extensions;
 using Booking.API.Persistence;
+<<<<<<< HEAD
 using Booking.API.Repositories.Interfaces;
 using Booking.API.Repositories;
 using Booking.API.Services.Interfaces;
 using Booking.API.Services;
+=======
+using EventBus.Masstransit;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 using Booking.API.GrpcClient.Protos;
 using Infrastructure.Polly.GprcPolly;
 namespace Booking.API.Extensions
@@ -37,12 +42,15 @@ namespace Booking.API.Extensions
         {
             return services.AddScoped(typeof(IRepositoryBase<,,>), typeof(RepositoryBase<,,>))
                     .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
+<<<<<<< HEAD
 					.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
 					.AddScoped<IBookingRoomRepository, BookingRoomRepository>()
 					.AddScoped<IBookingTourRepository, BookingTourRepository>()
 					.AddScoped<IDetailBookingRoomRepository, DetailBookingRoomRepository>()
 					.AddScoped<IBookingRoomService, BookingRoomService>()
 					.AddScoped<IBookingTourService, BookingTourService>()
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 					.AddScoped<BookingDbContextSeeder>();
         }
         public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
@@ -59,6 +67,7 @@ namespace Booking.API.Extensions
         public static IServiceCollection AddGrpcClients(this IServiceCollection services)
         {
             var grpcOptions = services.GetOptions<GrpcSettings>(nameof(GrpcSettings));
+<<<<<<< HEAD
             services.AddGrpcClient<IdentityGrpcService.IdentityGrpcServiceClient>(options =>
             {
                 options.Address = new Uri(grpcOptions.IdentityAddress ?? throw new Exception("Configration Not found"));
@@ -70,6 +79,26 @@ namespace Booking.API.Extensions
             services.AddGrpcClient<TourGrpcService.TourGrpcServiceClient>(options => {
                 options.Address = new Uri(grpcOptions.TourAddress ?? throw new Exception("Configuration Not Found"));
             });
+=======
+            services.AddGrpcClient<IdentityGrpcService.IdentityGrpcServiceClient>(
+                option =>
+                {
+                    option.Address = new Uri(grpcOptions.IdentityAddress ?? throw new Exception("Configration Not found"));
+                }
+            );
+            services.AddGrpcClient<TourGrpcService.TourGrpcServiceClient>(
+                option =>
+                {
+                    option.Address = new Uri(grpcOptions.TourAddress ?? throw new Exception("Configration Not found"));
+                }
+            );
+            services.AddGrpcClient<RoomGrpcService.RoomGrpcServiceClient>(
+                option =>
+                {
+                    option.Address = new Uri(grpcOptions.RoomAddress ?? throw new Exception("Configration Not found"));
+                }
+            );
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
             return services;
         }
     }

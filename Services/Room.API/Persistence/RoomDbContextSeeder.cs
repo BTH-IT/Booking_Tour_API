@@ -68,6 +68,11 @@ namespace Room.API.Persistence
 								CreatedAt = DateTime.UtcNow,
 								UpdatedAt = DateTime.UtcNow,
 								ReviewList = new List<ReviewHotel>(),
+<<<<<<< HEAD
+=======
+								HotelRulesList = new List<HotelRules>(),
+								HotelAmenitiesList = new List<HotelAmenities>(),
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 								Rooms = new List<RoomEntity>()
 							};
 
@@ -76,6 +81,7 @@ namespace Room.API.Persistence
 								var room = new RoomEntity
 								{
 									Name = $"Phòng {j} tại {hotel.Name}",
+<<<<<<< HEAD
 									ImagesList = new string[5],
 									Video = "https://booking-cloud-storage.s3.amazonaws.com/tour.mp4",
 									Detail = $"Chi tiết về phòng {j} tại {hotel.Name}",
@@ -84,11 +90,30 @@ namespace Room.API.Persistence
 									MaxGuests = 2,
 									CreatedAt = DateTime.UtcNow,
 									ReviewList = new List<ReviewRoom>()
+=======
+									Detail = $"Chi tiết về phòng {j} tại {hotel.Name}",
+									Price = 100 + (j * 20), 
+									IsAvailable = true,
+									MaxGuests = 2,
+									CreatedAt = DateTime.UtcNow,
+									ReviewList = new List<ReviewRoom>(),
+									RoomAmenitiesList = new List<RoomAmenities>(),
+									ImagesList = new List<Image>(),
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 								};
 								int Counter = 0;
 								for (int k = 1; k <= 5; k++)
 								{
+<<<<<<< HEAD
 									room.ImagesList[k - 1] = $"https://booking-cloud-storage.s3.amazonaws.com/jack-ward-rknrvCrfS1k-unsplash-scaled.jpg";
+=======
+									room.ImagesList.Add(new Image
+									{
+										Id = $"{++Counter}",
+										Url = $"https://realimages.com/{province}/hotel{i}/room{j}/image{k}.jpg"
+									});
+									
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 									room.ReviewList.Add(new ReviewRoom
 									{
 										Id = $"{Counter}",
@@ -99,7 +124,19 @@ namespace Room.API.Persistence
 										UserId = j
 									});
 								}
+<<<<<<< HEAD
 								room.RoomAmenitiesList = new[] { "Wi-Fi miễn phí", "Điều hòa nhiệt độ", "TV màn hình phẳng" };
+=======
+								room.VideoObject = new Video
+								{
+									Id = "1",
+									Url = "https://example.com/video1.mp4",
+									Type = "mp4"
+								};
+								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"1", Title = "Wi-Fi miễn phí" });
+								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"2", Title = "Điều hòa nhiệt độ" });
+								room.RoomAmenitiesList.Add(new RoomAmenities { Id = $"3", Title = "TV màn hình phẳng" });
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
 								hotel.Rooms.Add(room);
 							}
@@ -117,16 +154,27 @@ namespace Room.API.Persistence
 								});
 							}
 
+<<<<<<< HEAD
 							hotel.HotelRulesList = new[] { "Không hút thuốc trong phòng.", "Giữ yên lặng từ 22h đến 6h sáng." };
 							hotel.HotelAmenitiesList = new[] { "Bể bơi ngoài trời", "Phòng Gym", "Spa" };
+=======
+							hotel.HotelRulesList.Add(new HotelRules { Id = $"1", Title = "Không hút thuốc trong phòng." });
+							hotel.HotelRulesList.Add(new HotelRules { Id = $"2", Title = "Giữ yên lặng từ 22h đến 6h sáng." });
+							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"1", Title = "Bể bơi ngoài trời" });
+							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"2", Title = "Phòng Gym" });
+							hotel.HotelAmenitiesList.Add(new HotelAmenities { Id = $"3", Title = "Spa" });
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
 							hotels.Add(hotel);
 						}
 						count++;
 					}
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 					await _context.Hotels.AddRangeAsync(hotels);
 					await _context.SaveChangesAsync();
 

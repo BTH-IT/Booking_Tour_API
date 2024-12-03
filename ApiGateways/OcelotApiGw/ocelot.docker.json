@@ -16,11 +16,14 @@
         "PUT",
         "DELETE"
       ],
+<<<<<<< HEAD
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 2,
         "DurationOfBreak": 1000,
         "TimeoutValue": 10000
       },
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
       "SwaggerKey": "identity.api"
     },
     {
@@ -92,6 +95,7 @@
         "POST",
         "DELETE"
       ],
+<<<<<<< HEAD
       "RateLimitOptions": {
         "ClientWhiteList": [],
         "EnableRateLimiting": true,
@@ -152,6 +156,9 @@
 
       ],
       "SwaggerKey": "realtime.api"
+=======
+      "SwaggerKey": "booking.api"
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     }
   ],
   "SwaggerEndPoints": [
@@ -204,6 +211,7 @@
           "Url": "http://upload.api:80/swagger/v1/swagger.json"
         }
       ]
+<<<<<<< HEAD
     },
     {
       "Key": "saga.api",
@@ -214,6 +222,8 @@
           "Url": "http://saga.api:80/swagger/v1/swagger.json"
         }
       ]
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     }
   ],
   "GlobalConfiguration": {

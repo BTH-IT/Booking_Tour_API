@@ -13,12 +13,16 @@ using Tour.API.Services;
 using FluentValidation;
 using Shared.DTOs;
 using Tour.API.Validators;
+<<<<<<< HEAD
 using Infrastructure.Polly.GprcPolly;
 using Tour.API.GrpcClient.Protos;
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 namespace Tour.API.Extensions
 {
     public static class ServiceExtensions
     {
+<<<<<<< HEAD
         public static IServiceCollection AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
         {
             var grpcSettings = configuration.GetSection(nameof(GrpcSettings));
@@ -26,6 +30,8 @@ namespace Tour.API.Extensions
             return services;
         }
 
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
         public static IServiceCollection ConfigureIdentityDbContext(this IServiceCollection services)
         {
             var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
@@ -52,9 +58,14 @@ namespace Tour.API.Extensions
                 .AddScoped<ITourService, TourService>()
                 .AddScoped<IDestinationRepository, DestinationRepository>()
                 .AddScoped<IDestinationService, DestinationService>()
+<<<<<<< HEAD
 				.AddScoped<IReviewTourService, ReviewTourService>()
                 .AddScoped<TourDbContextSeeder>();
 		}
+=======
+                .AddScoped<TourDbContextSeeder>(); 
+        }
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
         public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCors(option =>
@@ -66,6 +77,7 @@ namespace Tour.API.Extensions
             );
             return services;
         }
+<<<<<<< HEAD
         public static IServiceCollection AddGrpcClients(this IServiceCollection services)
         {
             var grpcOptions = services.GetOptions<GrpcSettings>(nameof(GrpcSettings));
@@ -74,5 +86,8 @@ namespace Tour.API.Extensions
             });
             return services;
         }
+=======
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     }
 }

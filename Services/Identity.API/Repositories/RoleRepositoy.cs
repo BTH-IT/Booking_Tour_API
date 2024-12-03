@@ -45,7 +45,11 @@ namespace Identity.API.Repositories
 
 		public Task<Role> GetRoleByIdAsync(int id) => FindByCondition(c=>c.Id.Equals(id) && c.DeletedAt == null).FirstOrDefaultAsync();
 
+<<<<<<< HEAD
         public async Task<IEnumerable<Role>> GetRolesAsync() => await FindByCondition(c => c.DeletedAt == null).OrderByDescending(r => r.CreatedAt).ToListAsync();
+=======
+        public async Task<IEnumerable<Role>> GetRolesAsync() => await FindByCondition(c => c.DeletedAt == null).ToListAsync();
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
         public Task UpdateRoleAsync(Role role) => UpdateAsync(role);
 
@@ -79,7 +83,11 @@ namespace Identity.API.Repositories
 		public async Task<List<RoleDetail>> GetRoleDetailsByRoleIdAsync(int roleId)
 		{
 			return await _context.RoleDetails
+<<<<<<< HEAD
 				.Where(rd => rd.RoleId == roleId && rd.DeletedAt == null)
+=======
+				.Where(rd => rd.RoleId == roleId && rd.DeletedAt == null) 
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 				.ToListAsync();
 		}
 	}

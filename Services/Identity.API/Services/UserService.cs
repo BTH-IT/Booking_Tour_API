@@ -17,6 +17,7 @@ namespace Identity.API.Services
 		private readonly IAccountRepository _accountRepository;
 		private readonly ILogger _logger;
 		private readonly IMapper _mapper;
+<<<<<<< HEAD
 
 		public UserService(
 			IUserRepository userRepository,
@@ -81,6 +82,52 @@ namespace Identity.API.Services
 			return new ApiResponse<List<UserResponseDTO>>(200, data, "Data retrieved successfully");
 		}
 
+=======
+
+		public UserService(
+			IUserRepository userRepository,
+			IAccountRepository accountRepository,
+			ILogger logger,
+			IMapper mapper
+		)
+		{
+			_userRepository = userRepository;
+			_accountRepository = accountRepository;
+			_logger = logger;
+			_mapper = mapper;
+		}
+
+		public async Task<ApiResponse<int>> DeleteAsync(int id)
+		{
+			_logger.Information($"Begin: UserService - DeleteAsync: {id}");
+			var user = await _userRepository.GetUserByIdAsync(id);
+			if (user == null)
+			{
+				return new ApiResponse<int>(404, 0, "User not found");
+			}
+
+			var account = await _accountRepository.GetAccountByIdAsync(user.AccountId); 
+			if (account != null)
+			{
+				await _accountRepository.DeleteAccountAsync(account.Id);
+			}
+
+			await _userRepository.DeleteUserAsync(user.Id);
+			_logger.Information($"End: UserService - DeleteAsync: {id} - Deletion successful");
+			return new ApiResponse<int>(200, id, "User and associated account deleted successfully");
+		}
+
+
+		public async Task<ApiResponse<List<UserResponseDTO>>> GetAllAsync()
+		{
+			_logger.Information($"Begin: UserService - GetAllAsync");
+			var users = await _userRepository.GetUsersAsync();
+			var data = _mapper.Map<List<UserResponseDTO>>(users);
+			_logger.Information($"End: UserService - GetAllAsync");
+			return new ApiResponse<List<UserResponseDTO>>(200, data, "Data retrieved successfully");
+		}
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 		public async Task<ApiResponse<UserResponseDTO>> GetUserByIdAsync(int id)
 		{
 			_logger.Information($"Begin: UserService - GetByIdAsync");
@@ -112,21 +159,37 @@ namespace Identity.API.Services
 			return new ApiResponse<UserResponseDTO>(200, userDto, "Creation successful");
 		}
 
+<<<<<<< HEAD
 		public async Task<ApiResponse<UserResponseDTO>> UpdateAsync(int id,UpdateUserRequestDTO item)
 		{
 			_logger.Information($"Begin: UserService - UpdateAsync");
 			var user = await _userRepository.GetUserByIdAsync(id);
 			var userId = user.Id;
 			var accountId = user.AccountId;
+=======
+		public async Task<ApiResponse<UserResponseDTO>> UpdateAsync(UserRequestDTO item)
+		{
+			_logger.Information($"Begin: UserService - UpdateAsync");
+			var user = await _userRepository.GetUserByIdAsync(item.Id.Value);
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 			if (user == null)
 			{
 				return new ApiResponse<UserResponseDTO>(404, null, "User not found");
 			}
 
+<<<<<<< HEAD
 			user = _mapper.Map<User>(item);
 			user.Id = userId;
 			user.AccountId = accountId;	
 			
+=======
+			if (await _userRepository.FindByCondition(c => c.AccountId.Equals(item.AccountId) && !c.Id.Equals(item.Id)).FirstOrDefaultAsync() != null)
+			{
+				return new ApiResponse<UserResponseDTO>(400, null, "Account is already assigned to another user");
+			}
+
+			user = _mapper.Map<User>(item);
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 			var result = await _userRepository.UpdateAsync(user);
 			if (result > 0)
 			{

@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+<<<<<<< HEAD
 import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Tour.API.GrpcServer.Protos";
 
@@ -60,4 +61,16 @@ message GetSchedulesByIdsRequest{
 }
 message GetSchedulesByIdsResponse{
     repeated ScheduleResponse Schedules = 1;
+=======
+option csharp_namespace = "Tour.API.GrpcServer.Protos";
+
+service TourGrpcService{
+	rpc GetTourById (GetTourByIdRequest) returns (GetTourByIdResponse);
+}
+message GetTourByIdRequest{
+	int32 id = 1;
+}
+message GetTourByIdResponse{
+	int32 result = 1;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }

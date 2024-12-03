@@ -1,10 +1,14 @@
 ﻿using Booking.API.Entities;
 using Booking.API.Persistence;
+<<<<<<< HEAD
 using Booking.API.Repositories.Interfaces;
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 using Contracts.Domains.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
+<<<<<<< HEAD
 
 namespace Booking.API.Repositories
 {
@@ -40,4 +44,24 @@ namespace Booking.API.Repositories
 			}
 		}
 	}
+=======
+namespace Booking.API.Repositories
+{
+    public class BookingRoomRepository :RepositoryBase<BookingRoom, int, BookingDbContext>
+    {
+        private readonly BookingDbContext _context;
+        public BookingRoomRepository(BookingDbContext dbContext, IUnitOfWork<BookingDbContext> unitOfWork) : base(dbContext, unitOfWork)
+        {
+            _context = dbContext;
+        }
+        public void AddDetailBookingRooms(List<DetailBookingRoom> detailBookingRooms)
+        {
+            _context.AddRange(detailBookingRooms);
+        }
+        public void RemoveDetailBookingRooms(List<DetailBookingRoom> detailBookingRooms)
+        {
+            _context.RemoveRange(detailBookingRooms);
+        }
+    }
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }

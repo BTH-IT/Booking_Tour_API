@@ -27,6 +27,12 @@ namespace Tour.API.Validators
 
             RuleFor(tour => tour.Rate)
                 .InclusiveBetween(0, 5).WithMessage("Đánh giá phải trong khoảng từ 0 đến 5.");
+<<<<<<< HEAD
+=======
+
+            RuleFor(tour => tour.Video)
+                .MaximumLength(1000).WithMessage("URL video không vượt quá 1000 ký tự.");
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
         }
     }
 }

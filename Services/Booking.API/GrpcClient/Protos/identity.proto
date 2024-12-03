@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 ﻿syntax = "proto3";
 import "google/protobuf/timestamp.proto";
+=======
+syntax = "proto3";
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 option csharp_namespace = "Booking.API.GrpcClient.Protos";
 
 service IdentityGrpcService{
 	rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+<<<<<<< HEAD
 	rpc GetUsersByIds (GetUsersByIdRequest) returns (GetUsersByIdsResponse);
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }
 
 message GetUserByIdRequest{
@@ -12,6 +20,7 @@ message GetUserByIdRequest{
 }
 
 message GetUserByIdResponse{
+<<<<<<< HEAD
     string Fullname = 1;
     string Country = 2;
 	string Phone = 3;
@@ -32,4 +41,7 @@ message UserResponse{
     string Gender = 4;
 	int32 Id = 5;
     google.protobuf.Timestamp BirthDate = 6;
+=======
+	int32 Result = 1;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }

@@ -1,6 +1,10 @@
 ﻿using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
+<<<<<<< HEAD
 using Ocelot.Provider.Polly;
+=======
+using System.Configuration;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
 namespace OcelotApiGw.Extensions
 {
@@ -17,7 +21,10 @@ namespace OcelotApiGw.Extensions
             var ocelotConfiguration = configurationBuilder.Build();
 
             services.AddOcelot(ocelotConfiguration)
+<<<<<<< HEAD
                 .AddPolly()
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
                 .AddCacheManager(c=>c.WithDictionaryHandle());
 
             services.AddSwaggerForOcelot(ocelotConfiguration,

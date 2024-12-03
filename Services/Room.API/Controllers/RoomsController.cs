@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,13 @@ using Shared.DTOs;
 using Shared.Helper;
 using Shared.Constants;
 using Shared.Enums;
+=======
+﻿using Microsoft.AspNetCore.Mvc;
+using Room.API.Services.Interfaces;
+using Shared.DTOs;
+using Shared.Helper;
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 namespace Room.API.Controllers
 {
 	[ApiController]
@@ -35,10 +43,14 @@ namespace Room.API.Controllers
 
 		[HttpPost]
 		[ApiValidationFilter]
+<<<<<<< HEAD
 		[Authorize]
         [RoleRequirement(ERole.Admin)]
 
         public async Task<IActionResult> CreateRoomAsync([FromBody] RoomRequestDTO requestDTO)
+=======
+		public async Task<IActionResult> CreateRoomAsync([FromBody] RoomRequestDTO requestDTO)
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 		{
 			var response = await _roomService.CreateAsync(requestDTO);
 			return StatusCode(response.StatusCode, response);
@@ -46,9 +58,13 @@ namespace Room.API.Controllers
 
 		[HttpPut("{id:int}")]
 		[ApiValidationFilter]
+<<<<<<< HEAD
 		[Authorize]
         [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> UpdateRoomAsync(int id, [FromBody] RoomRequestDTO requestDTO)
+=======
+		public async Task<IActionResult> UpdateRoomAsync(int id, [FromBody] RoomRequestDTO requestDTO)
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 		{
 			var response = await _roomService.UpdateAsync(id, requestDTO);
 			return StatusCode(response.StatusCode, response);
@@ -56,16 +72,24 @@ namespace Room.API.Controllers
 
 
 		[HttpDelete("{id:int}")]
+<<<<<<< HEAD
         [Authorize]
         [RoleRequirement(ERole.Admin)]
         public async Task<IActionResult> DeleteRoomAsync(int id)
+=======
+		public async Task<IActionResult> DeleteRoomAsync(int id)
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 		{
 			var response = await _roomService.DeleteAsync(id);
 			return StatusCode(response.StatusCode, response);
 		}
 
 		[HttpGet("search")]
+<<<<<<< HEAD
         public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchRequestDTO request)
+=======
+		public async Task<IActionResult> SearchRooms([FromQuery] RoomSearchRequestDTO request)
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 		{
 			var rooms = await _roomService.SearchRoomsAsync(request);
 			return Ok(rooms);

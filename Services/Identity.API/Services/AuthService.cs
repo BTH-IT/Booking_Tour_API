@@ -58,8 +58,12 @@ namespace Identity.API.Services
 				{
 					new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
 					new Claim(ClaimTypes.Email, account.Email),
+<<<<<<< HEAD
 					new Claim(ClaimTypes.Role, account.Role!.Id.ToString()),
 					new Claim(ClaimTypes.PrimarySid,user!.Id.ToString())
+=======
+					new Claim(ClaimTypes.Role, account.Role.Id.ToString()),
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 				}),
 				Expires = DateTime.UtcNow.AddDays(20),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

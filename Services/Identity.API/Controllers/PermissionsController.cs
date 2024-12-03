@@ -1,6 +1,9 @@
 ﻿using Identity.API.Services;
 using Identity.API.Services.Interfaces;
+<<<<<<< HEAD
 using Infrastructure.Authorization;
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Constants;

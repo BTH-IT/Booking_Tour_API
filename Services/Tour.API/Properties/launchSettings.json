@@ -2,7 +2,11 @@
   "profiles": {
     "http": {
       "commandName": "Project",
+<<<<<<< HEAD
       "launchBrowser": false,
+=======
+      "launchBrowser": true,
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -23,4 +27,15 @@
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
+<<<<<<< HEAD
+=======
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:42316",
+      "sslPort": 44388
+    }
+  }
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }

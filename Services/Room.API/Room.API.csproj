@@ -38,7 +38,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Contracts\Contracts.csproj" />
+<<<<<<< HEAD
     <ProjectReference Include="..\..\BuildingBlocks\EventBus\EventBus\EventBus.csproj" />
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     <ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
   </ItemGroup>

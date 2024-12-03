@@ -29,7 +29,11 @@ namespace Identity.API.Repositories
 
         public Task<Permission> GetPermissionByNameAsync(string name) => FindByCondition(c => c.Name.Equals(name) && c.DeletedAt == null).FirstOrDefaultAsync();
 
+<<<<<<< HEAD
         public async Task<IEnumerable<Permission>> GetPermissionsAsync() => await FindByCondition(c => c.DeletedAt == null).OrderByDescending(r => r.Id).ToListAsync();
+=======
+        public async Task<IEnumerable<Permission>> GetPermissionsAsync() => await FindByCondition(c => c.DeletedAt == null).ToListAsync();
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
         public Task UpdatePermissionAsync(Permission permission) => UpdateAsync(permission);
     }

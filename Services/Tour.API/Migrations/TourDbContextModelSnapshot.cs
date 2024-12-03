@@ -158,8 +158,13 @@ namespace Tour.API.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Video")
+<<<<<<< HEAD
                         .IsRequired()
                         .HasColumnType("longtext");
+=======
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
                     b.HasKey("Id");
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using AutoMapper;
 using EventBus.IntergrationEvents.Events;
 using Grpc.Core;
@@ -5,10 +6,16 @@ using MassTransit;
 using Tour.API.GrpcServer.Protos;
 using Tour.API.Repositories.Interfaces;
 using ILogger = Serilog.ILogger;
+=======
+﻿using Grpc.Core;
+using Tour.API.GrpcServer.Protos;
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 namespace Tour.API.GrpcServer.Services
 {
     public class TourProtoService : TourGrpcService.TourGrpcServiceBase
     {
+<<<<<<< HEAD
         private readonly IScheduleRepository scheduleRepository;
         private readonly ILogger logger;
         private readonly IMapper mapper;
@@ -100,6 +107,14 @@ namespace Tour.API.GrpcServer.Services
             logger.Information("END -- TourProtoService -- UpdateScheduleAvailableSeat");
 
             return response;
+=======
+        public override Task<GetTourByIdResponse> GetTourById(GetTourByIdRequest request, ServerCallContext context)
+        {
+            return Task.FromResult(new GetTourByIdResponse
+            {
+                Result = 102
+            });
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
         }
     }
 }

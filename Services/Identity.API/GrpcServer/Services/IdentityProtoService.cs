@@ -1,13 +1,21 @@
+<<<<<<< HEAD
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Identity.API.GrpcServer.Protos;
 using Identity.API.Repositories.Interfaces;
 using ILogger = Serilog.ILogger;
+=======
+﻿using Grpc.Core;
+using Identity.API.GrpcServer.Protos;
+using System.Net.WebSockets;
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 namespace Identity.API.GrpcServer.Services
 {
     public record GetUserById(int Result);
     public class IdentityProtoService : IdentityGrpcService.IdentityGrpcServiceBase
     {
+<<<<<<< HEAD
         private readonly IUserRepository userRepository;
         private readonly ILogger _logger;
         public IdentityProtoService(IUserRepository userRepository,ILogger logger)
@@ -60,6 +68,14 @@ namespace Identity.API.GrpcServer.Services
             return response;
 
 
+=======
+        public override Task<GetUserByIdResponse> GetUserById(GetUserByIdRequest request, ServerCallContext context)
+        {
+            return Task.FromResult(new GetUserByIdResponse()
+            {
+                Result = 100
+            });
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
         }
     }
 }

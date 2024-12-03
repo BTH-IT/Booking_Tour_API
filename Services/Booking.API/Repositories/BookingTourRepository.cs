@@ -1,5 +1,6 @@
 ﻿using Booking.API.Entities;
 using Booking.API.Persistence;
+<<<<<<< HEAD
 using Booking.API.Repositories.Interfaces;
 using Contracts.Domains.Interfaces;
 using Infrastructure.Repositories;
@@ -33,4 +34,27 @@ namespace Booking.API.Repositories
 			}
 		}
 	}
+=======
+using Contracts.Domains.Interfaces;
+using Infrastructure.Repositories;
+
+namespace Booking.API.Repositories
+{
+    public class BookingTourRepository : RepositoryBase<BookingTour,int , BookingDbContext>
+    {
+        private readonly BookingDbContext _context;
+        public BookingTourRepository(BookingDbContext dbContext, IUnitOfWork<BookingDbContext> unitOfWork) : base(dbContext, unitOfWork)
+        {
+            _context = dbContext;
+        }
+        public void AddTourBookingRooms(List<TourBookingRoom> tourBookingRooms)
+        {
+            _context.TourBookingRooms.AddRange(tourBookingRooms);
+        }
+        public void RemoveTourBookingRooms(List<TourBookingRoom> tourBookingRooms)
+        {
+            _context.RemoveRange(tourBookingRooms);
+        }
+    }
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }

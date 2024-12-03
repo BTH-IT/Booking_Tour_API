@@ -19,6 +19,7 @@ namespace Identity.API.Repositories
         public async Task DeleteAccountAsync(int id)
         {
             var account = await GetAccountByIdAsync(id);
+<<<<<<< HEAD
             if (account != null)
             {
                 account.DeletedAt = DateTime.UtcNow;
@@ -31,6 +32,20 @@ namespace Identity.API.Repositories
         public Task<Account> GetAccountByIdAsync(int id) => FindByCondition(c => c.Id.Equals(id) && c.DeletedAt == null, false, c => c.Role, c => c.Role.RoleDetails).SingleOrDefaultAsync();
 
         public async Task<IEnumerable<Account>> GetAccountsAsync() => await FindByCondition(c => c.DeletedAt == null, false, c => c.Role, c => c.Role.RoleDetails).OrderByDescending(r => r.CreatedAt).ToListAsync();
+=======
+			if (account != null)
+			{
+				account.DeletedAt = DateTime.UtcNow;
+				await UpdateAsync(account);
+			}
+		}
+
+        public Task<Account> GetAccountByEmailAsync(string email) => FindByCondition(c => c.Email.Equals(email) && c.DeletedAt == null, false,c => c.Role, c => c.Role.RoleDetails).SingleOrDefaultAsync();
+
+		public Task<Account> GetAccountByIdAsync(int id) => FindByCondition(c => c.Id.Equals(id) && c.DeletedAt == null, false,c=>c.Role,c=>c.Role.RoleDetails).SingleOrDefaultAsync();
+
+        public async Task<IEnumerable<Account>> GetAccountsAsync() => await FindByCondition(c => c.DeletedAt == null, false, c => c.Role, c => c.Role.RoleDetails).ToListAsync();
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
         public Task UpdateAccountAsync(Account account) => UpdateAsync(account);
     }

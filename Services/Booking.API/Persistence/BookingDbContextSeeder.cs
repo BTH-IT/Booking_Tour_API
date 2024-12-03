@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 ﻿using Booking.API.Entities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Shared.Constants;
+=======
+﻿using Microsoft.EntityFrameworkCore;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 using ILogger = Serilog.ILogger;
 
 namespace Booking.API.Persistence
@@ -10,6 +14,7 @@ namespace Booking.API.Persistence
     {
         private readonly BookingDbContext _context;
         private readonly ILogger _logger;
+<<<<<<< HEAD
 
         public BookingDbContextSeeder(BookingDbContext context, ILogger logger)
         {
@@ -17,6 +22,13 @@ namespace Booking.API.Persistence
             _logger = logger;
         }
 
+=======
+        public BookingDbContextSeeder(BookingDbContext context, ILogger logger)
+        {
+            this._context = context;
+            this._logger = logger;
+        }
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
         public async Task InitialiseAsync()
         {
             try
@@ -26,9 +38,12 @@ namespace Booking.API.Persistence
                 {
                     await _context.Database.MigrateAsync();
                     _logger.Information("Initialized Db");
+<<<<<<< HEAD
 
                     // Seed data
                     await SeedDataAsync();
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
                 }
             }
             catch (Exception ex)
@@ -36,6 +51,7 @@ namespace Booking.API.Persistence
                 _logger.Error($"Failed to Initialise database :{ex.Message}");
             }
         }
+<<<<<<< HEAD
 
         private async Task SeedDataAsync()
         {
@@ -112,3 +128,7 @@ namespace Booking.API.Persistence
         }
     }
 }
+=======
+    }
+}
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a

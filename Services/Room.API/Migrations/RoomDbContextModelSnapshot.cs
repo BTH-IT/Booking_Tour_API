@@ -120,7 +120,11 @@ namespace Room.API.Migrations
 
                     b.Property<string>("Video")
                         .IsRequired()
+<<<<<<< HEAD
                         .HasColumnType("longtext");
+=======
+                        .HasColumnType("JSON");
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
                     b.HasKey("Id");
 

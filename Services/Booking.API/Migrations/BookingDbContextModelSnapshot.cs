@@ -39,15 +39,19 @@ namespace Booking.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+<<<<<<< HEAD
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
 
                     b.Property<double>("PriceTotal")
                         .HasColumnType("double");
 
+<<<<<<< HEAD
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -57,6 +61,14 @@ namespace Booking.API.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+=======
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
                     b.HasKey("Id");
 
@@ -71,21 +83,41 @@ namespace Booking.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+<<<<<<< HEAD
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
+=======
+                    b.Property<double>("Coupon")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsCleaningFee")
+                        .HasColumnType("tinyint(1)");
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
                     b.Property<bool>("IsEntranceTicket")
                         .HasColumnType("tinyint(1)");
 
+<<<<<<< HEAD
                     b.Property<bool>("IsLunch")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsTip")
                         .HasColumnType("tinyint(1)");
 
+=======
+                    b.Property<bool>("IsTip")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
                     b.Property<double>("PriceTotal")
                         .HasColumnType("double");
 
@@ -95,14 +127,25 @@ namespace Booking.API.Migrations
                     b.Property<int>("Seats")
                         .HasColumnType("int");
 
+<<<<<<< HEAD
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
+=======
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
                     b.Property<string>("Travellers")
                         .IsRequired()
                         .HasColumnType("JSON");
 
+<<<<<<< HEAD
+=======
+                    b.Property<bool>("Umbrella")
+                        .HasColumnType("tinyint(1)");
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -131,10 +174,44 @@ namespace Booking.API.Migrations
                     b.Property<int>("Children")
                         .HasColumnType("int");
 
+<<<<<<< HEAD
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")
+=======
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("DetailBookingRooms");
+                });
+
+            modelBuilder.Entity("Booking.API.Entities.TourBookingRoom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Adults")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookingTourId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Children")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
                         .HasColumnType("datetime(6)");
 
                     b.Property<double>("Price")
@@ -148,9 +225,15 @@ namespace Booking.API.Migrations
 
                     b.HasKey("Id");
 
+<<<<<<< HEAD
                     b.HasIndex("BookingId");
 
                     b.ToTable("DetailBookingRooms");
+=======
+                    b.HasIndex("BookingTourId");
+
+                    b.ToTable("TourBookingRooms");
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
                 });
 
             modelBuilder.Entity("Booking.API.Entities.DetailBookingRoom", b =>
@@ -164,10 +247,32 @@ namespace Booking.API.Migrations
                     b.Navigation("BookingRoom");
                 });
 
+<<<<<<< HEAD
+=======
+            modelBuilder.Entity("Booking.API.Entities.TourBookingRoom", b =>
+                {
+                    b.HasOne("Booking.API.Entities.BookingTour", "BookingTour")
+                        .WithMany("TourBookingRooms")
+                        .HasForeignKey("BookingTourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BookingTour");
+                });
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
             modelBuilder.Entity("Booking.API.Entities.BookingRoom", b =>
                 {
                     b.Navigation("DetailBookingRooms");
                 });
+<<<<<<< HEAD
+=======
+
+            modelBuilder.Entity("Booking.API.Entities.BookingTour", b =>
+                {
+                    b.Navigation("TourBookingRooms");
+                });
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 #pragma warning restore 612, 618
         }
     }

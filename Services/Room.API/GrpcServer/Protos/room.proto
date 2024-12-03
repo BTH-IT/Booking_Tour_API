@@ -1,9 +1,13 @@
 syntax = "proto3";
+<<<<<<< HEAD
 import "google/protobuf/timestamp.proto";
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
 option csharp_namespace = "Room.API.GrpcServer.Protos";
 
 service RoomGrpcService{
+<<<<<<< HEAD
 	rpc GetRoomsByIds (GetRoomsByIdsRequest) returns (GetRoomsByIdsResponse);
 	rpc UpdateRoomsAvailability (UpdateRoomsAvailabilityRequest) returns (UpdateRoomsAvailabilityResponse);
 }
@@ -53,4 +57,14 @@ message UpdateRoomsAvailabilityRequest{
 
 message UpdateRoomsAvailabilityResponse{
 	bool Result = 1;
+=======
+	rpc GetRoomById (GetRoomByIdRequest) returns (GetRoomByIdResponse);
+}
+
+message GetRoomByIdRequest{
+	int32 Id = 1;
+}
+message GetRoomByIdResponse{
+	int32 Result=1;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }

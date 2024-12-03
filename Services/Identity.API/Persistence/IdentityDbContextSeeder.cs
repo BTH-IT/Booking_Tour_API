@@ -67,6 +67,7 @@ namespace Identity.API.Persistence
 				var adminRole = await _context.Roles.FirstOrDefaultAsync(c => c.RoleName.Equals("Admin"));
 				if (adminRole != null)
 				{
+<<<<<<< HEAD
 					await _context.Accounts.AddAsync(new Account()
 					{
 						Email = $"admin1@example.com",
@@ -139,6 +140,17 @@ namespace Identity.API.Persistence
 						Password = "admin@1234",
 						RoleId = adminRole.Id
 					});
+=======
+					for (int i = 1; i <= 5; i++)
+					{
+						await _context.Accounts.AddAsync(new Account()
+						{
+							Email = $"admin{i}@example.com",
+							Password = "admin@1234",
+							RoleId = adminRole.Id
+						});
+					}
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 					await _context.SaveChangesAsync();
 					_logger.Information("Admin accounts seeded");
 				}
@@ -157,7 +169,11 @@ namespace Identity.API.Persistence
 						Country = GetRandomCountry(),
 						Phone = GetRandomPhoneNumber(),
 						Gender = GetRandomGender(),
+<<<<<<< HEAD
 						AccountId = account.Id,
+=======
+						AccountId = account.Id
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 					});
 				}
 				await _context.SaveChangesAsync();

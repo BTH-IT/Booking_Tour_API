@@ -1,17 +1,32 @@
 ﻿using Room.API.Persistence;
 using Serilog;
+<<<<<<< HEAD
 using Tour.API.Extensions;
 using Tour.API.Validators;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+=======
+using Tour.API;
+using Tour.API.Extensions;
+using Tour.API.Persistence;
+using FluentValidation;
+using Tour.API.Entities;
+using Tour.API.Validators;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 using Tour.API.GrpcServer.Services;
 using Contracts.Exceptions;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+<<<<<<< HEAD
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EventBus.Masstransit;
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -22,7 +37,10 @@ try
 
     // Add services to the container.
     builder.Services.AddControllers();
+<<<<<<< HEAD
     builder.Services.AddConfigurationSettings(builder.Configuration);
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
@@ -51,6 +69,7 @@ try
 
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
+<<<<<<< HEAD
     // Add Masstransit
     builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
     // Add Authentication
@@ -73,6 +92,33 @@ try
             )
         }
     );
+=======
+
+    // Add Grpc
+    builder.Services.AddGrpc(options =>
+    {
+        options.Interceptors.Add<GrpcExceptionInterceptor>(); 
+    });
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5004);
+            options.ListenAnyIP(5104, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+        else if (builder.Environment.IsEnvironment("docker"))
+        {
+            options.ListenAnyIP(80);
+            options.ListenAnyIP(81, listenOptions =>
+            {
+                listenOptions.Protocols = HttpProtocols.Http2;
+            });
+        }
+    });
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     //Add Swagger Gen
     builder.Services.AddSwaggerGen(
         options =>
@@ -103,6 +149,7 @@ try
             });
         }
     );
+<<<<<<< HEAD
     //Add Grpc
     builder.WebHost.ConfigureKestrel(options =>
     {
@@ -131,6 +178,8 @@ try
     //Add GrpcClient
     builder.Services.AddGrpcClients();
 
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
@@ -141,6 +190,10 @@ try
     }
     app.UseCors("CorsPolicy");
     //app.UseHttpsRedirection(); // Uncomment if you want to enable HTTPS redirection
+<<<<<<< HEAD
+=======
+    app.UseAuthentication(); 
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     app.UseAuthorization();
     app.MapControllers();
     app.MapGrpcService<TourProtoService>();

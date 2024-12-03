@@ -39,6 +39,7 @@ namespace Shared.DTOs
         public string Phone { get; set; }
 
         public string Gender { get; set; }
+<<<<<<< HEAD
         public int? AccountId { get; set; } = null;
         public string? Avatar { get; set; }
 
@@ -49,4 +50,9 @@ namespace Shared.DTOs
 
         public string NewPassword { get; set; }
     }
+=======
+        public int AccountId { get; set; }
+		public DateTime? DeletedAt { get; set; }
+	}
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }

@@ -10,6 +10,20 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5000"
     },
+<<<<<<< HEAD
+=======
+    "https": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:5000"
+    },
+
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "launchBrowser": true,

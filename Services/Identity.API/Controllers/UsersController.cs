@@ -1,7 +1,10 @@
 ﻿using Identity.API.Services;
 using Identity.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+<<<<<<< HEAD
 using Microsoft.AspNetCore.Identity;
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Helper;
@@ -11,7 +14,11 @@ namespace Identity.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+<<<<<<< HEAD
 
+=======
+    [Authorize]
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+<<<<<<< HEAD
 using Booking.API.Entities;
 using Booking.API.GrpcClient.Protos;
 using Google.Protobuf.WellKnownTypes;
@@ -82,4 +83,15 @@ namespace Booking.API
                 .ForMember(dest => dest.DateTo, opt => opt.MapFrom(src => src.DateTo.ToDateTime())); 
         }
 	}
+=======
+
+namespace Booking.API
+{
+    public class MappingProfile : Profile
+    {
+        public MappingProfile() 
+        { 
+        }
+    }
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 }

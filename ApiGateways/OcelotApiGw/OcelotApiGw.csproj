@@ -17,10 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <_ContentIncludedByDefault Remove="appsettings.docker.json" />
   </ItemGroup>
 
   <ItemGroup>
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />

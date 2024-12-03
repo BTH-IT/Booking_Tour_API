@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Infrastructure.Extensions;
+<<<<<<< HEAD
+=======
+using System.ComponentModel.DataAnnotations;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 namespace EventBus.Masstransit
 {
     public static class Extensions

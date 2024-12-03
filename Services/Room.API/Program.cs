@@ -3,15 +3,26 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+<<<<<<< HEAD
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+=======
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Room.API;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 using Room.API.Extensions;
 using Room.API.GrpcServer.Services;
 using Room.API.Persistence;
 using Room.API.Validators;
 using Serilog;
 using System.Text;
+<<<<<<< HEAD
 using EventBus.Masstransit;
+=======
+using System.Text.Json.Serialization;
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,10 +37,17 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+<<<<<<< HEAD
 	// Add Auto Mapper
 	builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     // Add Fluent Validator 
     builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<HotelRequestDTOValidator>());
+=======
+    // Add Auto Mapper
+    builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+	// Add Fluent Validator 
+	builder.Services.AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<HotelRequestDTOValidator>());
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 	builder.Services.Configure<ApiBehaviorOptions>(options =>
 	{
 	    options.SuppressModelStateInvalidFilter = true;
@@ -95,9 +113,12 @@ try
     {
         options.Interceptors.Add<GrpcExceptionInterceptor>();
     });
+<<<<<<< HEAD
     // Add Masstransit
     builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
 
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     builder.WebHost.ConfigureKestrel(options =>
     {
         if (builder.Environment.IsDevelopment())
@@ -131,6 +152,10 @@ try
 
     //app.UseHttpsRedirection();
     app.UseCors("CorsPolicy");
+<<<<<<< HEAD
+=======
+    app.UseAuthentication();
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     app.UseAuthorization();
     app.MapGrpcService<RoomProtoService>();
     app.MapControllers();

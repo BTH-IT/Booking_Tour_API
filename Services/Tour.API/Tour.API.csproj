@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <None Remove="GrpcClient\Protos\room.proto" />
   </ItemGroup>
 
@@ -27,6 +28,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+=======
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.ClientFactory" Version="2.66.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.66.0" />
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -42,19 +51,31 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <Folder Include="Migrations\" />
     <Folder Include="Validators\" />
+=======
+    <Folder Include="Repositories\" />
+    <Folder Include="Validators\" />
+    <Folder Include="Services\" />
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Contracts\Contracts.csproj" />
+<<<<<<< HEAD
     <ProjectReference Include="..\..\BuildingBlocks\EventBus\EventBus\EventBus.csproj" />
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
     <ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
   </ItemGroup>
 	<ItemGroup>
+<<<<<<< HEAD
 		<Protobuf Include="GrpcClient\Protos\room.proto" GrpcServices="Both" />
+=======
+>>>>>>> 8ea5293bc147863998b5331d4fd7eb2f4226a11a
 		<Protobuf Include="GrpcServer\Protos\tour.proto" GrpcServices="Both" />
 	</ItemGroup>
 </Project>
