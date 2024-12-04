@@ -114,8 +114,19 @@ try
             });
         } 
     });
-    // Configure the HTTP request pipeline.
-    var app = builder.Build();
+	// Add Redis Distributed Caching
+	builder.Services.AddStackExchangeRedisCache(options =>
+	{
+		options.Configuration = "redis-container:6379";
+		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+		{
+			AbortOnConnectFail = true,
+			EndPoints = { "redis-container:6379" },
+			DefaultDatabase = 1 // Use database 1
+		};
+	});
+	// Configure the HTTP request pipeline.
+	var app = builder.Build();
     
     if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
     {

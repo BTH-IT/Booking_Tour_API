@@ -84,8 +84,21 @@ try
             });
         }
     );
-    // Add DbContext
-    builder.Services.ConfigureIdentityDbContext();
+
+	// Add Redis Cache
+	builder.Services.AddStackExchangeRedisCache(options =>
+	{
+		options.Configuration = "redis-container:6379";
+		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+		{
+			AbortOnConnectFail = true,
+			EndPoints = { "redis-container:6379" },
+			DefaultDatabase = 2 // Use database 2
+		};
+	});
+
+	// Add DbContext
+	builder.Services.ConfigureIdentityDbContext();
     // Add Infrastructure Services
     builder.Services.AddInfrastructureServices();
     // Add Cors

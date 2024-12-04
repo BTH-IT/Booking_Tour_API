@@ -6,6 +6,7 @@ using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
 using Shared.DTOs;
 using Shared.Helper;
+using Microsoft.Extensions.Caching.Distributed;
 using ILogger = Serilog.ILogger;
 
 public class ReviewRoomService : IReviewRoomService
@@ -14,12 +15,15 @@ public class ReviewRoomService : IReviewRoomService
 	private readonly IMapper _mapper;
 	private readonly ILogger _logger;
 	private readonly IPublishEndpoint _publishEndpoint;
-	public ReviewRoomService(IRoomRepository roomRepository, ILogger logger, IMapper mapper,IPublishEndpoint publishEndpoint)
+	private readonly IDistributedCache _cache;
+
+	public ReviewRoomService(IRoomRepository roomRepository, ILogger logger, IMapper mapper, IPublishEndpoint publishEndpoint, IDistributedCache cache)
 	{
 		_roomRepository = roomRepository;
 		_logger = logger;
 		_mapper = mapper;
 		_publishEndpoint = publishEndpoint;
+		_cache = cache;
 	}
 
 	public async Task<ApiResponse<ReviewRoomDTO>> CreateReviewAsync(ReviewRoomDTO reviewRequest)
@@ -52,16 +56,21 @@ public class ReviewRoomService : IReviewRoomService
 			}
 
 			var responseData = _mapper.Map<ReviewRoomDTO>(reviewEntity);
-            // publish event
-            await _publishEndpoint.Publish(new ReviewRoomEvent()
-            {
-                Id = Guid.NewGuid(),
-                ObjectId = reviewEntity.RoomId,
-                Data = responseData,
-                Type = "CREATE",
-                CreationDate = DateTime.Now,
-            });
-            _logger.Information("End: ReviewRoomService - CreateReviewAsync");
+			// publish event
+			await _publishEndpoint.Publish(new ReviewRoomEvent()
+			{
+				Id = Guid.NewGuid(),
+				ObjectId = reviewEntity.RoomId,
+				Data = responseData,
+				Type = "CREATE",
+				CreationDate = DateTime.Now,
+			});
+
+			// Invalidate cache
+			await _cache.RemoveAsync($"Room_All");
+			await _cache.RemoveAsync($"Room_{reviewRequest.RoomId}");
+
+			_logger.Information("End: ReviewRoomService - CreateReviewAsync");
 			return new ApiResponse<ReviewRoomDTO>(200, responseData, "Review created successfully");
 		}
 		catch (Exception ex)
@@ -103,16 +112,21 @@ public class ReviewRoomService : IReviewRoomService
 			}
 
 			var responseData = _mapper.Map<ReviewRoomDTO>(review);
-            // publish event
-            await _publishEndpoint.Publish(new ReviewRoomEvent()
-            {
-                Id = Guid.NewGuid(),
-                ObjectId = responseData.RoomId,
-                Data = responseData,
-                Type = "UPDATE",
-                CreationDate = DateTime.Now,
-            });
-            _logger.Information("End: ReviewRoomService - UpdateReviewAsync");
+			// publish event
+			await _publishEndpoint.Publish(new ReviewRoomEvent()
+			{
+				Id = Guid.NewGuid(),
+				ObjectId = responseData.RoomId,
+				Data = responseData,
+				Type = "UPDATE",
+				CreationDate = DateTime.Now,
+			});
+
+			// Invalidate cache
+			await _cache.RemoveAsync($"Room_All");
+			await _cache.RemoveAsync($"Room_{reviewRequest.RoomId}");
+
+			_logger.Information("End: ReviewRoomService - UpdateReviewAsync");
 			return new ApiResponse<ReviewRoomDTO>(200, responseData, "Review updated successfully");
 		}
 		catch (Exception ex)
@@ -149,16 +163,22 @@ public class ReviewRoomService : IReviewRoomService
 				_logger.Warning("Failed to delete review for room");
 				return new ApiResponse<int>(400, 0, "Error occurred while deleting review for room");
 			}
-            // publish event
-            await _publishEndpoint.Publish(new ReviewRoomEvent()
-            {
-                Id = Guid.NewGuid(),
-                ObjectId = review.RoomId,
-                Data = _mapper.Map<ReviewRoomDTO>(review),
-                Type = "DELETE",
-                CreationDate = DateTime.Now,
-            });
-            _logger.Information($"End: ReviewRoomService - DeleteReviewAsync: {reviewId} - Successfully deleted the review.");
+
+			// publish event
+			await _publishEndpoint.Publish(new ReviewRoomEvent()
+			{
+				Id = Guid.NewGuid(),
+				ObjectId = review.RoomId,
+				Data = _mapper.Map<ReviewRoomDTO>(review),
+				Type = "DELETE",
+				CreationDate = DateTime.Now,
+			});
+
+			// Invalidate cache
+			await _cache.RemoveAsync($"Room_All");
+			await _cache.RemoveAsync($"Room_{roomId}");
+
+			_logger.Information($"End: ReviewRoomService - DeleteReviewAsync: {reviewId} - Successfully deleted the review.");
 			return new ApiResponse<int>(200, 1, "Review deleted successfully.");
 		}
 		catch (Exception ex)

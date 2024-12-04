@@ -7,27 +7,40 @@ using ILogger = Serilog.ILogger;
 using Tour.API.Services.Interfaces;
 using MassTransit;
 using EventBus.IntergrationEvents.Events;
+using Microsoft.Extensions.Caching.Distributed;
+using Tour.API.Repositories;
+using System.Text.Json;
+using Tour.API.Entities;
 
 public class ReviewTourService : IReviewTourService
 {
 	private readonly ITourRepository _TourRepository;
 	private readonly IMapper _mapper;
 	private readonly ILogger _logger;
-    private readonly IPublishEndpoint _publishEndpoint;
+	private readonly IPublishEndpoint _publishEndpoint;
+	private readonly IDistributedCache _cache;
 
-    public ReviewTourService(ITourRepository TourRepository, ILogger logger, IMapper mapper,IPublishEndpoint publishEndpoint)
+	public ReviewTourService(
+		ITourRepository tourRepository,
+		ILogger logger,
+		IMapper mapper,
+		IPublishEndpoint publishEndpoint,
+		IDistributedCache cache)
 	{
-		_TourRepository = TourRepository;
+		_TourRepository = tourRepository;
 		_logger = logger;
 		_mapper = mapper;
 		_publishEndpoint = publishEndpoint;
+		_cache = cache;
 	}
+
 
 	public async Task<ApiResponse<ReviewTourDTO>> CreateReviewAsync(ReviewTourDTO reviewRequest)
 	{
 		_logger.Information("Begin: ReviewTourService - CreateReviewAsync");
 		try
 		{
+
 			var tour = await _TourRepository.GetTourByIdAsync(reviewRequest.TourId);
 			if (tour == null)
 			{
@@ -47,17 +60,21 @@ public class ReviewTourService : IReviewTourService
 
 			await _TourRepository.UpdateTourAsync(tour);
 
+			// Invalidate cache
+			await _cache.RemoveAsync("Tour_All");
+			await _cache.RemoveAsync($"Tour_{reviewRequest.TourId}");
+
 			var responseData = _mapper.Map<ReviewTourDTO>(reviewEntity);
-            // publish event
-            await _publishEndpoint.Publish(new ReviewTourEvent()
-            {
-                Id = Guid.NewGuid(),
-                ObjectId = reviewEntity.TourId,
-                Data = responseData,
-                Type = "CREATE",
-                CreationDate = DateTime.Now,
-            });
-            _logger.Information("End: ReviewTourService - CreateReviewAsync");
+			// publish event
+			await _publishEndpoint.Publish(new ReviewTourEvent()
+			{
+				Id = Guid.NewGuid(),
+				ObjectId = reviewEntity.TourId,
+				Data = responseData,
+				Type = "CREATE",
+				CreationDate = DateTime.Now,
+			});
+			_logger.Information("End: ReviewTourService - CreateReviewAsync");
 			return new ApiResponse<ReviewTourDTO>(200, responseData, "Review created successfully.");
 		}
 		catch (Exception ex)
@@ -93,16 +110,21 @@ public class ReviewTourService : IReviewTourService
 			await _TourRepository.UpdateTourAsync(tour);
 
 			var responseData = _mapper.Map<ReviewTourDTO>(review);
-            // publish event
-            await _publishEndpoint.Publish(new ReviewTourEvent()
-            {
-                Id = Guid.NewGuid(),
-                ObjectId = review.TourId,
-                Data = responseData,
-                Type = "UPDATE",
-                CreationDate = DateTime.Now,
-            });
-            _logger.Information("End: ReviewTourService - UpdateReviewAsync");
+			// publish event
+			await _publishEndpoint.Publish(new ReviewTourEvent()
+			{
+				Id = Guid.NewGuid(),
+				ObjectId = review.TourId,
+				Data = responseData,
+				Type = "UPDATE",
+				CreationDate = DateTime.Now,
+			});
+
+			// Invalidate cache
+			await _cache.RemoveAsync("Tour_All");
+			await _cache.RemoveAsync($"Tour_{reviewRequest.TourId}");
+
+			_logger.Information("End: ReviewTourService - UpdateReviewAsync");
 			return new ApiResponse<ReviewTourDTO>(200, responseData, "Review updated successfully.");
 		}
 		catch (Exception ex)
@@ -133,16 +155,21 @@ public class ReviewTourService : IReviewTourService
 
 			review.DeletedAt = DateTime.UtcNow;
 			await _TourRepository.UpdateAsync(tour);
-            // publish event
-            await _publishEndpoint.Publish(new ReviewTourEvent()
-            {
-                Id = Guid.NewGuid(),
-                ObjectId = review.TourId,
-                Data = _mapper.Map<ReviewTourDTO>(review),
-                Type = "DELETE",
-                CreationDate = DateTime.Now,
-            });
-            _logger.Information($"End: ReviewTourService - DeleteReviewAsync : {reviewId} - Successfully deleted the review.");
+			// publish event
+			await _publishEndpoint.Publish(new ReviewTourEvent()
+			{
+				Id = Guid.NewGuid(),
+				ObjectId = review.TourId,
+				Data = _mapper.Map<ReviewTourDTO>(review),
+				Type = "DELETE",
+				CreationDate = DateTime.Now,
+			});
+
+			// Invalidate cache
+			await _cache.RemoveAsync("Tour_All");
+			await _cache.RemoveAsync($"Tour_{TourId}");
+
+			_logger.Information($"End: ReviewTourService - DeleteReviewAsync : {reviewId} - Successfully deleted the review.");
 			return new ApiResponse<int>(200, 1, "Review deleted successfully.");
 		}
 		catch (Exception ex)
