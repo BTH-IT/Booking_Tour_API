@@ -67,15 +67,78 @@ namespace Identity.API.Persistence
 				var adminRole = await _context.Roles.FirstOrDefaultAsync(c => c.RoleName.Equals("Admin"));
 				if (adminRole != null)
 				{
-					for (int i = 1; i <= 5; i++)
+					await _context.Accounts.AddAsync(new Account()
 					{
-						await _context.Accounts.AddAsync(new Account()
-						{
-							Email = $"admin{i}@example.com",
-							Password = "admin@1234",
-							RoleId = adminRole.Id
-						});
-					}
+						Email = $"admin1@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin2@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin3@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin4@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin5@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin6@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin7@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin8@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin9@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin10@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin11@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
+					await _context.Accounts.AddAsync(new Account()
+					{
+						Email = $"admin12@example.com",
+						Password = "admin@1234",
+						RoleId = adminRole.Id
+					});
 					await _context.SaveChangesAsync();
 					_logger.Information("Admin accounts seeded");
 				}

@@ -8,6 +8,8 @@ using Tour.API.GrpcClient.Protos;
 using ILogger = Serilog.ILogger;
 using EventBus.IntergrationEvents.Events;
 using MassTransit;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace Tour.API.Services
 {
@@ -19,12 +21,14 @@ namespace Tour.API.Services
         private readonly IScheduleService _scheduleService;
         private readonly RoomGrpcService.RoomGrpcServiceClient _roomGrpcServiceClient;
         private readonly IPublishEndpoint _publishEndpoint;
-        public TourService(ITourRepository tourRepository,
+        private readonly IDistributedCache _cache;
+		public TourService(ITourRepository tourRepository,
             IScheduleService scheduleService,
             RoomGrpcService.RoomGrpcServiceClient roomGrpcServiceClient,
             IMapper mapper,
             ILogger logger,
-            IPublishEndpoint publishEndpoint)
+            IPublishEndpoint publishEndpoint,
+            IDistributedCache cache)
         {
             _tourRepository = tourRepository;
             _scheduleService = scheduleService;
@@ -32,17 +36,34 @@ namespace Tour.API.Services
             _mapper = mapper;
             _logger = logger;
             _publishEndpoint = publishEndpoint;
-        }
+			_cache = cache;
+		}
 
         public async Task<ApiResponse<List<TourResponseDTO>>> GetAllAsync()
         {
             _logger.Information("Begin: GetAllAsync");
             try
             {
-                var tours = await _tourRepository.GetToursAsync();
+				var cacheKey = "Tour_All";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<List<TourResponseDTO>>(cachedData);
+
+					_logger.Information("End: TourService - GetAllAsync");
+					return new ApiResponse<List<TourResponseDTO>>(200, cachedResponse, "Data retrieved successfully", true);
+				}
+				var tours = await _tourRepository.GetToursAsync();
                 var tourDtos = _mapper.Map<List<TourResponseDTO>>(tours);
 
-                return new ApiResponse<List<TourResponseDTO>>(200, tourDtos, "Successfully retrieved the list of tours");
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(tourDtos), cacheOptions);
+
+				return new ApiResponse<List<TourResponseDTO>>(200, tourDtos, "Successfully retrieved the list of tours");
             }
             catch (Exception ex)
             {
@@ -60,12 +81,29 @@ namespace Tour.API.Services
             _logger.Information($"Begin: GetByIdAsync, id: {id}");
             try
             {
-                var tour = await _tourRepository.GetTourByIdAsync(id);
+				var cacheKey = $"Tour_{id}";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<TourResponseDTO>(cachedData);
+
+					_logger.Information("End: TourService - GetAllAsync");
+					return new ApiResponse<TourResponseDTO>(200, cachedResponse, "Data retrieved successfully", true);
+				}
+
+				var tour = await _tourRepository.GetTourByIdAsync(id);
                 if (tour == null) return NotFound<TourResponseDTO>(id);
 
                 var data = _mapper.Map<TourResponseDTO>(tour);
 
-                return new ApiResponse<TourResponseDTO>(200, data, "Successfully retrieved tour data");
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
+
+				return new ApiResponse<TourResponseDTO>(200, data, "Successfully retrieved tour data");
             }
             catch (Exception ex)
             {
@@ -98,7 +136,10 @@ namespace Tour.API.Services
                         Type = "CREATE",
                     });
 
-                    return new ApiResponse<TourResponseDTO>(200, responseData, "Tour created successfully");
+					//Invalidating cache
+					await _cache.RemoveAsync("Tour_All");
+
+					return new ApiResponse<TourResponseDTO>(200, responseData, "Tour created successfully");
                 }
 
                 return new ApiResponse<TourResponseDTO>(400, null, "Failed to create tour");
@@ -137,9 +178,13 @@ namespace Tour.API.Services
 
                 dateFrom = dateFrom.AddDays(1);
             }
-        }
 
-        public async Task<ApiResponse<TourResponseDTO>> UpdateAsync(int id, TourRequestDTO item)
+			// Invalidate schedule cache
+			await _cache.RemoveAsync("Schedule_All");
+            await _cache.RemoveAsync($"Schedule_Tour_{tourId}");
+		}
+
+		public async Task<ApiResponse<TourResponseDTO>> UpdateAsync(int id, TourRequestDTO item)
         {
             _logger.Information($"Begin: UpdateAsync, id: {id}");
             try
@@ -161,7 +206,11 @@ namespace Tour.API.Services
                     Type = "UPDATE",
                 });
 
-                return new ApiResponse<TourResponseDTO>(result > 0 ? 200 : 400, responseData, result > 0 ? "Successfully updated the tour" : "Failed to update the tour");
+				//Invalidating cache
+				await _cache.RemoveAsync("Tour_All");
+				await _cache.RemoveAsync($"Tour_{id}");
+
+				return new ApiResponse<TourResponseDTO>(result > 0 ? 200 : 400, responseData, result > 0 ? "Successfully updated the tour" : "Failed to update the tour");
             }
             catch (Exception ex)
             {
@@ -191,7 +240,11 @@ namespace Tour.API.Services
                     Type = "DELETE",
                 });
 
-                return new ApiResponse<int>(200, id, "Successfully deleted the tour (soft delete)");
+				//Invalidating cache
+				await _cache.RemoveAsync("Tour_All");
+				await _cache.RemoveAsync($"Tour_{id}");
+
+				return new ApiResponse<int>(200, id, "Successfully deleted the tour (soft delete)");
             }
             catch (Exception ex)
             {

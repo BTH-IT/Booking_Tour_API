@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Room.API.Entities;
 using Room.API.Repositories.Interfaces;
 using Room.API.Services.Interfaces;
@@ -8,6 +9,7 @@ using Shared.DTOs;
 using Shared.Helper;
 using EventBus.IntergrationEvents.Events;
 using ILogger = Serilog.ILogger;
+using System.Text.Json;
 
 namespace Room.API.Services
 {
@@ -18,14 +20,16 @@ namespace Room.API.Services
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
 		private readonly IPublishEndpoint _publishEndpoint;
+		private readonly IDistributedCache _cache;
 
-		public HotelService(IHotelRepository hotelRepository, IRoomRepository roomRepository, IMapper mapper, ILogger logger, IPublishEndpoint publishEndpoint)
+		public HotelService(IHotelRepository hotelRepository, IRoomRepository roomRepository, IMapper mapper, ILogger logger, IPublishEndpoint publishEndpoint, IDistributedCache cache)
 		{
 			_hotelRepository = hotelRepository;
 			_roomRepository = roomRepository;
 			_mapper = mapper;
 			_logger = logger;
 			_publishEndpoint = publishEndpoint;
+			_cache = cache;
 		}
 
 		public async Task<ApiResponse<List<HotelResponseDTO>>> GetAllAsync()
@@ -34,6 +38,16 @@ namespace Room.API.Services
 
 			try
 			{
+				var cacheKey = "Hotel_All";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<List<HotelResponseDTO>>(cachedData);
+					_logger.Information("End: HotelService - GetAllAsync"); 
+					return new ApiResponse<List<HotelResponseDTO>>(200, cachedResponse, "Data retrieved successfully from cache", true);
+				}
+
 				var hotels = await _hotelRepository.GetHotelsAsync();
 
 				if (!hotels?.Any() ?? true)
@@ -43,6 +57,13 @@ namespace Room.API.Services
 				}
 
 				var data = _mapper.Map<List<HotelResponseDTO>>(hotels);
+
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
 
 				_logger.Information("End: HotelService - GetAllAsync");
 				return new ApiResponse<List<HotelResponseDTO>>(200, data, "Data retrieved successfully");
@@ -60,6 +81,16 @@ namespace Room.API.Services
 
 			try
 			{
+				var cacheKey = $"Hotel_{id}";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<HotelResponseDTO>(cachedData);
+					_logger.Information("End: HotelService - GetByIdAsync");
+					return new ApiResponse<HotelResponseDTO>(200, cachedResponse, "Hotel data retrieved successfully from cache", true);
+				}
+
 				var hotel = await _hotelRepository.GetHotelByIdAsync(id);
 				if (hotel == null)
 				{
@@ -68,6 +99,12 @@ namespace Room.API.Services
 				}
 
 				var data = _mapper.Map<HotelResponseDTO>(hotel);
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
 
 				_logger.Information("End: HotelService - GetByIdAsync");
 				return new ApiResponse<HotelResponseDTO>(200, data, "Hotel data retrieved successfully");
@@ -85,6 +122,16 @@ namespace Room.API.Services
 
 			try
 			{
+				var cacheKey = $"Hotel_{name}";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<HotelResponseDTO>(cachedData);
+					_logger.Information("End: HotelService - GetByNameAsync");
+					return new ApiResponse<HotelResponseDTO>(200, cachedResponse, "Hotel data retrieved successfully from cache", true);
+				}
+
 				var hotel = await _hotelRepository.GetHotelByNameAsync(name);
 
 				if (hotel == null || hotel.DeletedAt != null)
@@ -94,6 +141,13 @@ namespace Room.API.Services
 				}
 
 				var data = _mapper.Map<HotelResponseDTO>(hotel);
+
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
 
 				_logger.Information("End: HotelService - GetByNameAsync");
 				return new ApiResponse<HotelResponseDTO>(200, data, "Hotel data retrieved successfully");
@@ -137,6 +191,9 @@ namespace Room.API.Services
 					Data = responseData,
 					Type = "CREATE"
 				});
+
+				// Invalidate cache
+				await _cache.RemoveAsync("Hotel_All");
 
 				_logger.Information("End: HotelService - CreateAsync");
 				return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel created successfully");
@@ -187,6 +244,11 @@ namespace Room.API.Services
 					Data = responseData,
 					Type = "UPDATE"
 				});
+
+				// Invalidate cache
+				await _cache.RemoveAsync("Hotel_All");
+				await _cache.RemoveAsync($"Hotel_{id}");
+				await _cache.RemoveAsync($"Hotel_{hotel.Name}");
 
 				_logger.Information("End: HotelService - UpdateAsync");
 				return new ApiResponse<HotelResponseDTO>(200, responseData, "Hotel updated successfully");
@@ -243,6 +305,11 @@ namespace Room.API.Services
 					Data = responseData,
 					Type = "DELETE"
 				});
+
+				// Invalidate cache
+				await _cache.RemoveAsync("Hotel_All");
+				await _cache.RemoveAsync($"Hotel_{id}");
+				await _cache.RemoveAsync($"Hotel_{hotel.Name}");
 
 				_logger.Information($"End: HotelService - DeleteAsync : {id} - Successfully soft deleted the hotel and its rooms.");
 				return new ApiResponse<int>(200, rooms.Count(), "Successfully soft deleted the hotel and its associated rooms.");

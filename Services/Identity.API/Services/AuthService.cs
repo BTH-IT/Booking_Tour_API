@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using ILogger = Serilog.ILogger;
 using System.Security.Claims;
 using Shared.Enums;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Identity.API.Services
 {
@@ -23,13 +24,15 @@ namespace Identity.API.Services
 		private readonly ILogger _logger;
 		private readonly IMapper _mapper;
 		private readonly IConfiguration _configuration;
+		private readonly IDistributedCache _cache;
 
 		public AuthService(IUserRepository userRepository,
 			IAccountRepository accountRepository,
 			ILogger logger,
 			IMapper mapper,
 			IConfiguration configuration,
-			IRoleRepository roleRepository)
+			IRoleRepository roleRepository,
+			IDistributedCache cache)
 		{
 			this._roleRepository = roleRepository;
 			this._userRepository = userRepository;
@@ -37,6 +40,7 @@ namespace Identity.API.Services
 			this._configuration = configuration;
 			this._logger = logger;
 			this._mapper = mapper;
+			this._cache = cache;
 		}
 
 		public async Task<ApiResponse<AuthResponseDTO>> LoginAsync(AuthLoginDTO loginDTO)
@@ -72,6 +76,13 @@ namespace Identity.API.Services
 			token = tokenHandler.CreateToken(tokenDescriptor);
 			var refreshToken = tokenHandler.WriteToken(token);
 
+			// Cache the refresh token
+			var cacheOptions = new DistributedCacheEntryOptions
+			{
+				AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1461) // 2 months
+			};
+			await _cache.SetStringAsync($"RefreshToken_{account.Id}", refreshToken, cacheOptions);
+
 			return new ApiResponse<AuthResponseDTO>(200, new AuthResponseDTO()
 			{
 				AccessToken = accessToken,
@@ -98,8 +109,13 @@ namespace Identity.API.Services
 				}, out _);
 
 				var accountId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-				var email = principal.FindFirst(ClaimTypes.Email)?.Value;
-				var roleId = principal.FindFirst(ClaimTypes.Role)?.Value;
+
+				// Retrieve the cached refresh token
+				var cachedRefreshToken = await _cache.GetStringAsync($"RefreshToken_{accountId}");
+				if (cachedRefreshToken != refreshToken)
+				{
+					return new ApiResponse<string>(401, "", "Invalid refresh token");
+				}
 
 				var account = await _accountRepository.FindByCondition(c => c.Id.Equals(int.Parse(accountId!)), false, c => c.Role, c => c.Role.RoleDetails).FirstOrDefaultAsync();
 
@@ -130,6 +146,7 @@ namespace Identity.API.Services
 				return new ApiResponse<string>(401, ex.Message, "Token refresh failed");
 			}
 		}
+
 		public async Task<ApiResponse<UserResponseDTO>> RegisterAsync(AuthRegisterDTO registerDTO)
 		{
 			var emailCheckResponse = await CheckEmailExists(registerDTO.Email);
@@ -191,11 +208,11 @@ namespace Identity.API.Services
 
 		private async Task<UserResponseDTO> MapUserToDTOAsync(int userId, int accountId, AuthRegisterDTO registerDTO, int roleId)
 		{
-			var user = await _userRepository.GetByIdAsync(userId); 
+			var user = await _userRepository.GetByIdAsync(userId);
 			var userDTO = _mapper.Map<UserResponseDTO>(user);
 
 			var role = await _roleRepository.GetRoleByIdAsync(roleId);
-			var roleDetails = await _roleRepository.GetRoleDetailsByRoleIdAsync(role.Id); 
+			var roleDetails = await _roleRepository.GetRoleDetailsByRoleIdAsync(role.Id);
 
 			userDTO.Account = new AccountResponseDTO
 			{
@@ -210,7 +227,7 @@ namespace Identity.API.Services
 					{
 						RoleId = rd.RoleId,
 						PermissionId = rd.PermissionId,
-						ActionName = (ActionType)rd.ActionName, 
+						ActionName = (ActionType)rd.ActionName,
 						Status = rd.Status
 					}).ToList()
 				}

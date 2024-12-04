@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using EventBus.IntergrationEvents.Events;
 using MassTransit;
+using Microsoft.Extensions.Caching.Distributed;
 using Shared.DTOs;
 using Shared.Helper;
+using System.Text.Json;
 using Tour.API.Entities;
 using Tour.API.Repositories.Interfaces;
 using Tour.API.Services.Interfaces;
@@ -16,15 +18,18 @@ namespace Tour.API.Services
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
 		private readonly IPublishEndpoint _publishEndpoint;
+		private readonly IDistributedCache _cache;
 		public ScheduleService(IScheduleRepository scheduleRepository, 
 			IMapper mapper, 
 			ILogger logger,
-			IPublishEndpoint publishEndpoint)
+			IPublishEndpoint publishEndpoint,
+			IDistributedCache cache)
 		{
 			_scheduleRepository = scheduleRepository;
 			_mapper = mapper;
 			_logger = logger;
 			_publishEndpoint = publishEndpoint;
+			_cache = cache;
 		}
 
 		public async Task<ApiResponse<List<ScheduleResponseDTO>>> GetAllAsync()
@@ -32,8 +37,26 @@ namespace Tour.API.Services
 			_logger.Information("Begin: ScheduleService - GetAllAsync");
 			try
 			{
+				var cacheKey = "Schedule_All";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<List<ScheduleResponseDTO>>(cachedData);
+
+					_logger.Information("End: ScheduleService - GetAllAsync");
+					return new ApiResponse<List<ScheduleResponseDTO>>(200, cachedResponse, "Data retrieved successfully", true);
+				}
+
 				var schedules = await _scheduleRepository.GetSchedulesAsync();
 				var data = _mapper.Map<List<ScheduleResponseDTO>>(schedules);
+
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
+
 				_logger.Information("End: ScheduleService - GetAllAsync");
 				return new ApiResponse<List<ScheduleResponseDTO>>(200, data, "Successfully retrieved the schedule list.");
 			}
@@ -49,6 +72,16 @@ namespace Tour.API.Services
 			_logger.Information($"Begin: ScheduleService - GetByIdAsync, id: {id}");
 			try
 			{
+				var cacheKey = $"Schedule_{id}";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<ScheduleResponseDTO>(cachedData);
+
+					_logger.Information("End: ScheduleService - GetAllAsync");
+					return new ApiResponse<ScheduleResponseDTO>(200, cachedResponse, "Data retrieved successfully", true);
+				}
+
 				var schedule = await _scheduleRepository.GetScheduleByIdAsync(id);
 				if (schedule == null)
 				{
@@ -56,6 +89,14 @@ namespace Tour.API.Services
 					return new ApiResponse<ScheduleResponseDTO>(404, null, $"Schedule not found, id: {id}");
 				}
 				var data = _mapper.Map<ScheduleResponseDTO>(schedule);
+
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
+
 				_logger.Information("End: ScheduleService - GetByIdAsync");
 				return new ApiResponse<ScheduleResponseDTO>(200, data, "Successfully retrieved the schedule data.");
 			}
@@ -71,6 +112,16 @@ namespace Tour.API.Services
 			_logger.Information($"Begin: ScheduleService - GetByTourIdAsync, tourId: {tourId}");
 			try
 			{
+				var cacheKey = $"Schedule_Tour_{tourId}";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<List<ScheduleResponseDTO>>(cachedData);
+
+					_logger.Information("End: ScheduleService - GetAllAsync");
+					return new ApiResponse<List<ScheduleResponseDTO>>(200, cachedResponse, "Data retrieved successfully", true);
+				}
+
 				var schedules = await _scheduleRepository.GetSchedulesByTourIdAsync(tourId);
 				if (schedules == null)
 				{
@@ -78,6 +129,14 @@ namespace Tour.API.Services
 					return new ApiResponse<List<ScheduleResponseDTO>>(404, null, $"Schedules not found for tourId: {tourId}");
 				}
 				var data = _mapper.Map<List<ScheduleResponseDTO>>(schedules);
+
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
+
 				_logger.Information("End: ScheduleService - GetByTourIdAsync");
 				return new ApiResponse<List<ScheduleResponseDTO>>(200, data, "Successfully retrieved the schedule data.");
 			}
@@ -106,10 +165,11 @@ namespace Tour.API.Services
 				var createdSchedule = await _scheduleRepository.GetScheduleByIdAsync(result);
 				var responseData = _mapper.Map<ScheduleResponseDTO>(createdSchedule);
 
+				//Invalidating cache
+				await _cache.RemoveAsync("Schedule_All");
+
 				_logger.Information("End: ScheduleService - CreateAsync");
-				return result > 0
-					? new ApiResponse<ScheduleResponseDTO>(200, responseData, "Successfully created the schedule.")
-					: new ApiResponse<ScheduleResponseDTO>(400, null, "Failed to create the schedule.");
+				return new ApiResponse<ScheduleResponseDTO>(200, responseData, "Successfully created the schedule.");
 			}
 			catch (Exception ex)
 			{
@@ -154,9 +214,15 @@ namespace Tour.API.Services
 					Data = schedule.AvailableSeats,
 					CreationDate = DateTime.Now,
 				});
-				return result > 0
-					? new ApiResponse<ScheduleResponseDTO>(200, responseData, "Successfully updated the schedule.")
-					: new ApiResponse<ScheduleResponseDTO>(400, null, "Failed to update the schedule.");
+
+				//Invalidating cache
+				await _cache.RemoveAsync("Schedule_All");
+				await _cache.RemoveAsync($"Schedule_{id}");
+				await _cache.RemoveAsync($"Schedule_Tour_{schedule.TourId}");
+				await _cache.RemoveAsync($"Tour_{schedule.TourId}");
+				await _cache.RemoveAsync($"Tour_All");
+
+				return new ApiResponse<ScheduleResponseDTO>(200, responseData, "Successfully updated the schedule.");
 			}
 			catch (Exception ex)
 			{
@@ -181,9 +247,14 @@ namespace Tour.API.Services
 				var result = await _scheduleRepository.SaveChangesAsync();
 				_logger.Information("End: ScheduleService - DeleteAsync");
 
-				return result > 0
-					? new ApiResponse<int>(200, result, "Successfully deleted the schedule.")
-					: new ApiResponse<int>(400, result, "Failed to delete the schedule.");
+				//Invalidating cache
+				await _cache.RemoveAsync("Schedule_All");
+				await _cache.RemoveAsync($"Schedule_{id}");
+				await _cache.RemoveAsync($"Schedule_Tour_{schedule.TourId}");
+				await _cache.RemoveAsync($"Tour_{schedule.TourId}");
+				await _cache.RemoveAsync($"Tour_All");
+
+				return new ApiResponse<int>(200, result, "Successfully deleted the schedule.");
 			}
 			catch (Exception ex)
 			{
