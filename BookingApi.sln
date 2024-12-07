@@ -30,8 +30,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{434D5AED-D4CD-4011-A1D4-BFF8EFF261D1}"
 	ProjectSection(SolutionItems) = preProject
 		.env = .env
-		docker-compose.override.yml = docker-compose.override.yml
-		docker-compose.yml = docker-compose.yml
 		infrastrucutre.yml = infrastrucutre.yml
 	EndProjectSection
 EndProject
@@ -56,6 +54,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Realtime", "Realtime", "{83591066-86FF-427D-81AC-B7407BF39A10}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Realtime.API", "Services\Realtime.API\Realtime.API.csproj", "{8C6D0F24-DD1D-4E71-8540-354F4E3FFD18}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{93000BA3-75DE-47C4-8684-963B85181C99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +115,10 @@ Global
 		{8C6D0F24-DD1D-4E71-8540-354F4E3FFD18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C6D0F24-DD1D-4E71-8540-354F4E3FFD18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C6D0F24-DD1D-4E71-8540-354F4E3FFD18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93000BA3-75DE-47C4-8684-963B85181C99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93000BA3-75DE-47C4-8684-963B85181C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93000BA3-75DE-47C4-8684-963B85181C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93000BA3-75DE-47C4-8684-963B85181C99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
