@@ -4,7 +4,16 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "room.api": "StartDebugging"
+        "room.api": "StartDebugging",
+        "api_gateway": "StartDebugging",
+        "booking.api": "StartDebugging",
+        "identity.api": "StartDebugging",
+        "rabbitmq": "StartWithoutDebugging",
+        "realtime.api": "StartDebugging",
+        "redis": "StartWithoutDebugging",
+        "saga.api": "StartDebugging",
+        "tour.api": "StartDebugging",
+        "upload.api": "StartDebugging"
       }
     }
   }
