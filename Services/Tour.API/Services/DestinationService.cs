@@ -6,6 +6,10 @@ using Tour.API.Entities;
 using Tour.API.Repositories.Interfaces;
 using Tour.API.Services.Interfaces;
 using ILogger = Serilog.ILogger;
+using EventBus.IntergrationEvents.Events;
+using MassTransit;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace Tour.API.Services
 {
@@ -14,14 +18,20 @@ namespace Tour.API.Services
 		private readonly IDestinationRepository _destinationRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
+		private readonly IPublishEndpoint _publishEndpoint;
+		private readonly IDistributedCache _cache;
 
 		public DestinationService(IDestinationRepository destinationRepository,
-			IMapper mapper,
-			ILogger logger)
+		IMapper mapper,
+		ILogger logger,
+		IPublishEndpoint publishEndpoint,
+		IDistributedCache cache)
 		{
 			_destinationRepository = destinationRepository;
 			_mapper = mapper;
 			_logger = logger;
+			_publishEndpoint = publishEndpoint;
+			_cache = cache;
 		}
 
 		public async Task<ApiResponse<List<DestinationResponseDTO>>> GetAllAsync()
@@ -29,8 +39,26 @@ namespace Tour.API.Services
 			_logger.Information("Begin: DestinationService - GetAllAsync");
 			try
 			{
+				var cacheKey = "Destination_All";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<List<DestinationResponseDTO>>(cachedData);
+
+					_logger.Information("End: DestinationService - GetAllAsync");
+					return new ApiResponse<List<DestinationResponseDTO>>(200, cachedResponse, "Data retrieved successfully", true);
+				}
+
 				var destinations = await _destinationRepository.GetDestinationsAsync();
 				var data = _mapper.Map<List<DestinationResponseDTO>>(destinations);
+
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
+
 				_logger.Information("End: DestinationService - GetAllAsync");
 				return new ApiResponse<List<DestinationResponseDTO>>(200, data, "Data retrieved successfully.");
 			}
@@ -46,6 +74,16 @@ namespace Tour.API.Services
 			_logger.Information($"Begin: DestinationService - GetByIdAsync, id: {id}");
 			try
 			{
+				var cacheKey = $"Destination_{id}";
+				var cachedData = await _cache.GetStringAsync(cacheKey);
+				if (!string.IsNullOrEmpty(cachedData))
+				{
+					var cachedResponse = JsonSerializer.Deserialize<DestinationResponseDTO>(cachedData);
+
+					_logger.Information("End: DestinationService - GetAllAsync");
+					return new ApiResponse<DestinationResponseDTO>(200, cachedResponse, "Data retrieved successfully", true);
+				}
+
 				var destination = await _destinationRepository.GetDestinationByIdAsync(id);
 				if (destination == null)
 				{
@@ -53,6 +91,14 @@ namespace Tour.API.Services
 					return new ApiResponse<DestinationResponseDTO>(404, null, "Destination not found.");
 				}
 				var data = _mapper.Map<DestinationResponseDTO>(destination);
+
+				// Cache the data
+				var cacheOptions = new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+				};
+				await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
+
 				_logger.Information("End: DestinationService - GetByIdAsync");
 				return new ApiResponse<DestinationResponseDTO>(200, data, "Destination data retrieved successfully.");
 			}
@@ -79,6 +125,15 @@ namespace Tour.API.Services
 
 				var createdDestination = await _destinationRepository.GetDestinationByIdAsync(newId);
 				var responseData = _mapper.Map<DestinationResponseDTO>(createdDestination);
+				await _publishEndpoint.Publish(new DestinationEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = responseData,
+					Type = "CREATE"
+				});
+
+				// Invalidate cache
+				await _cache.RemoveAsync("Destination_All");
 
 				_logger.Information("End: DestinationService - CreateAsync");
 				return new ApiResponse<DestinationResponseDTO>(200, responseData, "Destination created successfully.");
@@ -115,6 +170,16 @@ namespace Tour.API.Services
 
 				var updatedDestination = await _destinationRepository.GetDestinationByIdAsync(id);
 				var responseData = _mapper.Map<DestinationResponseDTO>(updatedDestination);
+				await _publishEndpoint.Publish(new DestinationEvent
+				{
+					Id = Guid.NewGuid(),
+					Data = responseData,
+					Type = "UPDATE"
+				});
+
+				// Invalidate cache
+				await _cache.RemoveAsync("Destination_All");
+				await _cache.RemoveAsync($"Destination_{id}");
 
 				_logger.Information("End: DestinationService - UpdateAsync");
 				return result > 0
@@ -146,6 +211,22 @@ namespace Tour.API.Services
 				_destinationRepository.Delete(destination);
 				var result = await _destinationRepository.SaveChangesAsync();
 				_logger.Information("End: DestinationService - DeleteAsync");
+				var responseData = _mapper.Map<DestinationResponseDTO>(result);
+
+				if (result > 0)
+				{
+					await _publishEndpoint.Publish(new DestinationEvent
+					{
+						Id = Guid.NewGuid(),
+						Data = responseData,
+						Type = "DELETE"
+					});
+
+					// Invalidate cache
+					await _cache.RemoveAsync("Destination_All");
+					await _cache.RemoveAsync($"Destination_{id}");
+				}
+
 
 				return result > 0
 					? new ApiResponse<int>(200, result, "Destination deleted successfully.")

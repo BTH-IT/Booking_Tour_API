@@ -4,8 +4,12 @@ using Identity.API.Repositories;
 using Identity.API.Repositories.Interfaces;
 using Identity.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Shared.DTOs;
 using Shared.Helper;
+using System.Security.Principal;
+using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using ILogger = Serilog.ILogger;
 
 namespace Identity.API.Services
@@ -15,14 +19,17 @@ namespace Identity.API.Services
 		private readonly IPermissionRepository _permissionRepository;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
+		private readonly IDistributedCache _cache;
 
 		public PermissionService(IPermissionRepository permissionRepository,
 			IMapper mapper,
-			ILogger logger)
+			ILogger logger,
+			IDistributedCache cache)
 		{
 			this._permissionRepository = permissionRepository;
 			this._mapper = mapper;
 			this._logger = logger;
+			this._cache = cache;
 		}
 
 		public async Task<ApiResponse<int>> DeleteAsync(int id)
@@ -33,7 +40,12 @@ namespace Identity.API.Services
 			{
 				return new ApiResponse<int>(404, 0, "Permission not found");
 			}
-			 await _permissionRepository.DeletePermissionAsync(id);
+			await _permissionRepository.DeletePermissionAsync(id);
+
+			// Invalidate cache
+			await _cache.RemoveAsync($"Permission_{id}");
+			await _cache.RemoveAsync("Permission_All");
+
 			_logger.Information($"End : PermissionService - DeleteAsync : {id} - Deletion successful");
 			return new ApiResponse<int>(200, id, "Permission deleted successfully");
 		}
@@ -41,9 +53,31 @@ namespace Identity.API.Services
 		public async Task<ApiResponse<List<PermissionResponseDTO>>> GetAllAsync()
 		{
 			_logger.Information($"Begin : PermissionService - GetAllAsync");
+
+			var cacheKey = "Permission_All";
+			var cachedData = await _cache.GetStringAsync(cacheKey);
+
+			if (!string.IsNullOrEmpty(cachedData))
+
+			{
+				var CachedResponse = JsonSerializer.Deserialize<List<PermissionResponseDTO>>(cachedData);
+
+				_logger.Information($"End : PermissionService - GetAllAsync");
+				return new ApiResponse<List<PermissionResponseDTO>>(200, CachedResponse, "Data retrieved successfully", true);
+			}
+
 			var permissions = await _permissionRepository.GetPermissionsAsync();
 			_logger.Information($"Mapping list of permissions to DTO");
 			var data = _mapper.Map<List<PermissionResponseDTO>>(permissions);
+
+
+			// Cache the data
+			var cacheOptions = new DistributedCacheEntryOptions
+			{
+				AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+			};
+			await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
+
 			_logger.Information($"End : PermissionService - GetAllAsync");
 			return new ApiResponse<List<PermissionResponseDTO>>(200, data, "Data retrieved successfully");
 		}
@@ -52,12 +86,30 @@ namespace Identity.API.Services
 		{
 			_logger.Information($"Begin : PermissionService - GetByIdAsync");
 
+			var cacheKey = $"Permission_{id}";
+			var cachedData = await _cache.GetStringAsync(cacheKey);
+
+			if (!string.IsNullOrEmpty(cachedData))
+			{
+				var CachedResponse = JsonSerializer.Deserialize<PermissionResponseDTO>(cachedData);
+
+				_logger.Information($"End : PermissionService - GetByIdAsync");
+				return new ApiResponse<PermissionResponseDTO>(200, CachedResponse, "Permission data retrieved successfully", true);
+			}
 			var permission = await _permissionRepository.GetPermissionByIdAsync(id);
 			if (permission == null)
 			{
 				return new ApiResponse<PermissionResponseDTO>(404, null, "Permission not found");
 			}
 			var data = _mapper.Map<PermissionResponseDTO>(permission);
+
+			// Cache the data
+			var cacheOptions = new DistributedCacheEntryOptions
+			{
+				AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+			};
+			await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), cacheOptions);
+
 			_logger.Information($"End : PermissionService - GetByIdAsync");
 			return new ApiResponse<PermissionResponseDTO>(200, data, "Permission data retrieved successfully");
 		}
@@ -74,6 +126,9 @@ namespace Identity.API.Services
 			var newId = await _permissionRepository.CreateAsync(permissionEntity);
 
 			var permissionDto = _mapper.Map<PermissionResponseDTO>(permissionEntity);
+
+			// Invalidate cache
+			await _cache.RemoveAsync("Permission_All");
 
 			_logger.Information($"End : PermissionService - InsertAsync");
 			return new ApiResponse<PermissionResponseDTO>(200, permissionDto, "Creation successful");
@@ -93,6 +148,11 @@ namespace Identity.API.Services
 			}
 			permission = _mapper.Map<Permission>(item);
 			var result = await _permissionRepository.UpdateAsync(permission);
+
+			// Invalidate cache
+			await _cache.RemoveAsync($"Permission_{item.Id}");
+			await _cache.RemoveAsync("Permission_All");
+
 			if (result > 0)
 			{
 				return new ApiResponse<PermissionResponseDTO>(200, _mapper.Map<PermissionResponseDTO>(permission), "Update successful");

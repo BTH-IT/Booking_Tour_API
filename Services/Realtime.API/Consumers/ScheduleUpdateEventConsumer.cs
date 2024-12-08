@@ -5,11 +5,11 @@ using Realtime.API.Hubs;
 using ILogger = Serilog.ILogger;
 namespace Realtime.API.Consumers
 {
-    public class TourUpdateEventConsumer : IConsumer<ScheduleUpdateEvent>
+    public class ScheduleUpdateEventConsumer : IConsumer<ScheduleUpdateEvent>
     {
         private readonly IHubContext<NotiHub> hubContext;
         private readonly ILogger logger;
-        public TourUpdateEventConsumer(IHubContext<NotiHub> hubContext,
+        public ScheduleUpdateEventConsumer(IHubContext<NotiHub> hubContext,
             ILogger logger)
         {
             this.hubContext = hubContext;
@@ -19,7 +19,7 @@ namespace Realtime.API.Consumers
         public async Task Consume(ConsumeContext<ScheduleUpdateEvent> context)
         {
             logger.Information("$START TourUpdateEventConsumer - Consume ");
-            await hubContext.Clients.All.SendAsync("ScheduleUpdateEvent",new
+            await hubContext.Clients.All.SendAsync("ScheduleUpdateEvent", new
             {
                 ScheduleId = context.Message.ObjectId,
                 AvailableSeats = context.Message.Data

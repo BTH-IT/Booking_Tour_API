@@ -123,8 +123,18 @@ try
             });
         }
     });
-
-    builder.Services.AddGrpc(options =>
+	// Add Redis Distributed Caching
+	builder.Services.AddStackExchangeRedisCache(options =>
+	{
+		options.Configuration = "redis-container:6379";
+		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+		{
+			AbortOnConnectFail = true,
+			EndPoints = { "redis-container:6379" },
+			DefaultDatabase = 3 // Use database 3
+		};
+	});
+	builder.Services.AddGrpc(options =>
     {
         options.Interceptors.Add<GrpcExceptionInterceptor>();
     });
