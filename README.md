@@ -48,7 +48,7 @@ Link thuyết trình: [Báo cáo .Net](https://www.canva.com/design/DAGXLw-JdZk/
 # Booking Tours API
 This is an API for booking tours and hotel rooms in Ho Chi Minh City, built using a Microservice architecture.
 
-<img src="https://drive.google.com/uc?export=view&id=1Edz4cBsCJT4nt0SS4Qr-lsyhIzQFjoT0" alt="Booking Tours API Microservices">
+<img src="https://drive.google.com/uc?export=view&id=1YEZdg4gehVpCIEdw9H3cZm74vhNvpC18" alt="Booking Tours API Microservices">
 
 ## Services
 The project is divided into six main microservices, each responsible for a specific domain within the application:
@@ -96,6 +96,7 @@ Each service is independently deployable and scalable, ensuring efficient handli
 - **API Gateway (Ocelot)**: Used to route requests to appropriate microservices.
 - **Entity Framework**: Utilized for data access and Object-Relational Mapping (ORM).
 - **MySQL**: The relational database system for storing application data.
+- **Redis**: A high-performance, in-memory data store used for caching frequently accessed data, improving application response time, and reducing database load.
 - **RabbitMQ**: Acts as a message broker to handle asynchronous communication between microservices, ensuring reliable message delivery and decoupling of services.
 - **SignalR**: Enables real-time communication, allowing instant updates for features like schedule availability.
 
