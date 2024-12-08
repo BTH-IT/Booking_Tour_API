@@ -4,7 +4,6 @@ Link Booking_Tour_FE: [https://github.com/BTH-IT/Booking_Tour_FE.git](https://gi
 
 Link thuyết trình: [Báo cáo .Net](https://www.canva.com/design/DAGXLw-JdZk/wPuk0vujq8fvU64592dFoQ/edit?utm_content=DAGXLw-JdZk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
-
 # Member
 <div style="display: flex; justify-content: center;">
     <table border="1">
@@ -48,7 +47,7 @@ Link thuyết trình: [Báo cáo .Net](https://www.canva.com/design/DAGXLw-JdZk/
 # Booking Tours API
 This is an API for booking tours and hotel rooms in Ho Chi Minh City, built using a Microservice architecture.
 
-<img src="https://drive.google.com/uc?export=view&id=1YEZdg4gehVpCIEdw9H3cZm74vhNvpC18" alt="Booking Tours API Microservices">
+<img src="https://drive.google.com/uc?export=view&id=1c-LAEOIsWigoh2wvjDNqq-P8TzSVwxyZ" alt="Booking Tours API Microservices">
 
 ## Services
 The project is divided into six main microservices, each responsible for a specific domain within the application:
