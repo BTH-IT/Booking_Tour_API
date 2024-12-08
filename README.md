@@ -1,6 +1,8 @@
+<img alt="Static Badge" src="https://img.shields.io/badge/C%23-9.0-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/.NET-8.0-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/ASP.NET-8.0-blue">
+
 Link Booking_Tour_FE: [https://github.com/BTH-IT/Booking_Tour_FE.git](https://github.com/BTH-IT/Booking_Tour_FE.git)
 
-<img alt="Static Badge" src="https://img.shields.io/badge/C%23-9.0-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/.NET-8.0-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/ASP.NET-8.0-blue">
+Link thuyết trình: [Báo cáo .Net](https://www.canva.com/design/DAGXLw-JdZk/wPuk0vujq8fvU64592dFoQ/edit?utm_content=DAGXLw-JdZk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 # Member
 <div style="display: flex; justify-content: center;">
@@ -21,7 +23,7 @@ Link Booking_Tour_FE: [https://github.com/BTH-IT/Booking_Tour_FE.git](https://gi
             <tr>
                 <td style="text-align: center;">2</td>
                 <td style="text-align: center;">3121560038</td>
-                <td><a href="#">Nguyễn Phúc Huy</a></td>
+                <td><a href="https://huy31203.github.io/Portfolio-Webpage/">Nguyễn Phúc Huy</a></td>
             </tr>
             <tr>
                 <td style="text-align: center;">3</td>
@@ -45,44 +47,45 @@ Link Booking_Tour_FE: [https://github.com/BTH-IT/Booking_Tour_FE.git](https://gi
 # Booking Tours API
 This is an API for booking tours and hotel rooms in Ho Chi Minh City, built using a Microservice architecture.
 
-<img src="https://drive.google.com/uc?export=view&id=16eTj6cxHmOiU8b1_GU-UQmwmO0rp-FWR" alt="Booking Tours API Microservices">
+<img src="https://drive.google.com/uc?export=view&id=1c-LAEOIsWigoh2wvjDNqq-P8TzSVwxyZ" alt="Booking Tours API Microservices">
 
 ## Services
 The project is divided into six main microservices, each responsible for a specific domain within the application:
 
-### 1. **Identity Service**
-- **User Authentication**: Users can register, log in, and authenticate access to the application.
-- **User Profile Management**: Users can view and update their profiles, including changing passwords.
-- **Account Management**: Admins can create, update, and delete user accounts.
-- **Role and Permission Management**: Admins can manage roles and permissions for users.
+1. **Identity Service**
+    - **User Authentication**: Users can register, log in, and authenticate access to the application.
+    - **User Profile Management**: Users can view and update their profiles, including changing passwords.
+    - **Account Management**: Admins can create, update, and delete user accounts.
+    - **Role and Permission Management**: Admins can manage roles and permissions for users.
 
-### 2. **Room Service**
-- **Hotel Management**: Admins can manage hotel details, including adding, updating, and deleting hotels.
-- **Room Management**: Admins can create, update, and delete room records within hotels.
-- **Review Management**: Users and admins can add, update, and delete reviews for hotels and rooms.
-- **Search Functionality**: Users and admins can search for rooms based on various criteria.
+2. **Room Service**
+    - **Hotel Management**: Admins can manage hotel details, including adding, updating, and deleting hotels.
+    - **Room Management**: Admins can create, update, and delete room records within hotels.
+    - **Review Management**: Users and admins can add, update, and delete reviews for hotels and rooms.
+    - **Search Functionality**: Users and admins can search for rooms based on various criteria.
 
-### 3. **Tour Service**
-- **Destination Management**: Admins can create, update, and delete destinations.
-- **Tour Management**: Admins can manage tours, view details, and update records.
-- **Schedule Management**: Admins can add, update, and delete tour schedules.
-- **Review Management**: Users and admins can add, update, and delete reviews for tours.
-- **Search Functionality**: Users and admins can search for tours based on various criteria.
+3. **Tour Service**
+    - **Destination Management**: Admins can create, update, and delete destinations.
+    - **Tour Management**: Admins can manage tours, view details, and update records.
+    - **Schedule Management**: Admins can add, update, and delete tour schedules.
+    - **Review Management**: Users and admins can add, update, and delete reviews for tours.
+    - **Search Functionality**: Users and admins can search for tours based on various criteria.
 
-### 4. **Saga Orchestrator Service**
-- **Room Booking Management**: Admins can create, update room status, and delete bookings.
-- **Tour Booking Management**: Admins can create, update, and delete tour bookings.
+4. **Saga Orchestrator**
+    - **Room Booking Management**: Admins can create, update room status, and delete bookings.
+    - **Tour Booking Management**: Admins can create, update, and delete tour bookings.
 
-### 5. **Booking Service**
-- **Room Booking Management**: Admins can manage all room bookings and view their details.
-- **Tour Booking Management**: Admins can manage all tour bookings and view booking details.
+5. **Booking Service**
+    - **Room Booking Management**: Admins can manage all room bookings and view their details.
+    - **Tour Booking Management**: Admins can manage all tour bookings and view booking details.
 
-### 6. **Upload Service**
-- **Image Management**: Handles uploading, retrieving, and deleting images stored on Cloudinary.
+6. **Upload Service**
+    - **Image Management**: Handles uploading, retrieving, and deleting images stored on aws.
+
+7. **Realtime Service**
+    - Provides instant updates on the availability of schedules.
 
 Each service is independently deployable and scalable, ensuring efficient handling of a large number of users and interactions.
-
----
 
 ## Technologies Used
 
@@ -92,8 +95,13 @@ Each service is independently deployable and scalable, ensuring efficient handli
 - **API Gateway (Ocelot)**: Used to route requests to appropriate microservices.
 - **Entity Framework**: Utilized for data access and Object-Relational Mapping (ORM).
 - **MySQL**: The relational database system for storing application data.
+- **Redis**: A high-performance, in-memory data store used for caching frequently accessed data, improving application response time, and reducing database load.
+- **RabbitMQ**: Acts as a message broker to handle asynchronous communication between microservices, ensuring reliable message delivery and decoupling of services.
+- **SignalR**: Enables real-time communication, allowing instant updates for features like schedule availability.
 
----
+## Cloud Services
+
+- **AWS**: Used for hosting microservices, managing databases, and providing scalable cloud infrastructure. Key services include AWS EC2 for virtual servers, S3 for object storage, and RDS for relational databases.
 
 ## Development Tools
 
@@ -132,6 +140,14 @@ I. Setting up Visual Studio Code (VSCode)
      ```
      The Identity API will run on port `http://localhost:5001`.
 
+   - **Run Booking API**:
+     Navigate to the `Booking.API` folder and run the service:
+     ```shell
+     cd .\Services\Booking.API\
+     dotnet run
+     ```
+     The Booking API will run on port `http://localhost:5002`.
+   
    - **Run Room API**:
      Navigate to the `Room.API` folder and run the service:
      ```shell
@@ -148,13 +164,13 @@ I. Setting up Visual Studio Code (VSCode)
      ```
      The Tour API will run on port `http://localhost:5004`.
 
-   - **Run Booking API**:
-     Navigate to the `Booking.API` folder and run the service:
+   - **Run Upload API**:
+     Navigate to the `Upload.API` folder and run the service:
      ```shell
-     cd .\Services\Booking.API\
+     cd .\Services\Upload.API\
      dotnet run
      ```
-     The Booking API will run on port `http://localhost:5002`.
+     The Upload API will run on port `http://localhost:5005`.
 
    - **Run Saga Orchestrator API**:
      Navigate to the `Saga.Orchestrator` folder and run the service:
@@ -163,6 +179,14 @@ I. Setting up Visual Studio Code (VSCode)
      dotnet run
      ```
      The Saga Orchestrator API will run on port `http://localhost:5007`.
+   
+   - **Run Realtime API**:
+     Navigate to the `Realtime.API` folder and run the service:
+     ```shell
+     cd .\Realtime.API\
+     dotnet run
+     ```
+     The Realtime API will run on port `http://localhost:5008`.
      
 II. Setting up Visual Studio 2022
 1. **Install the .NET SDK**:
@@ -266,7 +290,15 @@ For microservices, Docker can be an efficient way to containerize and run multip
      dotnet run
      ```
      The Identity API will run on port `http://localhost:5001`.
-
+  
+   - **Run Booking API**:
+     Navigate to the `Booking.API` folder and run the service:
+     ```shell
+     cd ./Services/Booking.API/
+     dotnet run
+     ```
+     The Booking API will run on port `http://localhost:5002`.
+  
    - **Run Room API**:
      Navigate to the `Room.API` folder and run the service:
      ```shell
@@ -283,13 +315,13 @@ For microservices, Docker can be an efficient way to containerize and run multip
      ```
      The Tour API will run on port `http://localhost:5004`.
 
-   - **Run Booking API**:
-     Navigate to the `Booking.API` folder and run the service:
+   - **Run Upload API**:
+     Navigate to the `Upload.API` folder and run the service:
      ```shell
-     cd ./Services/Booking.API/
+     cd ./Services/Upload.API/
      dotnet run
      ```
-     The Booking API will run on port `http://localhost:5002`.
+     The Upload API will run on port `http://localhost:5005`.
 
    - **Run Saga Orchestrator API**:
      Navigate to the `Saga.Orchestrator` folder and run the service:
@@ -298,11 +330,19 @@ For microservices, Docker can be an efficient way to containerize and run multip
      dotnet run
      ```
      The Saga Orchestrator API will run on port `http://localhost:5007`.
+   
+   - **Run Realtime**:
+     Navigate to the `Realtime.API` folder and run the service:
+     ```shell
+     cd ./Realtime.API/
+     dotnet run
+     ```
+     The Realtime API will run on port `http://localhost:5008`.
 
 5. Docker Setup (Optional)
 For microservices, Docker can be an efficient way to containerize and run multiple services simultaneously. You can build Docker images for each service and orchestrate them with Docker Compose.
 
-    1. **Install Docker**:
+    - **Install Docker**:
         Install Docker to enable running the project in containers. Run the following commands:
         ```shell
         sudo apt-get update
@@ -323,19 +363,19 @@ For microservices, Docker can be an efficient way to containerize and run multip
         ```shell
         sudo systemctl status docker
         ```
-    2. **Navigate to the Project Directory**:
+    - **Navigate to the Project Directory**:
         Move into the project folder to prepare for building and running the application:
         ```shell
         cd Booking_Tour_API
         ```
-    3. **Build và Run the Services**:
+    - **Build và Run the Services**:
         To run the services, use Docker Compose:
         ```shell
         docker-compose up --build
         ```
         This will start all the services defined in the `docker-compose.yml` file.
     
-    4. **Access the API via Docker Compose**:
+    - **Access the API via Docker Compose**:
         After running the services with Docker Compose, you can access the API at:
         - [http://localhost:5000](http://localhost:5000).
    

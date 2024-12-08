@@ -1,8 +1,14 @@
-﻿using Booking.API.Entities;
+﻿using AutoMapper;
+using Booking.API.Entities;
 using Booking.API.GrpcServer.Protos;
 using Booking.API.Repositories.Interfaces;
+using EventBus.IntergrationEvents.Events;
 using Grpc.Core;
+using MassTransit;
+using MassTransit.Transports;
 using Microsoft.EntityFrameworkCore;
+using Shared.Constants;
+using Shared.DTOs;
 using ILogger = Serilog.ILogger;
 namespace Booking.API.GrpcServer.Services
 {
@@ -12,17 +18,23 @@ namespace Booking.API.GrpcServer.Services
         private readonly IDetailBookingRoomRepository detailBookingRoomRepository;
         private readonly IBookingTourRepository tourRepository;
         private ILogger _logger;
+        private readonly IPublishEndpoint publishEndpoint;  
+        private readonly IMapper mapper;
         
         public BookingProtoService(IBookingRoomRepository bookingRoomRepository,
             IDetailBookingRoomRepository detailBookingRoomRepository,
             IBookingTourRepository tourRepository,
-            ILogger logger
+            ILogger logger,
+            IPublishEndpoint publishEndpoint,
+            IMapper mapper
            )
         {
             this.bookingRoomRepository = bookingRoomRepository;
             this.detailBookingRoomRepository = detailBookingRoomRepository;
             this.tourRepository = tourRepository;
             this._logger = logger;  
+            this.publishEndpoint = publishEndpoint;
+            this.mapper = mapper;
         }
         #region booking_room
         public override async Task<CheckRoomsIsBookedResponse> CheckRoomsIsBooked(CheckRoomsIsBookedRequest request, ServerCallContext context)
@@ -37,7 +49,7 @@ namespace Booking.API.GrpcServer.Services
             var dateEnd = request.CheckOut.ToDateTime();    
 
             var bookingRoomsByDate = await bookingRoomRepository.FindByCondition(c=>
-             c.CheckIn <= dateEnd && c.CheckOut >= dateStart,false,c=>c.DetailBookingRooms).ToListAsync();
+             c.CheckIn <= dateEnd && c.CheckOut >= dateStart && !c.Status.Equals(Constants.OrderStatus.Cancelled),false,c=>c.DetailBookingRooms).ToListAsync();
 
             foreach(var item in request.RoomIds)
             {
@@ -94,6 +106,13 @@ namespace Booking.API.GrpcServer.Services
             var detailBookingRoomResult = await detailBookingRoomRepository.CreateListAsync(newBookingRoomDetails);
             _logger.Information($"END - BookingProtoService - CreateBookingRoom");
 
+            var bookingRoom = await bookingRoomRepository.GetBookingRoomByIdAsync(bookingRoomresult);
+            await publishEndpoint.Publish(new BookingRoomEvent
+            {
+                Id = Guid.NewGuid(),
+                Data = mapper.Map<BookingRoomResponseDTO>(bookingRoom),
+                Type = "CREATE"
+            });
             return new BookingRoomResponse()
             {
                 BookingRoomId =  bookingRoomresult,
@@ -116,7 +135,12 @@ namespace Booking.API.GrpcServer.Services
                 }
             }
             _logger.Information($"END - BookingProtoService - DeleteBookingRoom");
-
+            await publishEndpoint.Publish(new BookingRoomEvent
+            {
+                Id = Guid.NewGuid(),
+                Data = mapper.Map<BookingRoomResponseDTO>(bookingRoom),
+                Type = "DELETE"
+            });
             return new DeleteBookingRoomResponse()
             {
                 Result = true   
@@ -151,6 +175,13 @@ namespace Booking.API.GrpcServer.Services
                 });
             }
             var bookingTourId  = await tourRepository.CreateAsync(newBookingTour);
+            var bookingTour = await tourRepository.GetBookingTourByIdAsync(bookingTourId);
+            await publishEndpoint.Publish(new BookingTourEvent
+            {
+                Id = Guid.NewGuid(),
+                Data = mapper.Map<BookingTourCustomResponseDTO>(bookingTour),
+                Type = "CREATE"
+            });
             return new BookingTourResponse()
             {
                 BookingTourId =bookingTourId,
@@ -165,6 +196,12 @@ namespace Booking.API.GrpcServer.Services
                 return new DeleteBookingTourResponse() { Result = false };
             }
             await tourRepository.DeleteBookingTourAsync(bookingTour.Id);
+            await publishEndpoint.Publish(new BookingTourEvent
+            {
+                Id = Guid.NewGuid(),
+                Data = mapper.Map<BookingTourCustomResponseDTO>(bookingTour),
+                Type = "DELETE"
+            });
             return new DeleteBookingTourResponse
             {
                 Result = true

@@ -14,6 +14,9 @@ services:
       dockerfile: Services/Room.API/Dockerfile
     networks:
       - apis-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   tour.api:
     image: tour-api
     build:
@@ -89,5 +92,19 @@ services:
       dockerfile: Saga.Orchestrator/Saga.Orchestrator/Dockerfile
     networks:
       - apis-network
+
+  redis:
+    container_name: redis-container
+    image: redis:7.4.1
+    networks:
+      - apis-network
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 networks:
   apis-network:

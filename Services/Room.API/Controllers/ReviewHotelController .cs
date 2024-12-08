@@ -11,7 +11,6 @@ namespace Room.API.Controllers
 	public class ReviewHotelController : ControllerBase
 	{
 		private readonly IReviewHotelService _reviewHotelService;
-
 		public ReviewHotelController(IReviewHotelService reviewHotelService)
 		{
 			_reviewHotelService = reviewHotelService;

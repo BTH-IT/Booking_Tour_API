@@ -35,6 +35,7 @@ message ReviewResponse{
 	float Rating = 3; 
 	int32 RoomId = 4;
 	int32 UserId = 5;
+    google.protobuf.Timestamp CreatedAt = 6;
 }
 
 message GetRoomsByIdsRequest{

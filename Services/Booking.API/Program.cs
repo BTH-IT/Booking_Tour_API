@@ -121,14 +121,25 @@ try
     });
     //Add GrpcClient
     builder.Services.AddGrpcClients();
-    // Configure the HTTP request pipeline.
-    var app = builder.Build();
+	// Add Redis Distributed Caching
+	builder.Services.AddStackExchangeRedisCache(options =>
+	{
+		options.Configuration = "redis-container:6379";
+		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+		{
+			AbortOnConnectFail = true,
+			EndPoints = { "redis-container:6379" },
+			DefaultDatabase = 4 // Use database 4
+		};
+	});
+	// Configure the HTTP request pipeline.
+	var app = builder.Build();
     if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-    app.UseCors("CorsPolicy");
+	app.UseCors("CorsPolicy");
     //app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthentication();

@@ -3,17 +3,15 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Room.API;
 using Room.API.Extensions;
 using Room.API.GrpcServer.Services;
 using Room.API.Persistence;
 using Room.API.Validators;
 using Serilog;
 using System.Text;
-using System.Text.Json.Serialization;
+using EventBus.Masstransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,8 +84,21 @@ try
             });
         }
     );
-    // Add DbContext
-    builder.Services.ConfigureIdentityDbContext();
+
+	// Add Redis Cache
+	builder.Services.AddStackExchangeRedisCache(options =>
+	{
+		options.Configuration = "redis-container:6379";
+		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+		{
+			AbortOnConnectFail = true,
+			EndPoints = { "redis-container:6379" },
+			DefaultDatabase = 2 // Use database 2
+		};
+	});
+
+	// Add DbContext
+	builder.Services.ConfigureIdentityDbContext();
     // Add Infrastructure Services
     builder.Services.AddInfrastructureServices();
     // Add Cors
@@ -97,6 +108,9 @@ try
     {
         options.Interceptors.Add<GrpcExceptionInterceptor>();
     });
+    // Add Masstransit
+    builder.Services.AddCustomMassTransit(builder.Environment, typeof(Program).Assembly);
+
     builder.WebHost.ConfigureKestrel(options =>
     {
         if (builder.Environment.IsDevelopment())
