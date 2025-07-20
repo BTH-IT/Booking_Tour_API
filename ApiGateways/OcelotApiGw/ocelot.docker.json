@@ -99,6 +99,13 @@
         "PeriodTimespan": 10,
         "Limit": 10
       },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+
+      },
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 2,
         "DurationOfBreak": 1000,

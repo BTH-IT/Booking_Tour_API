@@ -117,11 +117,15 @@ try
 	// Add Redis Distributed Caching
 	builder.Services.AddStackExchangeRedisCache(options =>
 	{
-		options.Configuration = "redis-container:6379";
+        var redisHost = builder.Configuration["Redis:Host"];
+        var redisPort = builder.Configuration["Redis:Port"];
+        var redisConnectionString = $"{redisHost}:{redisPort}";
+
+        options.Configuration = redisConnectionString;
 		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
 		{
 			AbortOnConnectFail = true,
-			EndPoints = { "redis-container:6379" },
+			EndPoints = { redisConnectionString },
 			DefaultDatabase = 1 // Use database 1
 		};
 	});

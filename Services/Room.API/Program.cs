@@ -88,13 +88,17 @@ try
 	// Add Redis Cache
 	builder.Services.AddStackExchangeRedisCache(options =>
 	{
-		options.Configuration = "redis-container:6379";
-		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
-		{
-			AbortOnConnectFail = true,
-			EndPoints = { "redis-container:6379" },
-			DefaultDatabase = 2 // Use database 2
-		};
+	    var redisHost = builder.Configuration["Redis:Host"];
+	    var redisPort = builder.Configuration["Redis:Port"];
+	    var redisConnectionString = $"{redisHost}:{redisPort}";
+
+	    options.Configuration = redisConnectionString;
+	    options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+	    {
+	        AbortOnConnectFail = true,
+	        EndPoints = { redisConnectionString },
+	        DefaultDatabase = 2 // Use database 2
+	    };
 	});
 
 	// Add DbContext

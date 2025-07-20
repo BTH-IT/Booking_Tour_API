@@ -9,6 +9,7 @@ using System.Text;
 using EventBus.Masstransit;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Saga.Orchestrator.API.Extensions;
+using Infrastructure.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Information($"Start {builder.Environment.ApplicationName} up");

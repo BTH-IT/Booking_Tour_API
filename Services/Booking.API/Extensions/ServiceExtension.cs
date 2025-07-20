@@ -24,9 +24,10 @@ namespace Booking.API.Extensions
         public static IServiceCollection ConfigureIdentityDbContext(this IServiceCollection services)
         {
             var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+
             if (databaseSettings == null || string.IsNullOrEmpty(databaseSettings.ConnectionString))
                 throw new ArgumentNullException("Connection string is not configured.");
-            Console.WriteLine(databaseSettings.ConnectionString);
+
             var builder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
             services.AddDbContext<BookingDbContext>(option => option.UseMySql(builder.ConnectionString,
                 ServerVersion.AutoDetect(builder.ConnectionString)));
