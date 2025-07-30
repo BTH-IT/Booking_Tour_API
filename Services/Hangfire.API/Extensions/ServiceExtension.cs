@@ -3,8 +3,11 @@ using Contracts.Services;
 using Hangfire.API.Services;
 using Hangfire.API.Services.Interfaces;
 using Infrastructure.Configurations;
+using Infrastructure.Extensions;
 using Infrastructure.ScheduleJobs;
 using Infrastructure.Services;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MongoDB.Driver;
 using Shared.Configurations;
 
 namespace Hangfire.API.Extensions
@@ -25,7 +28,16 @@ namespace Hangfire.API.Extensions
 
             return services;
         }
+        public static IServiceCollection ConfigureHealthCheck(this IServiceCollection services)
+        {
+            var databaseSettings = services.GetOptions<HangFireSettings>(nameof(HangFireSettings));
 
+            services.AddSingleton(sp=>new MongoClient(databaseSettings.Storage.ConnectionString))
+                .AddHealthChecks()
+                .AddMongoDb(databaseNameFactory: sp=> "hangfire-webapi");
+
+            return services;
+        }
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
             => services.AddTransient<IScheduleJobService, HangFireService>()
                 .AddScoped<ISmtpEmailService, SmtpEmailService>()

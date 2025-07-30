@@ -1,5 +1,6 @@
 ﻿
 using Amazon.S3;
+using Shared.Configurations;
 
 namespace Upload.API.Extensions
 {
@@ -21,6 +22,11 @@ namespace Upload.API.Extensions
             var awsOptions = configuration.GetAWSOptions("AWS");
             services.AddDefaultAWSOptions(awsOptions);
             services.AddAWSService<IAmazonS3>();
+            return services;
+        }
+        public static IServiceCollection ConfigureHealthCheck(this IServiceCollection services)
+        {
+            services.AddHealthChecks();
             return services;
         }
     }

@@ -23,6 +23,7 @@ namespace Contracts.Exceptions
             }
             catch (System.Exception exception)
             {
+                _logger.Error($"Error in Grpc  : {exception.Message}");
                 throw new RpcException(new Status(StatusCode.Internal, exception.Message));
             }
         }

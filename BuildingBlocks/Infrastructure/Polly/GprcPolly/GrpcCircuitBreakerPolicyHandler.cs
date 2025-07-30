@@ -19,7 +19,8 @@ namespace Infrastructure.Polly.GprcPolly
 
                 var logger = sp.GetRequiredService<ILogger>();
 
-                return Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+                return Policy
+                     .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
                     .CircuitBreakerAsync(
                         handledEventsAllowedBeforeBreaking: options.CircuitBreaker.RetryCount,
                         durationOfBreak: TimeSpan.FromSeconds(options.CircuitBreaker.BreakDuration),

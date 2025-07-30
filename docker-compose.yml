@@ -88,7 +88,13 @@ services:
       - realtime.api
     networks:
       - apis-network
-
+  healthstatus:
+    image: healthstatus
+    build:
+      context: .
+      dockerfile: WebApps/WebHealthCheck/DockerFile
+    networks:
+      - apis-network
   saga.api:
     image: saga-api
     build:

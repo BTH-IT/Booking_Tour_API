@@ -1,3 +1,4 @@
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -72,6 +73,7 @@ try
         }
     );
     builder.Services.AddAwsStorageService(builder.Configuration);
+    builder.Services.ConfigureHealthCheck();
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
@@ -84,7 +86,11 @@ try
     //app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
-
+    app.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
     app.MapControllers();
 
     app.Run();

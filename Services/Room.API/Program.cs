@@ -1,5 +1,7 @@
 ﻿using Contracts.Exceptions;
+using EventBus.Masstransit;
 using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -11,7 +13,6 @@ using Room.API.Persistence;
 using Room.API.Validators;
 using Serilog;
 using System.Text;
-using EventBus.Masstransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -137,7 +138,7 @@ try
     // Configure Route Options 
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
     // Configure the HTTP request pipeline.
-
+    builder.Services.ConfigureHealthCheck();
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
@@ -151,6 +152,11 @@ try
     app.UseAuthorization();
     app.MapGrpcService<RoomProtoService>();
     app.MapControllers();
+    app.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
     // Seeding database async
     using (var scope = app.Services.CreateScope())
     {
