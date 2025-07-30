@@ -7,6 +7,10 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "booking"
   redis:
     container_name: redis-container
     image: redis:alpine
@@ -14,7 +18,38 @@ services:
       - infra-network
     ports:
       - 6379:6379
-  
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
+    environment:
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - infra-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.2
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elasticsearch
+      - ELASTICSEARCH_PASSWORF=admin
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    networks:
+      - infra-network
+volumes:
+  elasticsearch_data:
+    name: elasticsearch_data
 
 networks:
   infra-network:

@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Booking.API.Entities;
 using Booking.API.Services.Interfaces;
-using Shared.DTOs;
-using Shared.Helper;
-using Microsoft.AspNetCore.Authorization;
+using EventBus.IntergrationEvents.Events;
 using Infrastructure.Authorization;
+using MassTransit;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Shared.DTOs;
 using Shared.Enums;
+using Shared.Helper;
 using System.Security.Claims;
 
 namespace Booking.API.Controllers
@@ -14,9 +17,12 @@ namespace Booking.API.Controllers
 	public class BookingRoomsController : ControllerBase
 	{
 		private readonly IBookingRoomService _bookingRoomService;
-		public BookingRoomsController(IBookingRoomService bookingRoomService)
+		private readonly IPublishEndpoint _publishEndpoint;	
+		public BookingRoomsController(IBookingRoomService bookingRoomService,
+			IPublishEndpoint publishEndpoint)
 		{
 			_bookingRoomService = bookingRoomService;
+			_publishEndpoint = publishEndpoint;
 		}
 
 		[HttpGet]
@@ -63,6 +69,28 @@ namespace Booking.API.Controllers
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 			var response = await _bookingRoomService.DeleteBookingRoomIdAsync(bookingRoomId,int.Parse(userId!));
 			return StatusCode(response.StatusCode, response);
+        }
+        [HttpPost("test-event")]
+        public async Task<IActionResult> TestPublishEvent()
+        {
+            try
+            {
+                // Create a booking event for testing
+                var newBookingRoom = new BookingRoomEvent()
+                {
+					Data = new BookingRoomResponseDTO(),
+					Type = "Create",
+                };
+
+                // Publish the event to RabbitMQ
+                await _publishEndpoint.Publish(newBookingRoom);
+
+                return Ok(new ApiResponse<string>(200, "Event published successfully", "Success"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>(500, null, $"Failed to publish event: {ex.Message}"));
+            }
         }
     }
 }

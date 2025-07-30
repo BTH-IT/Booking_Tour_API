@@ -30,7 +30,7 @@ namespace EventBus.Masstransit
                 {
                     throw new Exception("Missing RabbitMq options");
                 }
-                configurator.Host(rabbitMqOptions.HostName,rabbitMqOptions.Port,"/", h =>
+                configurator.Host(rabbitMqOptions.HostName,rabbitMqOptions.Port,rabbitMqOptions.VHost, h =>
                 {
                     h.Username(rabbitMqOptions.UserName);
                     h.Password(rabbitMqOptions.Password);

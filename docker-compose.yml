@@ -55,6 +55,10 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "booking"
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 5s
@@ -119,5 +123,19 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
+    networks:
+      - apis-network
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.2
+    networks:
+      - apis-network
+
+volumes:
+  elasticsearch_data:
+    name: elasticsearch_data
+
 networks:
   apis-network:
