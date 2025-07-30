@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Booking.API.GrpcServer.Services;
 using Contracts.Exceptions;
 using EventBus.Masstransit;
+using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -124,14 +125,20 @@ try
 	// Add Redis Distributed Caching
 	builder.Services.AddStackExchangeRedisCache(options =>
 	{
-		options.Configuration = "redis-container:6379";
+        var redisHost = builder.Configuration["Redis:Host"];
+        var redisPort = builder.Configuration["Redis:Port"];
+        var redisConnectionString = $"{redisHost}:{redisPort}";
+
+        options.Configuration = redisConnectionString;
 		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
 		{
 			AbortOnConnectFail = true,
-			EndPoints = { "redis-container:6379" },
+			EndPoints = { redisConnectionString },
 			DefaultDatabase = 4 // Use database 4
 		};
 	});
+
+    builder.Services.ConfigureHealthCheck();
 	// Configure the HTTP request pipeline.
 	var app = builder.Build();
     if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
@@ -142,11 +149,17 @@ try
 	app.UseCors("CorsPolicy");
     //app.UseHttpsRedirection();
     app.UseAuthentication();
-    app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapGrpcService<BookingProtoService>();
     app.MapControllers();
+
+    app.MapHealthChecks("/hc",new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
+
     // Seeding database async
     using (var scope = app.Services.CreateScope())
     {

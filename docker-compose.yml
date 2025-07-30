@@ -55,6 +55,10 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "booking"
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 5s
@@ -84,7 +88,13 @@ services:
       - realtime.api
     networks:
       - apis-network
-
+  healthstatus:
+    image: healthstatus
+    build:
+      context: .
+      dockerfile: WebApps/WebHealthCheck/DockerFile
+    networks:
+      - apis-network
   saga.api:
     image: saga-api
     build:
@@ -92,7 +102,20 @@ services:
       dockerfile: Saga.Orchestrator/Saga.Orchestrator/Dockerfile
     networks:
       - apis-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
+  background.api:
+    image: background-api
+    build:
+      context: .
+      dockerfile: BackgroundJob/Hangfire.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   redis:
     container_name: redis-container
     image: redis:7.4.1
@@ -106,5 +129,19 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
+    networks:
+      - apis-network
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.2
+    networks:
+      - apis-network
+
+volumes:
+  elasticsearch_data:
+    name: elasticsearch_data
+
 networks:
   apis-network:

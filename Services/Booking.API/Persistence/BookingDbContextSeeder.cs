@@ -47,7 +47,7 @@ namespace Booking.API.Persistence
                 {
                     var bookingRoom = new BookingRoom
                     {
-                        UserId = random.Next(1, 10),
+                        UserId = random.Next(1, 5),
                         CheckIn = DateTime.Now.AddDays(-random.Next(0, 60)),
                         CheckOut = DateTime.Now.AddDays(-random.Next(0, 60) + random.Next(1, 5)),
                         NumberOfPeople = random.Next(1, 5),

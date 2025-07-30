@@ -1,7 +1,9 @@
 ﻿using Booking.API.GrpcServer.Protos;
+using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Saga.Orchestrator.BookingRoomOrderManagers;
 using Saga.Orchestrator.BookingTourOrderManagers;
 using Shared.DTOs;
@@ -10,18 +12,22 @@ using System.Security.Claims;
 
 namespace Saga.Orchestrator.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/saga-service/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class SagasController : ControllerBase
     {
         private readonly BookingRoomManager _bookingRoomManager;
         private readonly BookingTourManager _bookingTourManager;
+        private IConfiguration _configuration;
         public SagasController(BookingRoomManager bookingRoomManager,
-            BookingTourManager bookingTourManager)
+            BookingTourManager bookingTourManager,
+            IConfiguration configuration
+            )
         {
             _bookingRoomManager = bookingRoomManager; 
-            _bookingTourManager = bookingTourManager;   
+            _bookingTourManager = bookingTourManager; 
+            _configuration = configuration;
         }
         [HttpPost("booking-room")]
         public async Task<IActionResult> CreateBookingRoomAsync(CreateBookingRoomOrderDto request)
@@ -41,5 +47,13 @@ namespace Saga.Orchestrator.Controllers
             var response = await  _bookingTourManager.CreateBookingTourOrder(request);
             return StatusCode(response.StatusCode, response);
         }
+        [HttpGet]
+        public async Task<IActionResult> Test()
+        {
+            return Ok(new {
+                tmp = _configuration.GetSection("SMTPEmailSettings:Password")
+            });
+        }
+    
     }
 }

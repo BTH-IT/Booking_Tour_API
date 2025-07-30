@@ -74,5 +74,17 @@ namespace Tour.API.Extensions
             });
             return services;
         }
+        public static IServiceCollection ConfigureHealthCheck(this IServiceCollection services)
+        {
+            var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+
+            if (databaseSettings == null || string.IsNullOrEmpty(databaseSettings.ConnectionString))
+                throw new ArgumentNullException("Connection string is not configured.");
+
+            services.AddHealthChecks()
+                .AddMySql(databaseSettings.ConnectionString);
+
+            return services;
+        }
     }
 }

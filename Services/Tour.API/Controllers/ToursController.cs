@@ -9,7 +9,7 @@ using Shared.Enums;
 namespace Tour.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/tour-service/[controller]")]
     public class ToursController : Controller
     {
         private readonly ITourService _tourService;

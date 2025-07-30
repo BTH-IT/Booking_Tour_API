@@ -9,6 +9,7 @@ using System.Text;
 using EventBus.Masstransit;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Saga.Orchestrator.API.Extensions;
+using Infrastructure.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -30,6 +31,9 @@ try
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
     // Add CORS
     builder.Services.ConfigureCors(builder.Configuration);
+    // Masstransit with RabbitMQ
+    builder.Services.AddCustomMassTransit(builder.Environment,typeof(Program).Assembly);
+
     //Configure authentication
     builder.Services.AddAuthentication(cfg =>
     {

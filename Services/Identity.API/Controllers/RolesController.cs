@@ -12,7 +12,7 @@ using Shared.Enums;
 namespace Identity.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/identity-service/[controller]")]
     [Authorize]
     public class RolesController : ControllerBase
     {

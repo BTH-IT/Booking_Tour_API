@@ -1,7 +1,8 @@
+using Infrastructure.Middlewares;
 using Microsoft.OpenApi.Models;
-using Serilog;
-using OcelotApiGw.Extensions;
 using Ocelot.Middleware;
+using OcelotApiGw.Extensions;
+using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
 try
@@ -27,12 +28,16 @@ try
 	// Add Redis Distributed Caching
 	builder.Services.AddStackExchangeRedisCache(options =>
 	{
-		options.Configuration = "redis-container:6379";
+        var redisHost = builder.Configuration["Redis:Host"];
+        var redisPort = builder.Configuration["Redis:Port"];
+        var redisConnectionString = $"{redisHost}:{redisPort}";
+
+        options.Configuration = redisConnectionString;
 		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
 		{
 			AbortOnConnectFail = true,
-			EndPoints = { "redis-container:6379" },
-			DefaultDatabase = 4 // Use database 4
+			EndPoints = { redisConnectionString },
+			DefaultDatabase = 4 
 		};
 	});
 	var app = builder.Build();
@@ -43,8 +48,8 @@ try
 		app.UseSwagger();
 		app.UseSwaggerForOcelotUI();
 	}
-
-	app.UseCors("CorsPolicy");
+    app.UseMiddleware<ErrorWrappingMiddleware>();
+    app.UseCors("CorsPolicy");
 	app.UseWebSockets();
 	app.UseRouting();
 

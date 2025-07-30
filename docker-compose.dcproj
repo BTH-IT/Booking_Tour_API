@@ -12,5 +12,7 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="infrastructure.yml" />
+    <None Include="Shared\DTOs\TestEventDTO.cs" />
   </ItemGroup>
 </Project>

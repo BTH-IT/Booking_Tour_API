@@ -1,17 +1,18 @@
-﻿using Room.API.Persistence;
-using Serilog;
-using Tour.API.Extensions;
-using Tour.API.Validators;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Mvc;
-using Tour.API.GrpcServer.Services;
-using Contracts.Exceptions;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+﻿using Contracts.Exceptions;
 using EventBus.Masstransit;
+using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Room.API.Persistence;
+using Serilog;
+using System.Text;
+using Tour.API.Extensions;
+using Tour.API.GrpcServer.Services;
+using Tour.API.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 Log.Information($"Start {builder.Environment.ApplicationName} up");
@@ -126,11 +127,15 @@ try
 	// Add Redis Distributed Caching
 	builder.Services.AddStackExchangeRedisCache(options =>
 	{
-		options.Configuration = "redis-container:6379";
+		var redisHost = builder.Configuration["Redis:Host"];
+		var redisPort = builder.Configuration["Redis:Port"];
+		var redisConnectionString = $"{redisHost}:{redisPort}";
+
+		options.Configuration = redisConnectionString;
 		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
 		{
 			AbortOnConnectFail = true,
-			EndPoints = { "redis-container:6379" },
+			EndPoints = { redisConnectionString },
 			DefaultDatabase = 3 // Use database 3
 		};
 	});
@@ -140,7 +145,7 @@ try
     });
     //Add GrpcClient
     builder.Services.AddGrpcClients();
-
+    builder.Services.ConfigureHealthCheck();
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
@@ -154,6 +159,11 @@ try
     app.UseAuthorization();
     app.MapControllers();
     app.MapGrpcService<TourProtoService>();
+    app.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
     // Seeding database async
     using (var scope = app.Services.CreateScope())
     {

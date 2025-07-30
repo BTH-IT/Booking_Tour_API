@@ -12,8 +12,10 @@
 		public DateTime? CreatedAt {  get; set; }
         public List<DetailBookingRoomResponseDTO> DetailBookingRooms { get; set; }
 		public UserResponseDTO User { get; set; }
+		public string? FullName { get; set; } = null;
+        public string? Email { get; set; } = null;
 
-	}
+    }
 	public class UpdateBookingStatusDTO
 	{
 		public string Status { get; set; }

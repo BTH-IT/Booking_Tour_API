@@ -1,5 +1,6 @@
 using Contracts.Exceptions;
 using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
 using Identity.API;
 using Identity.API.DTO.Validator;
 using Identity.API.Extensions;
@@ -117,16 +118,22 @@ try
 	// Add Redis Distributed Caching
 	builder.Services.AddStackExchangeRedisCache(options =>
 	{
-		options.Configuration = "redis-container:6379";
+        var redisHost = builder.Configuration["Redis:Host"];
+        var redisPort = builder.Configuration["Redis:Port"];
+        var redisConnectionString = $"{redisHost}:{redisPort}";
+
+        options.Configuration = redisConnectionString;
 		options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
 		{
 			AbortOnConnectFail = true,
-			EndPoints = { "redis-container:6379" },
+			EndPoints = { redisConnectionString },
 			DefaultDatabase = 1 // Use database 1
 		};
 	});
-	// Configure the HTTP request pipeline.
-	var app = builder.Build();
+    builder.Services.ConfigureHealthCheck();
+
+    // Configure the HTTP request pipeline.
+    var app = builder.Build();
     
     if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("docker"))
     {
@@ -139,6 +146,11 @@ try
     app.MapGrpcService<IdentityProtoService>();
 
     app.MapControllers();
+    app.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
     // Seeding database async
     using (var scope = app.Services.CreateScope())
     {

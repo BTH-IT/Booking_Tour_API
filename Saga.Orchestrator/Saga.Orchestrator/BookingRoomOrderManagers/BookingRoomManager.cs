@@ -96,7 +96,6 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
         }
         private async Task CheckRoomIsAvailableAsync()
         {
-            
             try
             {
                 _logger.Information("Begin : CheckRoomIsAvailableAsync - BookingRoomManager");
@@ -136,6 +135,9 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
         private async Task CreateBookingOrderAsync()
         {
             var userId = int.Parse(_contextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var fullName = (_contextAccessor.HttpContext!.User.FindFirstValue("FullName")!);
+            var email = (_contextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Email)!);
+
             try
             {
                 _logger.Information("Begin : CheckRoomIsAvailableAsync - BookingRoomManager");
@@ -145,7 +147,9 @@ namespace Saga.Orchestrator.BookingRoomOrderManagers
                     UserId = userId,
                     CheckIn = Timestamp.FromDateTime(requestDto.CheckIn!.Value.ToUniversalTime()),
                     CheckOut = Timestamp.FromDateTime(requestDto.CheckOut!.Value.ToUniversalTime()),
-                    Status = Constants.OrderStatus.Pending
+                    Status = Constants.OrderStatus.Pending,
+                    Email = email,
+                    FullName = fullName,
                 };
                 foreach(var item in requestDto.BookingRoomDetails)
                 {

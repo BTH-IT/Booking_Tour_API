@@ -17,6 +17,8 @@ message CreateBookingRoomRequest{
     google.protobuf.Timestamp CheckIn = 3;
     google.protobuf.Timestamp CheckOut = 4;
 	string Status = 5;
+	string FullName = 6;
+	string Email = 7;
 }
 message BookingRoomDetailRequest{
 	int32 RoomId = 1;
@@ -55,6 +57,8 @@ message CreateBookingTourRequest{
 	string Status = 7;
 	double PriceTotal = 8;
 	repeated TravellerDetail TravellerDetail = 11;
+	string FullName = 12;
+	string Email = 13;
 }
 
 message TourBookingRoomDetail{

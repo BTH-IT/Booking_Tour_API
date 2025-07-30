@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Tour.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/tour-service/[controller]")]
     public class SchedulesController : Controller
     {
         private readonly IScheduleService _scheduleService;
