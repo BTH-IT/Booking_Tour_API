@@ -6,7 +6,7 @@ using Shared.DTOs;
 namespace Room.API.Controllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/room-service/[controller]")]
 	[Authorize]
 	public class ReviewHotelController : ControllerBase
 	{

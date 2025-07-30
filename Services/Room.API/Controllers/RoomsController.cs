@@ -9,7 +9,7 @@ using Shared.Enums;
 namespace Room.API.Controllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/room-service/[controller]")]
 	public class RoomsController : ControllerBase
 	{
 		private readonly IRoomService _roomService;

@@ -13,7 +13,8 @@
         "redis": "StartWithoutDebugging",
         "saga.api": "StartDebugging",
         "tour.api": "StartDebugging",
-        "upload.api": "StartDebugging"
+        "upload.api": "StartDebugging",
+        "hangfire.api": "StartDebugging"
       }
     }
   }

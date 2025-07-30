@@ -10,7 +10,7 @@ using Shared.Helper;
 namespace Identity.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/identity-service/[controller]")]
     [Authorize]
     public class AccountsController : ControllerBase
     {

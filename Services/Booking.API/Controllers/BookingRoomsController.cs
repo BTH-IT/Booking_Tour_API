@@ -10,7 +10,7 @@ using System.Security.Claims;
 namespace Booking.API.Controllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/booking-serivce/[controller]")]
 	public class BookingRoomsController : ControllerBase
 	{
 		private readonly IBookingRoomService _bookingRoomService;

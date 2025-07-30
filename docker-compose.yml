@@ -92,7 +92,20 @@ services:
       dockerfile: Saga.Orchestrator/Saga.Orchestrator/Dockerfile
     networks:
       - apis-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
+  background.api:
+    image: background-api
+    build:
+      context: .
+      dockerfile: BackgroundJob/Hangfire.API/Dockerfile
+    networks:
+      - apis-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   redis:
     container_name: redis-container
     image: redis:7.4.1

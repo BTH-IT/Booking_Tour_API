@@ -60,6 +60,7 @@ namespace Identity.API.Services
 			{
 				Subject = new ClaimsIdentity(new Claim[]
 				{
+					new Claim("FullName",user.Fullname),
 					new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
 					new Claim(ClaimTypes.Email, account.Email),
 					new Claim(ClaimTypes.Role, account.Role!.Id.ToString()),

@@ -1,7 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Shared.Configurations;
+﻿using Hangfire;
+using Hangfire.Console;
+using Hangfire.Console.Extensions;
+using Hangfire.Mongo;
+using Hangfire.Mongo.Migration.Strategies;
+using Hangfire.Mongo.Migration.Strategies.Backup;
 using Infrastructure.Extensions;
-using Hangfire;
+using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
+using Newtonsoft.Json;
+using Shared.Configurations;
+using System.Security.Authentication;
 namespace Infrastructure.ScheduleJobs
 {
     public static class HangFireExtension
@@ -32,6 +40,47 @@ namespace Infrastructure.ScheduleJobs
                     {
                         options.UseSqlServerStorage(settings.Storage.ConnectionString);
                     });
+                    break;
+                case "mongodb":
+                    var mongoUrlBuilder = new MongoUrlBuilder(settings.Storage.ConnectionString);
+
+                    var mongoClientSettings = MongoClientSettings.FromUrl(
+                        new MongoUrl(settings.Storage.ConnectionString));
+                    mongoClientSettings.SslSettings = new SslSettings
+                    {
+                        EnabledSslProtocols = SslProtocols.Tls12
+                    };
+                    var mongoClient = new MongoClient(mongoClientSettings);
+
+                    var mongoStorageOptions = new MongoStorageOptions
+                    {
+                        MigrationOptions = new MongoMigrationOptions
+                        {
+                            MigrationStrategy = new MigrateMongoMigrationStrategy(),
+                            BackupStrategy = new CollectionMongoBackupStrategy(),
+                        },
+                        CheckConnection = true,
+                        Prefix = "SchedulerQueue",
+                        CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection
+                    };
+
+                    services.AddHangfire((_, config) =>
+                    {
+                        config.UseSimpleAssemblyNameTypeSerializer()
+                            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                            .UseRecommendedSerializerSettings()
+                            .UseConsole()
+                            .UseMongoStorage(mongoClient, mongoUrlBuilder.DatabaseName, mongoStorageOptions);
+
+                        var jsonSettings = new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.All
+                        };
+                        config.UseSerializerSettings(jsonSettings);
+                    });
+
+                    services.AddHangfireConsoleExtensions();
+
                     break;
                 default:
                     throw new Exception($"HangFire Storage Provider {settings.Storage.DBProvider} is not supported.");

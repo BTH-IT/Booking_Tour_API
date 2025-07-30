@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace Booking.API.Controllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/booking-serivce/[controller]")]
     [Authorize]
 
     public class BookingToursController : ControllerBase

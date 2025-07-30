@@ -4,6 +4,9 @@ using Saga.Orchestrator.API.GrpcClient.Protos;
 using Booking.API.GrpcServer.Protos;
 using Saga.Orchestrator.BookingRoomOrderManagers;
 using Saga.Orchestrator.BookingTourOrderManagers;
+using Saga.Orchestrator.Services.Interfaces;
+using Saga.Orchestrator.Services;
+using Infrastructure.Configurations;
 namespace Saga.Orchestrator.API.Extensions
 {
     public static class ServiceExtension
@@ -12,6 +15,8 @@ namespace Saga.Orchestrator.API.Extensions
         {
             var grpcSettings = configuration.GetSection(nameof(GrpcSettings));
             services.AddSingleton(grpcSettings);
+            services.Configure<SMTPEmailSetting>(configuration.GetSection("SMTPEmailSettings"));
+            
             return services;
         }
         public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
@@ -56,6 +61,7 @@ namespace Saga.Orchestrator.API.Extensions
         {
             services.AddTransient<BookingRoomManager>();
             services.AddTransient<BookingTourManager>();
+            services.AddTransient<IEmailTemplateService, BookingEmailService>();
             return services;
         }
     }

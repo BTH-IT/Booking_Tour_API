@@ -4,7 +4,7 @@ using Shared.DTOs;
 using Tour.API.Services.Interfaces;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/tour-service/[controller]")]
 public class ReviewTourController : ControllerBase
 {
 	private readonly IReviewTourService _reviewTourService;

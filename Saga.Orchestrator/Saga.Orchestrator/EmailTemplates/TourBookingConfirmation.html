@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Booking Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #27ae60;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+        }
+        .content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .booking-details {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0fff0;
+            border-left: 4px solid #27ae60;
+        }
+        .tour-details {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        .traveller-details {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .traveller-details th, .traveller-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .traveller-details th {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #27ae60;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .image-container {
+            width: 100%;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .tour-image {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tour Booking Confirmation</h1>
+        </div>
+        
+        <div class="content">
+            <p>Dear {{UserName}},</p>
+            
+            <p>Thank you for booking your tour with us! We're looking forward to providing you with an unforgettable experience.</p>
+            
+            <div class="booking-details">
+                <p><strong>Booking ID:</strong> {{BookingTourId}}</p>
+                <p><strong>Tour:</strong> {{TourName}}</p>
+                <p><strong>Departure Date:</strong> {{DepartureDate}}</p>
+                <p><strong>Return Date:</strong> {{ReturnDate}}</p>
+                <p><strong>Number of Seats:</strong> {{Seats}}</p>
+                <p><strong>Total Price:</strong> ${{TotalPrice}}</p>
+                <p><strong>Status:</strong> {{Status}}</p>
+            </div>
+            
+            <!--<div class="image-container">
+                <img src="{{TourImageUrl}}" alt="Tour Image" class="tour-image">
+            </div>-->
+            
+            <div class="tour-details">
+                <h3>Tour Details:</h3>
+                <p><strong>Destination:</strong> {{Destination}}</p>
+                <p><strong>Tour Description:</strong> {{TourDetail}}</p>
+                <p><strong>What to Expect:</strong> {{TourExpect}}</p>
+            </div>
+            
+            <h3>Traveller Information:</h3>
+            <table class="traveller-details">
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Phone</th>
+                </tr>
+                {{TravellersList}}
+            </table>
+            
+            <p>Please make sure to bring proper identification for all travellers on the day of departure.</p>
+            
+            <p>If you have any questions or need to update your traveller information, please contact our customer service team.</p>
+            
+            <a href="{{BookingUrl}}" class="button">View Your Tour Booking</a>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p>&copy; {{CurrentYear}} Travel Booking System. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

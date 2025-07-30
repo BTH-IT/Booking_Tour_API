@@ -84,6 +84,7 @@ namespace Booking.API.GrpcServer.Services
                 NumberOfPeople = numberOfGuests,   
                 CreatedAt = DateTime.Now,
                 Status = request.Status,
+        
             };
             var bookingRoomresult = await bookingRoomRepository.CreateAsync(newBookingRoom);
             if (bookingRoomresult <= 0) return new BookingRoomResponse()
@@ -107,10 +108,15 @@ namespace Booking.API.GrpcServer.Services
             _logger.Information($"END - BookingProtoService - CreateBookingRoom");
 
             var bookingRoom = await bookingRoomRepository.GetBookingRoomByIdAsync(bookingRoomresult);
+            var data = mapper.Map<BookingRoomResponseDTO>(bookingRoom);
+
+            data.FullName = request.FullName;
+            data.Email = request.Email;
+
             await publishEndpoint.Publish(new BookingRoomEvent
             {
                 Id = Guid.NewGuid(),
-                Data = mapper.Map<BookingRoomResponseDTO>(bookingRoom),
+                Data = data,
                 Type = "CREATE"
             });
             return new BookingRoomResponse()
@@ -176,10 +182,15 @@ namespace Booking.API.GrpcServer.Services
             }
             var bookingTourId  = await tourRepository.CreateAsync(newBookingTour);
             var bookingTour = await tourRepository.GetBookingTourByIdAsync(bookingTourId);
+
+            var data = mapper.Map<BookingTourCustomResponseDTO>(bookingTour);
+            data.FullName = request.FullName;
+            data.Email = request.Email;
+
             await publishEndpoint.Publish(new BookingTourEvent
             {
                 Id = Guid.NewGuid(),
-                Data = mapper.Map<BookingTourCustomResponseDTO>(bookingTour),
+                Data = data,
                 Type = "CREATE"
             });
             return new BookingTourResponse()

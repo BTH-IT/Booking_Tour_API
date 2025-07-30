@@ -27,12 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tour", "Tour", "{CC1885BF-D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "Services\Identity.API\Identity.API.csproj", "{2F18513F-B0AE-49EC-BBDD-974A85266759}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{434D5AED-D4CD-4011-A1D4-BFF8EFF261D1}"
-	ProjectSection(SolutionItems) = preProject
-		.env = .env
-		infrastrucutre.yml = infrastrucutre.yml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Room", "Room", "{30B9364A-ED32-49D2-B7D8-32E671E8BB77}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "BuildingBlocks\EventBus\EventBus\EventBus.csproj", "{09E24A76-F978-444C-A73B-BA9AAAA3ED36}"
@@ -56,6 +50,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Realtime.API", "Services\Realtime.API\Realtime.API.csproj", "{8C6D0F24-DD1D-4E71-8540-354F4E3FFD18}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{93000BA3-75DE-47C4-8684-963B85181C99}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundJob", "BackgroundJob", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hangfire.API", "Services\Hangfire.API\Hangfire.API.csproj", "{4B62DB32-2BCB-4F48-8D5D-3307062A5F4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +117,10 @@ Global
 		{93000BA3-75DE-47C4-8684-963B85181C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93000BA3-75DE-47C4-8684-963B85181C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93000BA3-75DE-47C4-8684-963B85181C99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B62DB32-2BCB-4F48-8D5D-3307062A5F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B62DB32-2BCB-4F48-8D5D-3307062A5F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B62DB32-2BCB-4F48-8D5D-3307062A5F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B62DB32-2BCB-4F48-8D5D-3307062A5F4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +145,8 @@ Global
 		{A07BA41B-16EA-4295-8BE9-D1F9826CBBF3} = {12E0AEAC-6992-4151-A27A-7B62040E2566}
 		{83591066-86FF-427D-81AC-B7407BF39A10} = {16004A43-7980-44AA-8F36-AB4086828472}
 		{8C6D0F24-DD1D-4E71-8540-354F4E3FFD18} = {83591066-86FF-427D-81AC-B7407BF39A10}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {16004A43-7980-44AA-8F36-AB4086828472}
+		{4B62DB32-2BCB-4F48-8D5D-3307062A5F4D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FE75517F-CC98-40B3-B50A-A6E5053329A1}

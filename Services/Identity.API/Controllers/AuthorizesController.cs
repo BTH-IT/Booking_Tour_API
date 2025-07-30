@@ -6,7 +6,7 @@ using Shared.Helper;
 namespace Identity.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/identity-service/[controller]")]
     public class AuthorizesController : ControllerBase
     {
         private readonly IAuthService _authService;

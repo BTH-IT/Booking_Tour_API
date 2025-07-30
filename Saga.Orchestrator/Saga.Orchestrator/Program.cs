@@ -31,6 +31,9 @@ try
     builder.Services.Configure<RouteOptions>(cfg => cfg.LowercaseQueryStrings = true);
     // Add CORS
     builder.Services.ConfigureCors(builder.Configuration);
+    // Masstransit with RabbitMQ
+    builder.Services.AddCustomMassTransit(builder.Environment,typeof(Program).Assembly);
+
     //Configure authentication
     builder.Services.AddAuthentication(cfg =>
     {

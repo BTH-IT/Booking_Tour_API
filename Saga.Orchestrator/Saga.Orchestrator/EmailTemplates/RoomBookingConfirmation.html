@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #2c3e50;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+        }
+        .content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .booking-details {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f2f7ff;
+            border-left: 4px solid #3498db;
+        }
+        .room-details {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .room-details th, .room-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .room-details th {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Room Booking Confirmation</h1>
+        </div>
+        
+        <div class="content">
+            <p>Dear {{UserName}},</p>
+            
+            <p>Thank you for your booking with us. We're excited to welcome you soon!</p>
+            
+            <div class="booking-details">
+                <p><strong>Booking ID:</strong> {{BookingRoomId}}</p>
+                <p><strong>Check-in Date:</strong> {{CheckInDate}}</p>
+                <p><strong>Check-out Date:</strong> {{CheckOutDate}}</p>
+                <p><strong>Total Price:</strong> ${{TotalPrice}}</p>
+                <p><strong>Number of Guests:</strong> {{NumberOfPeople}}</p>
+                <p><strong>Status:</strong> {{Status}}</p>
+            </div>
+            
+            <h3>Room Details:</h3>
+            <table class="room-details">
+                <tr>
+                    <th>Room</th>
+                    <th>Adults</th>
+                    <th>Children</th>
+                    <th>Price</th>
+                </tr>
+                {{RoomDetailsList}}
+            </table>
+            
+            <p>If you have any questions or need to make changes to your booking, please contact our customer service team.</p>
+            
+            <a href="{{BookingUrl}}" class="button">View Your Booking</a>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p>&copy; {{CurrentYear}} Travel Booking System. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

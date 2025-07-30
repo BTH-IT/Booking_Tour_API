@@ -34,6 +34,8 @@
         public UserResponseDTO User { get; set; }
         public ScheduleCustomResponseDTO Schedule { get; set; }
         public List<TravellerDTO> Travellers { get; set; }
+        public string? Email { get; set; } = null;
+        public string? FullName { get; set; } = null;
     }
     public class BookingTourRequestDTO
     {

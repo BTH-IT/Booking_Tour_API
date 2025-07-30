@@ -126,6 +126,8 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
             try
             {
                 var userId = int.Parse(_contextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var fullName = (_contextAccessor.HttpContext!.User.FindFirstValue("FullName")!);
+                var email = (_contextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Email)!);
                 #region tao_request
                 var request = new CreateBookingTourRequest()
                 {
@@ -136,6 +138,8 @@ namespace Saga.Orchestrator.BookingTourOrderManagers
                     IsEntranceTicket = requestDto!.IsEntranceTicket,
                     Status = Constants.OrderStatus.Pending,
                     PriceTotal = double.Parse(requestDto.PriceTotal.ToString()),
+                    FullName = fullName,
+                    Email = email
                 };
                 foreach(var item in requestDto.Travellers)
                 {
